@@ -1,5 +1,5 @@
-var OS = require('./OS');
-var Browser = require('./Browser');
+import OS from './OS';
+import Browser from './Browser';
 
 var Input = {
 
@@ -21,7 +21,7 @@ var Input = {
     * @protected
     */
     wheelEvent: null
-    
+
 };
 
 function init ()
@@ -59,4 +59,4 @@ function init ()
     return Input;
 }
 
-module.exports = init();
+export default init();

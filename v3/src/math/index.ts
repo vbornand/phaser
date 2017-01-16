@@ -1,47 +1,37 @@
-module.exports = {
+import * as Angle from './angle';
+import * as Easing from './easing';
+import * as Distance from './distance';
+import * as Fuzzy from './fuzzy';
+import * as Interpolation from './interpolation';
+import * as Pow2 from './pow2';
+import * as Snap from './snap';
 
-    //  CONSTs (makes them visible under Phaser.Math)
-    PI2: Math.PI * 2,
-    TAU: Math.PI * 0.5,
-    EPSILON: 1.0e-6,
-    DEG_TO_RAD: Math.PI / 180,
-    RAD_TO_DEG: 180 / Math.PI,
+export { Angle, Distance, Easing, Fuzzy, Interpolation, Pow2, Snap }
 
-    //  Collections of functions
-    Angle: require('./angle/'),
-    Distance: require('./distance/'),
-    Easing: require('./easing/'),
-    Fuzzy: require('./fuzzy/'),
-    Interpolation: require('./interpolation/'),
-    Pow2: require('./pow2/'),
-    Snap: require('./snap/'),
+export * from "./const";
 
-    //  Single functions
-    Average: require('./Average'),
-    Bernstein: require('./Bernstein'),
-    Between: require('./Between'),
-    CatmullRom: require('./CatmullRom'),
-    CeilTo: require('./CeilTo'),
-    Clamp: require('./Clamp'),
-    DegToRad: require('./DegToRad'),
-    Difference: require('./Difference'),
-    Factorial: require('./Factorial'),
-    FloatBetween: require('./FloatBetween'),
-    FloorTo: require('./FloorTo'),
-    Linear: require('./Linear'),
-    MaxAdd: require('./MaxAdd'),
-    MinSub: require('./MinSub'),
-    Percent: require('./Percent'),
-    RadToDeg: require('./RadToDeg'),
-    Rotate: require('./Rotate'),
-    RotateAround: require('./RotateAround'),
-    RotateAroundDistance: require('./RotateAroundDistance'),
-    RoundAwayFromZero: require('./RoundAwayFromZero'),
-    RoundTo: require('./RoundTo'),
-    SinCosTableGenerator: require('./SinCosTableGenerator'),
-    SmootherStep: require('./SmootherStep'),
-    SmoothStep: require('./SmoothStep'),
-    Within: require('./Within'),
-    Wrap: require('./Wrap')
-
-};
+export { default as Average } from "./Average";
+export { default as Bernstein } from "./Bernstein";
+export { default as Between } from "./Between";
+export { default as CatmullRom } from "./CatmullRom";
+export { default as CeilTo } from "./CeilTo";
+export { default as Clamp } from "./Clamp";
+export { default as DegToRad } from "./DegToRad";
+export { default as Difference } from "./Difference";
+export { default as Factorial } from "./Factorial";
+export { default as FloatBetween } from "./FloatBetween";
+export { default as FloorTo } from "./FloorTo";
+export { default as Linear } from "./Linear";
+export { default as MaxAdd } from "./MaxAdd";
+export { default as MinSub } from "./MinSub";
+export { default as Percent } from "./Percent";
+export { default as RadToDeg } from "./RadToDeg";
+export { default as Rotate } from "./Rotate";
+export { default as RotateAround } from "./RotateAround";
+export { default as RotateAroundDistance } from "./RotateAroundDistance";
+export { default as RoundAwayFromZero } from "./RoundAwayFromZero";
+export { default as RoundTo } from "./RoundTo";
+export { default as SinCosTableGenerator } from "./SinCosTableGenerator";
+export { default as SmootherStep } from "./SmootherStep";
+export { default as Within } from "./Within";
+export { default as Wrap } from "./Wrap";

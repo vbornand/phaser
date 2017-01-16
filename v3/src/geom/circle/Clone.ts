@@ -1,8 +1,6 @@
-var Circle = require('./Circle');
+import Circle from './Circle';
 
-var Clone = function (source)
+export default function (source: Circle): Circle
 {
     return new Circle(source.x, source.y, source.radius);
 };
-
-module.exports = Clone;

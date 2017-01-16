@@ -1,8 +1,8 @@
-var MATH_CONST = require('../../math/const');
-var Angle = require('./Angle');
-var Point = require('../point/Point');
+import * as MATH_CONST from '../../math/const';
+import Angle from './Angle';
+import Point from '../point';
 
-var GetNormal = function (line, out)
+export default function (line, out)
 {
     if (out === undefined) { out = new Point(); }
 
@@ -12,6 +12,4 @@ var GetNormal = function (line, out)
     out.y = Math.sin(a);
 
     return out;
-};
-
-module.exports = GetNormal;
+}

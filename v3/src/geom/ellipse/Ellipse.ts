@@ -1,24 +1,45 @@
-var Ellipse = function (x, y, width, height)
-{
-    if (x === undefined) { x = 0; }
-    if (y === undefined) { y = 0; }
-    if (width === undefined) { width = 0; }
-    if (height === undefined) { height = 0; }
+import Area from './Area';
+import Clone from './Clone';
+import Contains from './Contains';
+import ContainsPoint from './ContainsPoint';
+import ContainsRect from './ContainsRect';
+import CopyFrom from './CopyFrom';
+import Equals from './Equals';
+import GetBounds from './GetBounds';
+import Offset from './Offset';
+import OffsetPoint from './OffsetPoint';
+import Random from './Random';
 
-    this.x = x;
+export default class Ellipse {
 
-    this.y = y;
+    public static Area = Area;
+    public static Clone = Clone;
+    public static Contains = Contains;
+    public static ContainsPoint = ContainsPoint;
+    public static ContainsRect = ContainsRect;
+    public static CopyFrom = CopyFrom;
+    public static Equals = Equals;
+    public static GetBounds = GetBounds;
+    public static Offset = Offset;
+    public static OffsetPoint = OffsetPoint;
+    public static Random = Random;
 
-    this.width = width;
+    public x: number;
+    public y: number;
+    public width: number;
+    public height: number;
 
-    this.height = height;
-};
+    constructor(x = 0, y = 0, width = 0, height = 0) {
+        this.x = x;
 
-Ellipse.prototype.constructor = Ellipse;
+        this.y = y;
 
-Ellipse.prototype = {
+        this.width = width;
 
-    setTo: function (x, y, width, height)
+        this.height = height;
+    }
+
+    setTo (x, y, width, height)
     {
         this.x = x;
         this.y = y;
@@ -26,14 +47,14 @@ Ellipse.prototype = {
         this.height = height;
 
         return this;
-    },
+    }
 
-    setEmpty: function ()
+    setEmpty ()
     {
         return this.setTo(0, 0, 0, 0);
-    },
+    }
 
-    setPosition: function (x, y)
+    setPosition (x, y)
     {
         if (y === undefined) { y = x; }
 
@@ -41,9 +62,9 @@ Ellipse.prototype = {
         this.y = y;
 
         return this;
-    },
+    }
 
-    setSize: function (width, height)
+    setSize (width, height)
     {
         if (height === undefined) { height = width; }
 
@@ -51,124 +72,77 @@ Ellipse.prototype = {
         this.height = height;
 
         return this;
-    },
+    }
 
-    isEmpty: function ()
+    isEmpty ()
     {
         return (this.width <= 0 || this.height <= 0);
-    },
+    }
 
     //  AKA Semi Minor Axis
-    getMinorRadius: function ()
+    getMinorRadius ()
     {
         return Math.min(this.width, this.height) / 2;
-    },
+    }
 
     //  AKA Semi Major Axis
-    getMajorRadius: function ()
+    getMajorRadius ()
     {
         return Math.max(this.width, this.height) / 2;
     }
 
-};
-
-Object.defineProperties(Ellipse.prototype, {
-
-    left: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.x;
-        },
-
-        set: function (value)
-        {
-            if (value >= this.right)
-            {
-                this.width = 0;
-            }
-            else
-            {
-                this.width = this.right - value;
-            }
-
-            this.x = value;
-        }
-
-    },
-
-    right: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.x + this.width;
-        },
-
-        set: function (value)
-        {
-            if (value <= this.x)
-            {
-                this.width = 0;
-            }
-            else
-            {
-                this.width = value - this.x;
-            }
-        }
-
-    },
-
-    top: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.y;
-        },
-
-        set: function (value)
-        {
-            if (value >= this.bottom)
-            {
-                this.height = 0;
-                this.y = value;
-            }
-            else
-            {
-                this.height = (this.bottom - value);
-            }
-        }
-
-    },
-
-    bottom: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.y + this.height;
-        },
-
-        set: function (value)
-        {
-            if (value <= this.y)
-            {
-                this.height = 0;
-            }
-            else
-            {
-                this.height = value - this.y;
-            }
-        }
-
+    get left () {
+        return this.x;
     }
 
-});
+    set left (value) {
+        if (value >= this.right) {
+            this.width = 0;
+        }
+        else {
+            this.width = this.right - value;
+        }
 
-module.exports = Ellipse;
+        this.x = value;
+    }
+
+    get right () {
+        return this.x + this.width;
+    }
+
+    set right (value) {
+        if (value <= this.x) {
+            this.width = 0;
+        }
+        else {
+            this.width = value - this.x;
+        }
+    }
+
+    get top () {
+        return this.y;
+    }
+
+    set top (value) {
+        if (value >= this.bottom) {
+            this.height = 0;
+            this.y = value;
+        }
+        else {
+            this.height = (this.bottom - value);
+        }
+    }
+
+    get bottom () {
+        return this.y + this.height;
+    }
+
+    set bottom (value) {
+        if (value <= this.y) {
+            this.height = 0;
+        }
+        else {
+            this.height = value - this.y;
+        }
+    }
+}

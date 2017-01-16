@@ -4,10 +4,11 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var CONST = require('../const');
-var CHECKSUM = require('../checksum');
+import * as CONST from '../const';
+import * as CHECKSUM from '../checksum';
+import Game from './Game';
 
-var DebugHeader = function (game)
+export default function (game: Game)
 {
     var config = game.config;
 
@@ -88,5 +89,3 @@ var DebugHeader = function (game)
     console.log(CHECKSUM.build);
 
 };
-
-module.exports = DebugHeader;

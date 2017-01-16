@@ -1,54 +1,32 @@
-require('./polyfills');
+import './polyfills';
 
-//  This object is exported globally
+import * as Math from './math';
+import * as Geom from './geom';
+import * as Sound from './sound';
 
-var Phaser = {
+import * as GameobjectsFactoryContainer from './gameobjects/FactoryContainer';
+import * as LoaderImageFile from './loader/filetypes/ImageFile';
+import * as ArrayUtils from './utils/array';
+import * as ObjectUtils from './utils/object';
 
-    Game: require('./boot/Game'),
+import './gameobjects/image/ImageFactory';
+import './gameobjects/container/ContainerFactory';
 
-    Event: require('./events/Event'),
-    EventDispatcher: require('./events/EventDispatcher'),
+export { default as Game } from './boot/Game';
+export { default as Event } from './events/Event';
+export { default as EventDispatcher } from './events/EventDispatcher';
 
-    Math: require('./math'),
+export const GameObjects = {
+        Factory: GameobjectsFactoryContainer
+}
 
-    Geom: require('./geom'),
+export const Loader = {
+        ImageFile: LoaderImageFile
+}
 
-    GameObjects: {
+export { Sound, Math, Geom };
 
-        Factory: require('./gameobjects/FactoryContainer')
-
-    },
-
-    Loader: {
-
-        ImageFile: require('./loader/filetypes/ImageFile')
-
-    },
-
-    Sound: require('./sound'),
-
-    Utils: {
-
-        Array: require('./utils/array/'),
-        Objects: require('./utils/object/')
-
-    }
-
-};
-
-//  Required, but don't need Phaser level exports
-
-require('./gameobjects/image/ImageFactory');
-require('./gameobjects/container/ContainerFactory');
-
-//  Export it
-
-module.exports = Phaser;
-
-global.Phaser = Phaser;
-
-/*
- * “Sometimes, the elegant implementation is just a function.
- * Not a method. Not a class. Not a framework. Just a function.”
- * - John Carmack
- */
+export const Utils = {
+        Array: ArrayUtils,
+        Objects: ObjectUtils
+}

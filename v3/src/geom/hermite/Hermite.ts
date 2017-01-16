@@ -1,4 +1,11 @@
-var Point = require('../point/Point');
+import Point from '../point';
+import GetAngle from './GetAngle';
+import GetAngleWithDistance from './GetAngleWithDistance';
+import GetEntryTangent from './GetEntryTangent';
+import GetPoint from './GetPoint';
+import GetPointWithDistance from './GetPointWithDistance';
+import GetX from './GetX';
+import GetY from './GetY';
 
 /**
 * @author       Richard Davey <rich@photonstorm.com>
@@ -38,88 +45,108 @@ var Point = require('../point/Point');
 * @param {number} v2y - The y component of the tangent vector for the end of the curve.
 * @param {number} [accuracy=10] The amount of points to pre-calculate on the curve.
 */
-var Hermite = function (p1x, p1y, p2x, p2y, v1x, v1y, v2x, v2y, accuracy)
-{
-    if (accuracy === undefined) { accuracy = 10; }
+export default class Hermite {
+    public static GetAngle = GetAngle;
+    public static GetAngleWithDistance = GetAngleWithDistance;
+    public static GetEntryTangent = GetEntryTangent;
+    public static GetPoint = GetPoint;
+    public static GetPointWithDistance = GetPointWithDistance;
+    public static GetX = GetX;
+    public static GetY = GetY;
 
-    /**
-    * @property {number} _accuracy - The amount of points to pre-calculate on the curve.
-    * @private
-    */
-    this._accuracy = accuracy;
+    private _accuracy;
+    private _p1x;
+    private _p1y;
+    private _p2x;
+    private _p2y;
+    private _v1x;
+    private _v1y;
+    private _v2x;
+    private _v2y;
+    private _points;
+    private _temp1;
+    private _temp2;
+    private _ax;
+    private _ay;
+    private _bx;
+    private _by;
+    private length;
 
-    /**
-    * @property {number} _p1x - The x coordinate of the start of the curve.
-    * @private
-    */
-    this._p1x = p1x;
+    constructor(p1x, p1y, p2x, p2y, v1x, v1y, v2x, v2y, accuracy: number = 10) {
+        /**
+        * @property {number} _accuracy - The amount of points to pre-calculate on the curve.
+        * @private
+        */
+        this._accuracy = accuracy;
 
-    /**
-    * @property {number} _p1y - The y coordinate of the start of the curve.
-    * @private
-    */
-    this._p1y = p1y;
+        /**
+        * @property {number} _p1x - The x coordinate of the start of the curve.
+        * @private
+        */
+        this._p1x = p1x;
 
-    /**
-    * @property {number} _p2x - The x coordinate of the end of the curve.
-    * @private
-    */
-    this._p2x = p2x;
+        /**
+        * @property {number} _p1y - The y coordinate of the start of the curve.
+        * @private
+        */
+        this._p1y = p1y;
 
-    /**
-    * @property {number} _p2y - The y coordinate of the end of the curve.
-    * @private
-    */
-    this._p2y = p2y;
+        /**
+        * @property {number} _p2x - The x coordinate of the end of the curve.
+        * @private
+        */
+        this._p2x = p2x;
 
-    /**
-    * @property {number} _v1x - The x component of the tangent vector for the start of the curve.
-    * @private
-    */
-    this._v1x = v1x;
+        /**
+        * @property {number} _p2y - The y coordinate of the end of the curve.
+        * @private
+        */
+        this._p2y = p2y;
 
-    /**
-    * @property {number} _v1y - The y component of the tangent vector for the start of the curve.
-    * @private
-    */
-    this._v1y = v1y;
+        /**
+        * @property {number} _v1x - The x component of the tangent vector for the start of the curve.
+        * @private
+        */
+        this._v1x = v1x;
 
-    /**
-    * @property {number} _v2x - The x component of the tangent vector for the end of the curve.
-    * @private
-    */
-    this._v2x = v2x;
+        /**
+        * @property {number} _v1y - The y component of the tangent vector for the start of the curve.
+        * @private
+        */
+        this._v1y = v1y;
 
-    /**
-    * @property {number} _v2y - The y component of the tangent vector for the end of the curve.
-    * @private
-    */
-    this._v2y = v2y;
-    
-    /**
-    * @property {array} _points - A local array of cached points.
-    * @private
-    */
-    this._points = [];
+        /**
+        * @property {number} _v2x - The x component of the tangent vector for the end of the curve.
+        * @private
+        */
+        this._v2x = v2x;
 
-    /**
-    * @property {Phaser.Point} _temp1 - A local cached Point object.
-    * @private
-    */
-    this._temp1 = new Point();
+        /**
+        * @property {number} _v2y - The y component of the tangent vector for the end of the curve.
+        * @private
+        */
+        this._v2y = v2y;
 
-    /**
-    * @property {Phaser.Point} _temp2 - A local cached Point object.
-    * @private
-    */
-    this._temp2 = new Point();
+        /**
+        * @property {array} _points - A local array of cached points.
+        * @private
+        */
+        this._points = [];
 
-    this.recalculate();
-};
+        /**
+        * @property {Phaser.Point} _temp1 - A local cached Point object.
+        * @private
+        */
+        this._temp1 = new Point();
 
-Hermite.prototype.constructor = Hermite;
+        /**
+        * @property {Phaser.Point} _temp2 - A local cached Point object.
+        * @private
+        */
+        this._temp2 = new Point();
 
-Hermite.prototype = {
+        this.recalculate();
+    }
 
     /**
     * Performs the curve calculations.
@@ -131,7 +158,7 @@ Hermite.prototype = {
     * @method Phaser.Hermite#recalculate
     * @return {Phaser.Hermite} This object.
     */
-    recalculate: function () {
+    recalculate() {
 
         this._ax = (2 * this._p1x - 2 * this._p2x + this._v1x + this._v2x);
         this._ay = (2 * this._p1y - 2 * this._p2y + this._v1y + this._v2y);
@@ -142,7 +169,11 @@ Hermite.prototype = {
 
         return this;
 
-    },
+    }
+
+    getPoint(curve, t) {
+        return GetPoint(curve, t, this);
+    }
 
     /**
     * Calculate a number of points along the curve, based on `Hermite.accuracy`, and stores them in the private `_points` array.
@@ -150,7 +181,7 @@ Hermite.prototype = {
     * @method Phaser.Hermite#calculateEvenPoints
     * @return {number} The total length of the curve approximated as straight line distances between the points.
     */
-    calculateEvenPoints: function () {
+    calculateEvenPoints() {
 
         var totalLength = 0;
 
@@ -159,8 +190,7 @@ Hermite.prototype = {
 
         this._points[0] = 0;
 
-        for (var i = 1; i <= this._accuracy; i++)
-        {
+        for (var i = 1; i <= this._accuracy; i++) {
             this.getPoint(i / this._accuracy, this._temp1);
             totalLength += this._temp1.distance(this._temp2);
             this._points[i] = totalLength;
@@ -171,242 +201,181 @@ Hermite.prototype = {
 
     }
 
-};
+    get accuracy() {
+        return this._accuracy;
+    }
 
-Object.defineProperties(Hermite.prototype, {
-
-    /**
-    * @name Phaser.Hermite#accuracy
-    * @property {number} accuracy - The amount of points to pre-calculate on the curve.
-    */
-    accuracy: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._accuracy;
-        },
-
-        set: function (value)
-        {
-            if (value !== this._accuracy)
-            {
-                this._accuracy = value;
-                this.recalculate();
-            }
+    set accuracy(value) {
+        if (value !== this._accuracy) {
+            this._accuracy = value;
+            this.recalculate();
         }
-
-    },
-
+    }
     /**
     * @name Phaser.Hermite#p1x
     * @property {number} p1x - The x coordinate of the start of the curve. Setting this value will recalculate the curve.
     */
-    p1x: {
 
-        enumerable: true,
 
-        get: function () {
+    get p1x() {
 
-            return this._p1x;
+        return this._p1x;
 
-        },
+    }
 
-        set: function (value) {
+    set p1x(value) {
 
-            if (value !== this._p1x)
-            {
-                this._p1x = value;
-                this.recalculate();
-            }
-
+        if (value !== this._p1x) {
+            this._p1x = value;
+            this.recalculate();
         }
 
-    },
+    }
+
 
     /**
     * @name Phaser.Hermite#p1y
     * @property {number} p1y - The y coordinate of the start of the curve. Setting this value will recalculate the curve.
     */
-    p1y: {
+    get p1y() {
 
-        enumerable: true,
+        return this._p1y;
 
-        get: function () {
+    }
 
-            return this._p1y;
+    set p1y(value) {
 
-        },
-
-        set: function (value) {
-
-            if (value !== this._p1y)
-            {
-                this._p1y = value;
-                this.recalculate();
-            }
-
+        if (value !== this._p1y) {
+            this._p1y = value;
+            this.recalculate();
         }
 
-    },
+    }
 
     /**
     * @name Phaser.Hermite#p2x
     * @property {number} p2x - The x coordinate of the end of the curve. Setting this value will recalculate the curve.
     */
-    p2x: {
 
-        enumerable: true,
+    get p2x() {
 
-        get: function () {
+        return this._p2x;
 
-            return this._p2x;
+    }
 
-        },
+    set p2x(value) {
 
-        set: function (value) {
-
-            if (value !== this._p2x)
-            {
-                this._p2x = value;
-                this.recalculate();
-            }
-
+        if (value !== this._p2x) {
+            this._p2x = value;
+            this.recalculate();
         }
 
-    },
+    }
+
 
     /**
     * @name Phaser.Hermite#p2y
     * @property {number} p2y - The y coordinate of the end of the curve. Setting this value will recalculate the curve.
     */
-    p2y: {
 
-        enumerable: true,
+    get p2y() {
 
-        get: function () {
+        return this._p2y;
 
-            return this._p2y;
+    }
 
-        },
+    set p2y(value) {
 
-        set: function (value) {
-
-            if (value !== this._p2y)
-            {
-                this._p2y = value;
-                this.recalculate();
-            }
-
+        if (value !== this._p2y) {
+            this._p2y = value;
+            this.recalculate();
         }
 
-    },
+    }
+
+
 
     /**
     * @name Phaser.Hermite#v1x
     * @property {number} v1x - The x component of the tangent vector for the start of the curve. Setting this value will recalculate the curve.
     */
-    v1x: {
+    get v1x() {
 
-        enumerable: true,
+        return this._v1x;
 
-        get: function () {
+    }
 
-            return this._v1x;
+    set v1x(value) {
 
-        },
-
-        set: function (value) {
-
-            if (value !== this._v1x)
-            {
-                this._v1x = value;
-                this.recalculate();
-            }
-
+        if (value !== this._v1x) {
+            this._v1x = value;
+            this.recalculate();
         }
+    }
 
-    },
+
+
 
     /**
     * @name Phaser.Hermite#v1y
     * @property {number} v1y - The y component of the tangent vector for the start of the curve. Setting this value will recalculate the curve.
     */
-    v1y: {
 
-        enumerable: true,
+    get v1y() {
 
-        get: function () {
+        return this._v1y;
 
-            return this._v1y;
+    }
 
-        },
+    set v1y(value) {
 
-        set: function (value) {
-
-            if (value !== this._v1y)
-            {
-                this._v1y = value;
-                this.recalculate();
-            }
-
+        if (value !== this._v1y) {
+            this._v1y = value;
+            this.recalculate();
         }
 
-    },
+    }
 
     /**
     * @name Phaser.Hermite#v2x
     * @property {number} v2x - The x component of the tangent vector for the end of the curve. Setting this value will recalculate the curve.
     */
-    v2x: {
 
-        enumerable: true,
+    get v2x() {
 
-        get: function () {
+        return this._v2x;
 
-            return this._v2x;
+    }
 
-        },
+    set v2x(value) {
 
-        set: function (value) {
-
-            if (value !== this._v2x)
-            {
-                this._v2x = value;
-                this.recalculate();
-            }
-
+        if (value !== this._v2x) {
+            this._v2x = value;
+            this.recalculate();
         }
+    }
 
-    },
+
+
+
 
     /**
     * @name Phaser.Hermite#v2y
     * @property {number} v2y - The y component of the tangent vector for the end of the curve. Setting this value will recalculate the curve.
     */
-    v2y: {
 
-        enumerable: true,
 
-        get: function () {
+    get v2y() {
 
-            return this._v2y;
-
-        },
-
-        set: function (value) {
-
-            if (value !== this._v2y)
-            {
-                this._v2y = value;
-                this.recalculate();
-            }
-
-        }
+        return this._v2y;
 
     }
 
-});
+    set v2y(value) {
 
-module.exports = Hermite;
+        if (value !== this._v2y) {
+            this._v2y = value;
+            this.recalculate();
+        }
+    }
+}

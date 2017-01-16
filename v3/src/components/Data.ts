@@ -10,29 +10,35 @@
 *
 * @class
 */
-var Data = function (parent)
-{
-    this.parent = parent;
+export default class Data {
+    
+    private _beforeCallbacks;
+    private _afterCallbacks;
+    private _frozen: boolean;
 
-    this.list = {};
+    public parent;
+    public list;
+    
+    constructor (parent)
+    {
+        this.parent = parent;
 
-    this._beforeCallbacks = {};
-    this._afterCallbacks = {};
+        this.list = {};
 
-    this._frozen = false;
-};
+        this._beforeCallbacks = {};
+        this._afterCallbacks = {};
 
-Data.prototype.constructor = Data;
-
-Data.prototype = {
+        this._frozen = false;
+    };
+    
 
     //  Retrieves the value for the given key, or undefined if it doesn't exist.
-    get: function (key)
+    get (key)
     {
         return this.list[key];
-    },
+    }
 
-    getAll: function ()
+    getAll ()
     {
         var results = {};
 
@@ -42,9 +48,9 @@ Data.prototype = {
         }
 
         return results;
-    },
+    }
 
-    query: function (search)
+    query (search)
     {
         var results = {};
 
@@ -57,9 +63,9 @@ Data.prototype = {
         }
 
         return results;
-    },
+    }
 
-    set: function (key, data)
+    set (key, data)
     {
         if (this._frozen)
         {
@@ -98,9 +104,9 @@ Data.prototype = {
         }
 
         return this;
-    },
+    }
 
-    before: function (key, callback, scope)
+    before (key, callback, scope)
     {
         if (callback === undefined)
         {
@@ -111,9 +117,9 @@ Data.prototype = {
         {
             this._beforeCallbacks[key] = { callback: callback, scope: scope };
         }
-    },
+    }
 
-    after: function (key, callback, scope)
+    after (key, callback, scope)
     {
         if (callback === undefined)
         {
@@ -124,7 +130,7 @@ Data.prototype = {
         {
             this._afterCallbacks[key] = { callback: callback, scope: scope };
         }
-    },
+    }
 
     /**
     * Passes all data entries to the given callback. Stores the result of the callback.
@@ -134,7 +140,7 @@ Data.prototype = {
     * @param {object} [scope] - Value to use as `this` when executing callback.
     * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the game object, key, and data.
     */
-    each: function (callback, scope)
+    each (callback, scope)
     {
         var args = [ this.parent, null, undefined ];
 
@@ -150,9 +156,9 @@ Data.prototype = {
 
             callback.apply(scope, args);
         }
-    },
+    }
 
-    merge: function (data, overwrite)
+    merge (data, overwrite)
     {
         if (overwrite === undefined) { overwrite = true; }
 
@@ -164,9 +170,9 @@ Data.prototype = {
                 this.list[key] = data;
             }
         }
-    },
+    }
 
-    remove: function (key)
+    remove (key)
     {
         if (!this._frozen && this.has(key))
         {
@@ -174,9 +180,9 @@ Data.prototype = {
 
             this.removeListeners(key);
         }
-    },
+    }
 
-    removeListeners: function (key)
+    removeListeners (key)
     {
         if (this._beforeCallbacks.hasOwnProperty(key))
         {
@@ -187,10 +193,10 @@ Data.prototype = {
         {
             delete this._afterCallbacks[key];
         }
-    },
+    }
 
     //  Gets the data associated with the given 'key', deletes it from this Data store, then returns it.
-    pop: function (key)
+    pop (key)
     {
         var data = undefined;
 
@@ -204,14 +210,14 @@ Data.prototype = {
         }
 
         return data;
-    },
+    }
 
-    has: function (key)
+    has (key)
     {
         return this.list.hasOwnProperty(key);
-    },
+    }
 
-    reset: function ()
+    reset ()
     {
         for (var key in this.list)
         {
@@ -231,53 +237,29 @@ Data.prototype = {
         this._frozen = false;
     }
 
-};
-
-Object.defineProperties(Data.prototype, {
-
     /**
     * Freeze this Data component, so no changes can be written to it.
     *
     * @name freeze
     * @property {boolean} freeze
     */
-    freeze: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._frozen;
-        },
-
-        set: function (value)
-        {
-            this._frozen = (value) ? true : false;
-        }
-
-    },
-
-    count: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            var i = 0;
-
-            for (var key in this.list)
-            {
-                if (this.list[key] !== undefined)
-                {
-                    i++;
-                }
-            }
-
-            return i;
-        }
-
+    get freeze() {
+        return this._frozen;
     }
 
-});
+    set freeze(value) {
+        this._frozen = (value) ? true : false;
+    }
 
-module.exports = Data;
+    get count() {
+        var i = 0;
+
+        for (var key in this.list) {
+            if (this.list[key] !== undefined) {
+                i++;
+            }
+        }
+
+        return i;
+    }
+}

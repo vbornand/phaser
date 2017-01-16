@@ -1,5 +1,4 @@
-
-var GetAABB = function (polygon)
+export default function (polygon)
 {
     var minX = Infinity;
     var minY = Infinity;
@@ -23,6 +22,4 @@ var GetAABB = function (polygon)
         width: maxX - minX,
         height: maxY - minY
     };
-};
-
-module.exports = GetAABB;
+}

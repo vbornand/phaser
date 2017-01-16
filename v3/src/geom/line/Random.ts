@@ -1,6 +1,6 @@
-var Point = require('../point/Point');
+import Point from '../point';
 
-var Random = function (line, out)
+export default function (line, out)
 {
     if (out === undefined) { out = new Point(); }
 
@@ -10,6 +10,4 @@ var Random = function (line, out)
     out.y = line.y1 + t * (line.y2 - line.y1);
 
     return out;
-};
-
-module.exports = Random;
+}

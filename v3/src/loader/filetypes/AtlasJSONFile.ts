@@ -1,5 +1,6 @@
-var ImageFile = require('./ImageFile.js');
-var JSONFile = require('./JSONFile.js');
+import ImageFile from './ImageFile';
+import JSONFile from './JSONFile';
+
 
 var AtlasJSONFile = function (key, textureURL, atlasURL, path, textureXhrSettings, atlasXhrSettings)
 {
@@ -17,4 +18,4 @@ var AtlasJSONFile = function (key, textureURL, atlasURL, path, textureXhrSetting
     return { texture: image, data: data };
 };
 
-module.exports = AtlasJSONFile;
+export default AtlasJSONFile;

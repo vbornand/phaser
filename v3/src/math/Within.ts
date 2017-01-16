@@ -8,9 +8,7 @@
 * @return {boolean} True if a is <= tolerance of b.
 * @see {@link Phaser.Math.fuzzyEqual}
 */
-var Within = function (a, b, tolerance)
+export default function (a, b, tolerance)
 {
     return (Math.abs(a - b) <= tolerance);
 };
-
-module.exports = Within;

@@ -1,4 +1,4 @@
-var CONST = require('../../../const');
+import * as CONST from '../../../const';
 
 var CreateEmptyTexture = function (gl, width, height, scaleMode, textureIndex)
 {
@@ -20,4 +20,4 @@ var CreateEmptyTexture = function (gl, width, height, scaleMode, textureIndex)
     return texture;
 };
 
-module.exports = CreateEmptyTexture;
+export default CreateEmptyTexture;

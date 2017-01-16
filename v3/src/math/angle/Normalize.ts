@@ -1,4 +1,4 @@
-var Normalize = function (angle)
+export default function (angle)
 {
     angle = angle % (2 * Math.PI);
 
@@ -11,5 +11,3 @@ var Normalize = function (angle)
         return angle + 2 * Math.PI;
     }
 };
-
-module.exports = Normalize;

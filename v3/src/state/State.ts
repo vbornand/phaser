@@ -4,8 +4,9 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var Settings = require('./Settings');
-var Systems = require('./Systems');
+import Settings from './Settings';
+import Systems from './Systems';
+import Loader from './systems/loader';
 
 /**
 * A Base State Class.
@@ -13,10 +14,19 @@ var Systems = require('./Systems');
 * @class Phaser.State
 * @constructor
 */
-var State = function (config)
+export default class State
 {
-    //  The properties a State *must* have, that cannot be changed without breaking it:
 
+  public game;
+  public settings;
+  public sys;
+  public children;
+
+  public load: Loader;
+
+
+  constructor(config)
+  {
     this.game = null;
 
     //  Maybe just an object? Doesn't have to instantiate I don't think ...
@@ -26,32 +36,24 @@ var State = function (config)
 
     //  Reference to sys.children, set during sys.init only
     this.children;
-};
+  }
 
-State.prototype.constructor = State;
-
-State.prototype = {
-
-    //  Can be overridden by your own States
-    preUpdate: function ()
-    {
-    },
-
-    //  Can be overridden by your own States
-    update: function ()
-    {
-    },
-
-    //  Can be overridden by your own States
-    postUpdate: function ()
-    {
-    },
-
-    //  Can be overridden by your own States
-    render: function ()
+   preUpdate()
     {
     }
 
-};
+    //  Can be overridden by your own States
+    update()
+    {
+    }
 
-module.exports = State;
+    //  Can be overridden by your own States
+    postUpdate()
+    {
+    }
+
+    //  Can be overridden by your own States
+    render()
+    {
+    }
+}

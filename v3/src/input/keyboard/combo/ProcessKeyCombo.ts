@@ -1,6 +1,6 @@
-var AdvanceKeyCombo = require('./AdvanceKeyCombo');
+import AdvanceKeyCombo from './AdvanceKeyCombo';
 
-var ProcessKeyCombo = function (event, combo)
+export default function (event, combo)
 {
     if (combo.matched)
     {
@@ -53,5 +53,3 @@ var ProcessKeyCombo = function (event, combo)
 
     return comboMatched;
 };
-
-module.exports = ProcessKeyCombo;

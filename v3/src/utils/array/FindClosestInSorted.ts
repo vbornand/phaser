@@ -7,7 +7,7 @@
 * @param {number[]} arr - The input array which _must_ be sorted.
 * @return {number} The nearest value found.
 */
-var FindClosestInSorted = function (value, array)
+export default function (value, array)
 {
     if (!array.length)
     {
@@ -30,5 +30,3 @@ var FindClosestInSorted = function (value, array)
 
     return ((high - value) <= (value - low)) ? high : low;
 };
-
-module.exports = FindClosestInSorted;

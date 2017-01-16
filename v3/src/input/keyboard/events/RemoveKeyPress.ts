@@ -1,8 +1,6 @@
-var RemoveEventListener = require('../../../dom/RemoveEventListener');
+import RemoveEventListener from '../../../dom/RemoveEventListener';
 
-var RemoveKeyPress = function (target, listener)
+export default function (target, listener)
 {
     RemoveEventListener(target, 'keypress', listener);
 };
-
-module.exports = RemoveKeyPress;

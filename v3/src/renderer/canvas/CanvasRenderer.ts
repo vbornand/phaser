@@ -1,75 +1,91 @@
-var BatchManager = require('./BatchManager');
+import BatchManager from './BatchManager';
 
-var CanvasRenderer = function (game)
-{
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    */
-    //  Needed?
-    this.game = game;
+export default class CanvasRenderer {
 
-    // this.type = CONST.CANVAS;
+    game;
+    clearBeforeRender;
+    transparent;
+    autoResize;
+    preserveDrawingBuffer;
+    width;
+    height;
+    resolution;
+    view;
+    context;
+    batch
+    roundPixels;
+    currentAlpha;
+    currentBlendMode;
+    currentScaleMode;
+    startTime;
+    endTime;
+    drawCount;
+    blendModes;
 
-    //  Read all the following from game config
-    this.clearBeforeRender = true;
+    constructor(game) {
+        /**
+        * @property {Phaser.Game} game - A reference to the currently running Game.
+        */
+        //  Needed?
+        this.game = game;
 
-    this.transparent = false;
+        // this.type = CONST.CANVAS;
 
-    this.autoResize = false;
+        //  Read all the following from game config
+        this.clearBeforeRender = true;
 
-    this.preserveDrawingBuffer = false;
+        this.transparent = false;
 
-    this.width = game.config.width * game.config.resolution;
+        this.autoResize = false;
 
-    this.height = game.config.height * game.config.resolution;
+        this.preserveDrawingBuffer = false;
 
-    this.resolution = game.config.resolution;
+        this.width = game.config.width * game.config.resolution;
 
-    this.view = game.canvas;
+        this.height = game.config.height * game.config.resolution;
 
-    /**
-     * The canvas 2d context that everything is drawn with
-     * @property context
-     * @type CanvasRenderingContext2D
-     */
-    this.context = this.view.getContext('2d', { alpha: true });
+        this.resolution = game.config.resolution;
 
-    // this.smoothProperty = Phaser.Canvas.getSmoothingPrefix(this.context);
+        this.view = game.canvas;
 
-    this.roundPixels = false;
+        /**
+         * The canvas 2d context that everything is drawn with
+         * @property context
+         * @type CanvasRenderingContext2D
+         */
+        this.context = this.view.getContext('2d', { alpha: true });
 
-    this.batch = new BatchManager(this, 4000);
+        // this.smoothProperty = Phaser.Canvas.getSmoothingPrefix(this.context);
 
-    // var so = 'source-over';
-    // this.blendModes = [ so, 'lighter', so, so, so, so, so, so, so, so, so, so, so, so, so, so, so ];
+        this.roundPixels = false;
 
-    this.currentAlpha = 1;
-    this.currentBlendMode = 0;
-    this.currentScaleMode = 0;
+        this.batch = new BatchManager(this, 4000);
 
-    this.startTime = 0;
-    this.endTime = 0;
-    this.drawCount = 0;
+        // var so = 'source-over';
+        // this.blendModes = [ so, 'lighter', so, so, so, so, so, so, so, so, so, so, so, so, so, so, so ];
 
-    this.blendModes = [];
+        this.currentAlpha = 1;
+        this.currentBlendMode = 0;
+        this.currentScaleMode = 0;
 
-    // this.tintMethod = this.tintWithPerPixel;
+        this.startTime = 0;
+        this.endTime = 0;
+        this.drawCount = 0;
 
-    this.init();
-};
+        this.blendModes = [];
 
-CanvasRenderer.prototype.constructor = CanvasRenderer;
+        // this.tintMethod = this.tintWithPerPixel;
 
-CanvasRenderer.prototype = {
+        this.init();
+    }
 
-    init: function ()
-    {
+    init() {
         this.mapBlendModes();
 
         this.batch.init();
 
         this.resize(this.width, this.height);
-    },
+    }
 
     /**
      * Maps Blend modes to Canvas blend modes.
@@ -77,8 +93,7 @@ CanvasRenderer.prototype = {
      * @method mapBlendModes
      * @private
      */
-    mapBlendModes: function ()
-    {
+    mapBlendModes() {
         // var modes = Phaser.blendModes;
 
         // this.blendModes[modes.MULTIPLY] = 'multiply';
@@ -96,10 +111,9 @@ CanvasRenderer.prototype = {
         // this.blendModes[modes.SATURATION] = 'saturation';
         // this.blendModes[modes.COLOR] = 'color';
         // this.blendModes[modes.LUMINOSITY] = 'luminosity';
-    },
+    }
 
-    resize: function (width, height)
-    {
+    resize(width, height) {
         var res = this.game.config.resolution;
 
         this.width = width * res;
@@ -108,8 +122,7 @@ CanvasRenderer.prototype = {
         this.view.width = this.width;
         this.view.height = this.height;
 
-        if (this.autoResize)
-        {
+        if (this.autoResize) {
             this.view.style.width = (this.width / res) + 'px';
             this.view.style.height = (this.height / res) + 'px';
         }
@@ -118,7 +131,7 @@ CanvasRenderer.prototype = {
         // {
         //     this.context[this.smoothProperty] = (this.scaleMode === Phaser.scaleModes.LINEAR);
         // }
-    },
+    }
 
     /**
      * Renders the State.
@@ -129,8 +142,7 @@ CanvasRenderer.prototype = {
      *   by the amount of time that will be simulated the next time update()
      *   runs. Useful for interpolating frames.
      */
-    render: function (state, interpolationPercentage)
-    {
+    render(state, interpolationPercentage) {
         // console.log('%c render start ', 'color: #ffffff; background: #00ff00;');
 
         //  Add Pre-render hook
@@ -143,13 +155,11 @@ CanvasRenderer.prototype = {
 
         //  If the alpha or blend mode didn't change since the last render, then don't set them again (saves 2 ops)
 
-        if (this.currentAlpha !== 1)
-        {
+        if (this.currentAlpha !== 1) {
             this.context.globalAlpha = 1;
         }
 
-        if (this.currentBlendMode !== 0)
-        {
+        if (this.currentBlendMode !== 0) {
             this.context.globalCompositeOperation = 'source-over';
         }
 
@@ -157,8 +167,7 @@ CanvasRenderer.prototype = {
         this.currentScaleMode = 0;
         this.currentAlpha = 1;
 
-        if (this.clearBeforeRender)
-        {
+        if (this.clearBeforeRender) {
             this.context.clearRect(0, 0, this.width, this.height);
         }
 
@@ -176,7 +185,7 @@ CanvasRenderer.prototype = {
         // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');
 
         //  Add Post-render hook
-    },
+    }
 
     /**
      * Removes everything from the renderer and optionally removes the Canvas DOM element.
@@ -184,14 +193,10 @@ CanvasRenderer.prototype = {
      * @method destroy
      * @param [removeView=true] {boolean} Removes the Canvas element from the DOM.
      */
-    destroy: function ()
-    {
+    destroy() {
         //  CanvasPool
 
         this.view = null;
         this.context = null;
     }
-
-};
-
-module.exports = CanvasRenderer;
+}

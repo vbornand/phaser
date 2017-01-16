@@ -1,4 +1,4 @@
-var CeilTo = function (value, place, base)
+export default function (value, place, base)
 {
     if (place === undefined) { place = 0; }
     if (base === undefined) { base = 10; }
@@ -7,5 +7,3 @@ var CeilTo = function (value, place, base)
 
     return Math.ceil(value * p) / p;
 };
-
-module.exports = CeilTo;

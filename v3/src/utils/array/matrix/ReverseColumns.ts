@@ -1,4 +1,4 @@
-var ReverseColumns = function (matrix)
+export default function (matrix)
 {
     for (var i = 0; i < matrix.length; i++)
     {
@@ -7,5 +7,3 @@ var ReverseColumns = function (matrix)
 
     return matrix;
 };
-
-module.exports = ReverseColumns;

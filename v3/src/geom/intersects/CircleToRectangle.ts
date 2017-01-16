@@ -1,4 +1,4 @@
-var CircleToRectangle = function (circle, rect)
+export default function (circle, rect)
 {
     var halfWidth = rect.width / 2;
     var halfHeight = rect.height / 2;
@@ -26,6 +26,4 @@ var CircleToRectangle = function (circle, rect)
     var maxCornerDistSq = circle.radius * circle.radius;
 
     return (xCornerDistSq + yCornerDistSq <= maxCornerDistSq);
-};
-
-module.exports = CircleToRectangle;
+}

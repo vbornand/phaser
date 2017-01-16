@@ -1,24 +1,39 @@
-var Polygon = function (points)
+import Clone from './Clone';
+import Contains from './Contains';
+import ContainsPoint from './ContainsPoint';
+import GetAABB from './GetAABB';
+import GetNumberArray from './GetNumberArray';
+import Reverse from './Reverse';
+
+export default class Polygon
 {
-    /**
-    * @property {number} area - The area of this Polygon.
-    */
-    this.area = 0;
+    public static Clone = Clone;
+    public static Contains = Contains;
+    public static ContainsPoint = ContainsPoint;
+    public static GetAABB = GetAABB;
+    public static GetNumberArray = GetNumberArray;
+    public static Reverse = Reverse;
 
-    /**
-    * @property {array} points - An array of number pair objects that make up this polygon. I.e. [ {x,y}, {x,y}, {x,y} ]
-    */
-    this.points = [];
+    area;
+    points;
 
-    if (points)
+    constructor (points)
     {
-        this.setTo(points);
+        /**
+        * @property {number} area - The area of this Polygon.
+        */
+        this.area = 0;
+
+        /**
+        * @property {array} points - An array of number pair objects that make up this polygon. I.e. [ {x,y}, {x,y}, {x,y} ]
+        */
+        this.points = [];
+
+        if (points)
+        {
+            this.setTo(points);
+        }
     }
-};
-
-Polygon.prototype.constructor = Polygon;
-
-Polygon.prototype = {
 
     /**
      * Sets this Polygon to the given points.
@@ -36,7 +51,7 @@ Polygon.prototype = {
      * @param {Phaser.Point[]|number[]|...Phaser.Point|...number} points - The points to set.
      * @return {Phaser.Polygon} This Polygon object
      */
-    setTo: function (points)
+    setTo (points)
     {
         this.area = 0;
         this.points = [];
@@ -85,7 +100,7 @@ Polygon.prototype = {
         this.calculateArea(y0);
 
         return this;
-    },
+    }
 
     /**
      * Calculates the area of the Polygon. This is available in the property Polygon.area
@@ -95,7 +110,7 @@ Polygon.prototype = {
      * @param {number} y0 - The lowest boundary
      * @return {number} The area of the Polygon.
      */
-    calculateArea: function (y0)
+    calculateArea (y0)
     {
         if (this.points.length < 3)
         {
@@ -148,7 +163,4 @@ Polygon.prototype = {
 
         return this.area;
     }
-
-};
-
-module.exports = Polygon;
+}

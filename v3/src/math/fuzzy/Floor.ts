@@ -1,8 +1,7 @@
-var Floor = function (a, b, epsilon)
+
+export default function (value, epsilon)
 {
     if (epsilon === undefined) { epsilon = 0.0001; }
 
     return Math.floor(value + epsilon);
 };
-
-module.exports = Floor;

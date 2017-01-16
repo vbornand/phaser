@@ -1,6 +1,7 @@
-var CanvasPool = require('./CanvasPool');
+import CanvasPool from './CanvasPool';
 
-var Smoothing = {
+export class Smoothing
+{
 
     /**
     * Gets the Smoothing Enabled vendor prefix being used on the given context, or null if not set.
@@ -10,7 +11,7 @@ var Smoothing = {
     * @param {CanvasRenderingContext2D} context - The context to enable or disable the image smoothing on.
     * @return {string|null} Returns the smoothingEnabled vendor prefix, or null if not set on the context.
     */
-    prefix: (function ()
+    static prefix = (function ()
     {
         var canvas = CanvasPool.create(this, 1, 1);
         var ctx = canvas.getContext('2d');
@@ -32,7 +33,7 @@ var Smoothing = {
 
         return null;
 
-    })(),
+    })()
 
     /**
     * Sets the Image Smoothing property on the given context. Set to false to disable image smoothing.
@@ -46,7 +47,7 @@ var Smoothing = {
     * @param {boolean} value - If set to true it will enable image smoothing, false will disable it.
     * @return {CanvasRenderingContext2D} Returns the source context.
     */
-    enable: function (context, value)
+    enable (context, value)
     {
         if (Smoothing.prefix)
         {
@@ -54,7 +55,7 @@ var Smoothing = {
         }
 
         return context;
-    },
+    }
 
     /**
      * Returns `true` if the given context has image smoothing enabled, otherwise returns `false`.
@@ -64,11 +65,10 @@ var Smoothing = {
      * @param {CanvasRenderingContext2D} context - The context to check for smoothing on.
      * @return {boolean} True if the given context has image smoothing enabled, otherwise false.
      */
-    isEnabled: function (context)
+    isEnabled (context)
     {
         return (Smoothing.prefix !== null) ? context[Smoothing.prefix] : null;
     }
+}
 
-};
-
-module.exports = Smoothing();
+export default new Smoothing();

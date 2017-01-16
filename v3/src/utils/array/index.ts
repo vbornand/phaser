@@ -1,13 +1,9 @@
-module.exports = {
-
-    FindClosestInSorted: require('./FindClosestInSorted'),
-    GetRandomElement: require('./GetRandomElement'),
-    NumberArray: require('./NumberArray'),
-    NumberArrayStep: require('./NumberArrayStep'),
-    RemoveRandomElement: require('./RemoveRandomElement'),
-    RotateLeft: require('./RotateLeft'),
-    RotateRight: require('./RotateRight'),
-    Shuffle: require('./Shuffle'),
-    SpliceOne: require('./SpliceOne')
-
-};
+export { default as FindClosestInSorted } from './FindClosestInSorted';
+export { default as GetRandomElement } from './GetRandomElement';
+export { default as NumberArray } from './NumberArray';
+export { default as NumberArrayStep } from './NumberArrayStep';
+export { default as RemoveRandomElement } from './RemoveRandomElement';
+export { default as RotateLeft } from './RotateLeft';
+export { default as RotateRight } from './RotateRight';
+export { default as Shuffle } from './Shuffle';
+export { default as SpliceOne } from './SpliceOne';

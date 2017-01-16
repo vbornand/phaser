@@ -4,103 +4,125 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var MATH_CONST = require('../math/const');
-var WrapAngle = require('../math/angle/Wrap');
+import * as MATH_CONST from '../math/const';
+import WrapAngle from '../math/angle/Wrap';
 
 /**
 * 2D Transformation Component.
 *
 * @class
 */
-var Transform = function (gameObject, x, y, scaleX, scaleY)
-{
-    if (x === undefined) { x = 0; }
-    if (y === undefined) { y = 0; }
-    if (scaleX === undefined) { scaleX = 1; }
-    if (scaleY === undefined) { scaleY = 1; }
+export default class Transform {
 
-    this.gameObject = gameObject;
+    gameObject;
+    game;
+    state;
+    world;
+    old;
+    cache;
+    glVertextData;
+    canvasData;
+    immediate;
+    interpolate;
+    hasLocalRotation;
+    private _posX;
+    private _posY;
+    private _scaleX;
+    private _scaleY;
+    private _rotation;
+    private _pivotX;
+    private _pivotY;
+    private _anchorX;
+    private _anchorY;
+    private _worldRotation;
+    private _worldScaleX;
+    private _worldScaleY;
+    private _dirty;
+    private _dirtyVertex;
+    parent;
+    children;
 
-    this.state = (gameObject.state) ? gameObject.state : gameObject.parent.state;
 
-    this.game = this.state.game;
+    constructor(gameObject, x?, y?, scaleX?, scaleY?) {
+        if (x === undefined) { x = 0; }
+        if (y === undefined) { y = 0; }
+        if (scaleX === undefined) { scaleX = 1; }
+        if (scaleY === undefined) { scaleY = 1; }
 
-    //  a = scale X
-    //  b = shear Y
-    //  c = shear X
-    //  d = scale Y
-    //  tx / ty = translation
+        this.gameObject = gameObject;
 
-    //  World Transform
-    this.world = { a: scaleX, b: 0, c: 0, d: scaleY, tx: x, ty: y };
+        this.state = (gameObject.state) ? gameObject.state : gameObject.parent.state;
 
-    //  Previous Transform (used for interpolation)
-    this.old = { a: scaleX, b: 0, c: 0, d: scaleY, tx: x, ty: y };
+        this.game = this.state.game;
 
-    //  Cached Transform Calculations
-    this.cache = { a: 1, b: 0, c: 0, d: 1, sr: 0, cr: 0 };
+        //  a = scale X
+        //  b = shear Y
+        //  c = shear X
+        //  d = scale Y
+        //  tx / ty = translation
 
-    //  GL Vertex Data
-    this.glVertextData = { x0: 0, y0: 0, x1: 0, y1: 0, x2: 0, y2: 0, x3: 0, y3: 0 };
+        //  World Transform
+        this.world = { a: scaleX, b: 0, c: 0, d: scaleY, tx: x, ty: y };
 
-    //  Canvas SetTransform Data
-    this.canvasData = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
+        //  Previous Transform (used for interpolation)
+        this.old = { a: scaleX, b: 0, c: 0, d: scaleY, tx: x, ty: y };
 
-    this.immediate = false;
+        //  Cached Transform Calculations
+        this.cache = { a: 1, b: 0, c: 0, d: 1, sr: 0, cr: 0 };
 
-    this.interpolate = false;
+        //  GL Vertex Data
+        this.glVertextData = { x0: 0, y0: 0, x1: 0, y1: 0, x2: 0, y2: 0, x3: 0, y3: 0 };
 
-    this.hasLocalRotation = false;
+        //  Canvas SetTransform Data
+        this.canvasData = { a: 1, b: 0, c: 0, d: 1, tx: 0, ty: 0 };
 
-    //  Private value holders, accessed via the getters and setters
-    this._posX = x;
-    this._posY = y;
-    this._scaleX = scaleX;
-    this._scaleY = scaleY;
-    this._rotation = 0;
-    this._pivotX = 0;
-    this._pivotY = 0;
-    this._anchorX = 0;
-    this._anchorY = 0;
+        this.immediate = false;
 
-    this._worldRotation = 0;
-    this._worldScaleX = scaleX;
-    this._worldScaleY = scaleY;
+        this.interpolate = false;
 
-    this._dirty = true;
-    this._dirtyVertex = true;
+        this.hasLocalRotation = false;
 
-    this.state.sys.updates.add(this);
+        //  Private value holders, accessed via the getters and setters
+        this._posX = x;
+        this._posY = y;
+        this._scaleX = scaleX;
+        this._scaleY = scaleY;
+        this._rotation = 0;
+        this._pivotX = 0;
+        this._pivotY = 0;
+        this._anchorX = 0;
+        this._anchorY = 0;
 
-    //  The parent Transform (NOT the parent GameObject, although very often they are related)
-    this.parent = null;
+        this._worldRotation = 0;
+        this._worldScaleX = scaleX;
+        this._worldScaleY = scaleY;
 
-    //  Any child Transforms of this one - note that they don't have to belong to Game Objects
-    //  that are children of the owner of this Transform
-    this.children = [];
-};
+        this._dirty = true;
+        this._dirtyVertex = true;
 
-Transform.prototype.constructor = Transform;
+        this.state.sys.updates.add(this);
 
-Transform.prototype = {
+        //  The parent Transform (NOT the parent GameObject, although very often they are related)
+        this.parent = null;
 
-    add: function (child)
-    {
+        //  Any child Transforms of this one - note that they don't have to belong to Game Objects
+        //  that are children of the owner of this Transform
+        this.children = [];
+    }
+
+    add(child) {
         return this.addAt(child, this.children.length);
-    },
+    }
 
-    addAt: function (child, index)
-    {
+    addAt(child, index) {
         //  Invalid child?
-        if (child === this || child.parent === this || index < 0 || index > this.children.length)
-        {
+        if (child === this || child.parent === this || index < 0 || index > this.children.length) {
             console.log('Invalid child');
             return child;
         }
 
         //  Child already parented? Remove it
-        if (child.parent)
-        {
+        if (child.parent) {
             child.parent.remove(child);
         }
 
@@ -113,49 +135,41 @@ Transform.prototype = {
         this.updateAncestors();
 
         return child;
-    },
+    }
 
-    remove: function (child)
-    {
+    remove(child) {
         //  Invalid child?
-        if (child === this || child.parent !== this)
-        {
+        if (child === this || child.parent !== this) {
             return child;
         }
 
         var index = this.children.indexOf(child);
 
-        if (index !== -1)
-        {
+        if (index !== -1) {
             return this.removeAt(index);
         }
-    },
+    }
 
-    removeAt: function (index)
-    {
+    removeAt(index) {
         //  Valid index?
-        if (index >= 0 && index < this.children.length)
-        {
+        if (index >= 0 && index < this.children.length) {
             var child = this.children.splice(index, 1);
 
-            if (child[0])
-            {
+            if (child[0]) {
                 child[0].parent = null;
 
                 return child[0];
             }
         }
-    },
+    }
 
-    enableInterpolation: function ()
-    {
+    enableInterpolation() {
         this.interpolate = true;
 
         this.syncInterpolation();
-    },
+    }
 
-    syncInterpolation: function ()
-    {
+    syncInterpolation() {
         this._dirty = true;
 
         this.update();
@@ -169,25 +183,22 @@ Transform.prototype = {
         old.d = world.d;
         old.tx = world.tx;
         old.ty = world.ty;
-    },
+    }
 
-    disableInterpolation: function ()
-    {
+    disableInterpolation() {
         this.interpolate = false;
-    },
+    }
 
-    setPosition: function (x, y)
-    {
+    setPosition(x, y) {
         if (y === undefined) { y = x; }
 
         this._posX = x;
         this._posY = y;
 
         return this.update();
-    },
+    }
 
-    setScale: function (x, y)
-    {
+    setScale(x, y) {
         if (y === undefined) { y = x; }
 
         this._scaleX = x;
@@ -195,39 +206,33 @@ Transform.prototype = {
         this.updateCache();
 
         return this.update();
-    },
+    }
 
-    setPivot: function (x, y)
-    {
+    setPivot(x, y) {
         if (y === undefined) { y = x; }
 
         this._pivotX = x;
         this._pivotY = y;
 
         return this.update();
-    },
+    }
 
-    setAnchor: function (x, y)
-    {
-        if (y === undefined) { y = x; }
-
+    setAnchor(x, y = x) {
         this._anchorX = x;
         this._anchorY = y;
 
         this.dirty = true;
-    },
+    }
 
-    setRotation: function (rotation)
-    {
+    setRotation(rotation) {
         this.rotation = rotation;
 
         return this.update();
-    },
+    }
 
     //  Updates the Transform.world object, ready for rendering
     //  Assuming this Transform is a root node (i.e. no transform parent)
-    updateFromRoot: function ()
-    {
+    updateFromRoot() {
         var old = this.old;
         var world = this.world;
 
@@ -238,8 +243,7 @@ Transform.prototype = {
         old.tx = world.tx;
         old.ty = world.ty;
 
-        if (this.hasLocalRotation)
-        {
+        if (this.hasLocalRotation) {
             // console.log(this.name, 'Transform.updateFromRoot');
 
             world.a = this.cache.a;
@@ -251,8 +255,7 @@ Transform.prototype = {
 
             this._worldRotation = Math.atan2(-this.cache.c, this.cache.d);
         }
-        else
-        {
+        else {
             // console.log(this.name, 'Transform.updateFromRoot FAST');
 
             world.a = this._scaleX;
@@ -269,10 +272,9 @@ Transform.prototype = {
         this._worldScaleY = this._scaleY;
 
         return this;
-    },
+    }
 
-    updateFromParent: function ()
-    {
+    updateFromParent() {
         var old = this.old;
         var world = this.world;
 
@@ -287,8 +289,7 @@ Transform.prototype = {
         var tx = 0;
         var ty = 0;
 
-        if (this.hasLocalRotation)
-        {
+        if (this.hasLocalRotation) {
             // console.log(this.name, 'Transform.updateFromParent', this.parent.name);
 
             var a = this.cache.a;
@@ -304,8 +305,7 @@ Transform.prototype = {
             world.c = (c * parent.a) + (d * parent.c);
             world.d = (c * parent.b) + (d * parent.d);
         }
-        else
-        {
+        else {
             // console.log(this.name, 'Transform.updateFromParent FAST', this.parent.name);
 
             tx = this._posX - (this._pivotX * this._scaleX);
@@ -326,15 +326,13 @@ Transform.prototype = {
         this._worldScaleY = this._scaleY * Math.sqrt((world.b * world.b) + (world.d * world.d));
 
         return this;
-    },
+    }
 
-    updateAncestors: function ()
-    {
+    updateAncestors() {
         // console.log(this.name, 'Transform.updateAncestors');
 
         //  No parent? Then just update the children and leave, our job is done
-        if (!this.parent)
-        {
+        if (!this.parent) {
             // console.log(this.name, 'updateAncestors has no parent Transform');
 
             this.updateFromRoot();
@@ -355,8 +353,7 @@ Transform.prototype = {
         var node = this.parent;
         var nodes = [];
 
-        do
-        {
+        do {
             nodes.push(node);
             node = node.parent;
         }
@@ -364,16 +361,13 @@ Transform.prototype = {
 
         //  We've got all the ancestors in the 'nodes' array, let's loop it
 
-        while (nodes.length)
-        {
+        while (nodes.length) {
             node = nodes.pop();
 
-            if (node.parent)
-            {
+            if (node.parent) {
                 node.updateFromParent();
             }
-            else
-            {
+            else {
                 node.updateFromRoot();
             }
         }
@@ -383,40 +377,33 @@ Transform.prototype = {
         //  and any of its children too
 
         this.update();
-    },
+    }
 
-    updateChildren: function ()
-    {
+    updateChildren() {
         // console.log(this.name, 'Transform.updateChildren');
 
-        for (var i = 0; i < this.children.length; i++)
-        {
+        for (var i = 0; i < this.children.length; i++) {
             this.children[i].update();
         }
-    },
+    }
 
-    updateFromDirtyParent: function ()
-    {
+    updateFromDirtyParent() {
         // console.log(this.name, 'is updateFromDirtyParent', this.parent.name);
 
         this.updateFromParent();
 
-        if (this.children.length)
-        {
-            for (var i = 0; i < this.children.length; i++)
-            {
+        if (this.children.length) {
+            for (var i = 0; i < this.children.length; i++) {
                 this.children[i].updateFromDirtyParent();
             }
         }
 
         this._dirty = false;
         this._dirtyVertex = true;
-    },
+    }
 
-    update: function ()
-    {
-        if (!this._dirty)
-        {
+    update() {
+        if (!this._dirty) {
             return;
         }
 
@@ -424,41 +411,34 @@ Transform.prototype = {
         //  so we need to update it from its parent
         //  and then force the update to all children
 
-        if (this.parent)
-        {
+        if (this.parent) {
             this.updateFromParent();
         }
-        else
-        {
+        else {
             this.updateFromRoot();
         }
 
         var len = this.children.length;
 
-        if (len)
-        {
-            for (var i = 0; i < len; i++)
-            {
+        if (len) {
+            for (var i = 0; i < len; i++) {
                 this.children[i].updateFromDirtyParent();
             }
         }
 
         this._dirty = false;
         this._dirtyVertex = true;
-    },
+    }
 
-    updateCache: function ()
-    {
+    updateCache() {
         this.cache.a = this.cache.cr * this._scaleX;
         this.cache.b = this.cache.sr * this._scaleX;
         this.cache.c = -this.cache.sr * this._scaleY;
         this.cache.d = this.cache.cr * this._scaleY;
-    },
+    }
 
-    updateVertexData: function (interpolationPercentage)
-    {
-        if (!this.gameObject.frame || (!this._dirtyVertex && !this.interpolate))
-        {
+    updateVertexData(interpolationPercentage) {
+        if (!this.gameObject.frame || (!this._dirtyVertex && !this.interpolate)) {
             return;
         }
 
@@ -469,8 +449,7 @@ Transform.prototype = {
         var w1;
         var h1;
 
-        if (frame.data.trim)
-        {
+        if (frame.data.trim) {
             //  If the sprite is trimmed, add the extra space before transforming
             w1 = frame.x - (this._anchorX * frame.width);
             w0 = w1 + frame.cutWidth;
@@ -478,8 +457,7 @@ Transform.prototype = {
             h1 = frame.y - (this._anchorY * frame.height);
             h0 = h1 + frame.cutHeight;
         }
-        else
-        {
+        else {
             w0 = frame.cutWidth * (1 - this._anchorX);
             w1 = frame.cutWidth * -this._anchorX;
 
@@ -498,8 +476,7 @@ Transform.prototype = {
         var tx = wt.tx;
         var ty = wt.ty;
 
-        if (this.interpolate)
-        {
+        if (this.interpolate) {
             var old = this.old;
 
             // Interpolate with the last position to reduce stuttering.
@@ -511,8 +488,7 @@ Transform.prototype = {
             ty = old.ty + ((ty - old.ty) * interpolationPercentage);
         }
 
-        if (frame.rotated)
-        {
+        if (frame.rotated) {
             // var cw = frame.cutWidth;
             var ch = frame.height;
             var a0 = a;
@@ -525,7 +501,7 @@ Transform.prototype = {
             //  Offset before rotating
             tx = (wt.c * ch) + tx;
             ty = (wt.d * ch) + ty;
-            
+
             //  Rotate matrix by 90 degrees with precalc values for sine and cosine of rad(90)
             a = (a0 * 6.123233995736766e-17) + -c0;
             b = (b0 * 6.123233995736766e-17) + -d0;
@@ -542,8 +518,7 @@ Transform.prototype = {
             h1 = _w1;
         }
 
-        if (frame.autoRound === 1 || (frame.autoRound === -1 && this.game.renderer.roundPixels))
-        {
+        if (frame.autoRound === 1 || (frame.autoRound === -1 && this.game.renderer.roundPixels)) {
             tx |= 0;
             ty |= 0;
         }
@@ -565,24 +540,21 @@ Transform.prototype = {
         //  Bottom Left Vert
         vert.x3 = (a * w1) + (c * h0) + tx;
         vert.y3 = (d * h0) + (b * w1) + ty;
-        
-        return vert;
-    },
 
-    getVertexData: function (interpolationPercentage)
-    {
-        if (this.interpolate || this._dirtyVertex)
-        {
+        return vert;
+    }
+
+    getVertexData(interpolationPercentage) {
+        if (this.interpolate || this._dirtyVertex) {
             this.updateVertexData(interpolationPercentage);
 
             this._dirtyVertex = false;
         }
 
         return this.glVertextData;
-    },
+    }
 
-    cloneVertexData: function ()
-    {
+    cloneVertexData() {
         var src = this.glVertextData;
 
         return {
@@ -595,15 +567,13 @@ Transform.prototype = {
             x3: src.x3,
             y3: src.y3
         };
-    },
+    }
 
-    getCanvasTransformData: function (interpolationPercentage)
-    {
+    getCanvasTransformData(interpolationPercentage) {
         var world = this.world;
         var data = this.canvasData;
 
-        if (this.interpolate)
-        {
+        if (this.interpolate) {
             var old = this.old;
 
             // Interpolate with the last position to reduce stuttering.
@@ -614,8 +584,7 @@ Transform.prototype = {
             data.tx = old.tx + ((world.tx - old.tx) * interpolationPercentage);
             data.ty = old.ty + ((world.ty - old.ty) * interpolationPercentage);
         }
-        else
-        {
+        else {
             //  Copy over the values to the canvasData object, in case the renderer needs to adjust them
             data.a = world.a;
             data.b = world.b;
@@ -628,356 +597,203 @@ Transform.prototype = {
         return data;
     }
 
-};
-
-Object.defineProperties(Transform.prototype, {
-
     //  Transform getters / setters
 
-    x: {
+    get x() {
+        return this._posX;
+    }
 
-        enumerable: true,
+    set x(value) {
+        this._posX = value;
+        this.dirty = true;
+    }
 
-        get: function ()
-        {
-            return this._posX;
-        },
 
-        set: function (value)
-        {
-            this._posX = value;
-            this.dirty = true;
+
+    get y() {
+        return this._posY;
+    }
+
+    set y(value) {
+        this._posY = value;
+        this.dirty = true;
+    }
+
+    get scale() {
+        return this._scaleX;
+    }
+
+    set scale(value) {
+        this._scaleX = value;
+        this._scaleY = value;
+
+        this.dirty = true;
+        this.updateCache();
+    }
+
+    get scaleX() {
+        return this._scaleX;
+    }
+
+    set scaleX(value) {
+        this._scaleX = value;
+
+        this.dirty = true;
+        this.updateCache();
+    }
+
+    get scaleY() {
+        return this._scaleY;
+    }
+
+    set scaleY(value) {
+        this._scaleY = value;
+
+        this.dirty = true;
+        this.updateCache();
+    }
+
+    get anchor() {
+        return this._anchorX;
+    }
+
+    set anchor(value) {
+        this.setAnchor(value);
+    }
+
+
+    get anchorX() {
+        return this._anchorX;
+    }
+
+    set anchorX(value) {
+        this._anchorX = value;
+        this.dirty = true;
+    }
+
+
+    get anchorY() {
+        return this._anchorY;
+    }
+
+    set anchorY(value) {
+        this._anchorY = value;
+        this.dirty = true;
+    }
+
+
+    get pivotX() {
+        return this._pivotX;
+    }
+
+    set pivotX(value) {
+        this._pivotX = value;
+        this.dirty = true;
+        this.updateCache();
+    }
+
+
+    get pivotY() {
+        return this._pivotY;
+    }
+
+    set pivotY(value) {
+        this._pivotY = value;
+        this.dirty = true;
+        this.updateCache();
+    }
+
+    get angle() {
+        return WrapAngle(this.rotation * MATH_CONST.RAD_TO_DEG);
+    }
+
+    set angle(value) {
+        this.rotation = WrapAngle(value) * MATH_CONST.DEG_TO_RAD;
+    }
+
+    get rotation() {
+        return this._rotation;
+    }
+
+    set rotation(value) {
+        if (this._rotation === value) {
+            return;
         }
 
-    },
+        this._rotation = value;
+        this.dirty = true;
 
-    y: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._posY;
-        },
-
-        set: function (value)
-        {
-            this._posY = value;
-            this.dirty = true;
-        }
-
-    },
-
-    scale: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._scaleX;
-        },
-
-        set: function (value)
-        {
-            this._scaleX = value;
-            this._scaleY = value;
-
-            this.dirty = true;
+        if (this._rotation % MATH_CONST.PI2) {
+            this.cache.sr = Math.sin(this._rotation);
+            this.cache.cr = Math.cos(this._rotation);
             this.updateCache();
+            this.hasLocalRotation = true;
         }
-
-    },
-
-    scaleX: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._scaleX;
-        },
-
-        set: function (value)
-        {
-            this._scaleX = value;
-
-            this.dirty = true;
-            this.updateCache();
+        else {
+            this.hasLocalRotation = false;
         }
-
-    },
-
-    scaleY: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._scaleY;
-        },
-
-        set: function (value)
-        {
-            this._scaleY = value;
-
-            this.dirty = true;
-            this.updateCache();
-        }
-
-    },
-
-    anchor: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._anchorX;
-        },
-
-        set: function (value)
-        {
-            this.setAnchor(value);
-        }
-
-    },
-
-    anchorX: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._anchorX;
-        },
-
-        set: function (value)
-        {
-            this._anchorX = value;
-            this.dirty = true;
-        }
-
-    },
-
-    anchorY: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._anchorY;
-        },
-
-        set: function (value)
-        {
-            this._anchorY = value;
-            this.dirty = true;
-        }
-
-    },
-
-    pivotX: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._pivotX;
-        },
-
-        set: function (value)
-        {
-            this._pivotX = value;
-            this.dirty = true;
-            this.updateCache();
-        }
-
-    },
-
-    pivotY: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._pivotY;
-        },
-
-        set: function (value)
-        {
-            this._pivotY = value;
-            this.dirty = true;
-            this.updateCache();
-        }
-
-    },
-
-    angle: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return WrapAngle(this.rotation * MATH_CONST.RAD_TO_DEG);
-        },
-
-        set: function (value)
-        {
-            this.rotation = WrapAngle(value) * MATH_CONST.DEG_TO_RAD;
-        }
-
-    },
-
-    rotation: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._rotation;
-        },
-
-        set: function (value)
-        {
-            if (this._rotation === value)
-            {
-                return;
-            }
-
-            this._rotation = value;
-            this.dirty = true;
-
-            if (this._rotation % MATH_CONST.PI2)
-            {
-                this.cache.sr = Math.sin(this._rotation);
-                this.cache.cr = Math.cos(this._rotation);
-                this.updateCache();
-                this.hasLocalRotation = true;
-            }
-            else
-            {
-                this.hasLocalRotation = false;
-            }
-        }
-
-    },
+    }
 
     //  Sets this *component* as being dirty
-    dirty: {
+    get dirty() {
+        return this._dirty;
+    }
 
-        enumerable: true,
+    set dirty(value) {
+        if (value) {
+            if (!this._dirty) {
+                this._dirty = true;
 
-        get: function ()
-        {
-            return this._dirty;
-        },
-
-        set: function (value)
-        {
-            if (value)
-            {
-                if (!this._dirty)
-                {
-                    this._dirty = true;
-
-                    if (this.immediate)
-                    {
-                        this.update();
-                    }
-                    else
-                    {
-                        this._dirtyVertex = true;
-                        this.state.sys.updates.add(this);
-                    }
+                if (this.immediate) {
+                    this.update();
+                }
+                else {
+                    this._dirtyVertex = true;
+                    this.state.sys.updates.add(this);
                 }
             }
-            else
-            {
-                this._dirty = false;
-            }
         }
-
-    },
+        else {
+            this._dirty = false;
+        }
+    }
 
     //  GLOBAL read-only properties from here on
     //  Need *all* parents taken into account to get the correct values
 
-    name: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return (this.gameObject) ? this.gameObject.name : '';
-        }
-
-    },
-
-    worldRotation: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            this.updateAncestors();
-
-            return this._worldRotation;
-        }
-
-    },
-
-    worldScaleX: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            this.updateAncestors();
-
-            return this._worldScaleX;
-        }
-
-    },
-
-    worldScaleY: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            this.updateAncestors();
-
-            return this._worldScaleY;
-        }
-
-    },
-
-    worldX: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            this.updateAncestors();
-
-            return this.world.tx;
-        }
-
-    },
-
-    worldY: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            this.updateAncestors();
-
-            return this.world.ty;
-        }
-
+    get name() {
+        return (this.gameObject) ? this.gameObject.name : '';
     }
 
-});
+    get worldRotation() {
+        this.updateAncestors();
 
-module.exports = Transform;
+        return this._worldRotation;
+    }
+
+    get worldScaleX() {
+        this.updateAncestors();
+
+        return this._worldScaleX;
+    }
+
+
+    get worldScaleY() {
+        this.updateAncestors();
+
+        return this._worldScaleY;
+    }
+
+
+    get worldX() {
+        this.updateAncestors();
+
+        return this.world.tx;
+    }
+
+    get worldY() {
+        this.updateAncestors();
+
+        return this.world.ty;
+    }
+}

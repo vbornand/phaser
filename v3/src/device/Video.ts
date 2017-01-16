@@ -1,5 +1,5 @@
-var OS = require('./OS');
-var Browser = require('./Browser');
+import OS from './OS';
+import Browser from './Browser';
 
 var Video = {
 
@@ -86,4 +86,4 @@ function init ()
     return Video;
 }
 
-module.exports = init();
+export default init();

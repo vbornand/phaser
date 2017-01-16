@@ -1,6 +1,6 @@
-var Bernstein = require('../Bernstein');
+import Bernstein from '../Bernstein';
 
-var BezierInterpolation = function (v, k)
+export default function (v, k)
 {
     var b = 0;
     var n = v.length - 1;
@@ -12,5 +12,3 @@ var BezierInterpolation = function (v, k)
 
     return b;
 };
-
-module.exports = BezierInterpolation;

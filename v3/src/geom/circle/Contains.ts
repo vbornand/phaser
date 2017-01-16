@@ -1,4 +1,6 @@
-var Contains = function (circle, x, y)
+import Circle from './Circle';
+
+export default function (circle: Circle, x: number, y: number): boolean
 {
     //  Check if x/y are within the bounds first
     if (circle.radius > 0 && x >= circle.left && x <= circle.right && y >= circle.top && y <= circle.bottom)
@@ -13,5 +15,3 @@ var Contains = function (circle, x, y)
         return false;
     }
 };
-
-module.exports = Contains;

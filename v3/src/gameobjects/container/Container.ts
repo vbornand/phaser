@@ -4,28 +4,24 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var CONST = require('../../const');
-var GameObject = require('../GameObject');
-var ContainerWebGLRenderer = require('./ContainerWebGLRenderer');
-var Children = require('../../components/Children');
+import * as CONST from '../../const';
+import GameObject from '../GameObject';
+import ContainerWebGLRenderer from './ContainerWebGLRenderer';
+import Children from '../../components/Children';
 
-var Container = function (state, parent, x, y)
-{
-    GameObject.call(this, state, x, y, null, null, parent);
+export default class Container extends GameObject {
 
-    this.type = CONST.CONTAINER;
+    constructor(state, parent, x, y) {
+        super(state, x, y, null, null, parent);
 
-    this.render = ContainerWebGLRenderer;
+        this.type = CONST.CONTAINER;
 
-    this.children = new Children(this);
-};
+        this.render = ContainerWebGLRenderer;
 
-Container.prototype = Object.create(GameObject.prototype);
-Container.prototype.constructor = Container;
+        this.children = new Children(this);
+    }
 
-Container.prototype.preUpdate = function ()
-{
-    this.children.preUpdate();
-};
-
-module.exports = Container;
+    preUpdate() {
+        this.children.preUpdate();
+    }
+}

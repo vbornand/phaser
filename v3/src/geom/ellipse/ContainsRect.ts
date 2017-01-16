@@ -1,6 +1,8 @@
-var Contains = require('./Contains');
+import Ellipse from './Ellipse';
+import Contains from './Contains';
+import Rectangle from '../rectangle';
 
-var ContainsRect = function (ellipse, rect)
+export default function (ellipse: Ellipse, rect: Rectangle): boolean
 {
     return (
         Contains(ellipse, rect.x, rect.y) &&
@@ -9,5 +11,3 @@ var ContainsRect = function (ellipse, rect)
         Contains(ellipse, rect.right, rect.bottom)
     );
 };
-
-module.exports = ContainsRect;

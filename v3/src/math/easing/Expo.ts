@@ -1,14 +1,14 @@
-function In (v)
+export function In (v)
 {
     return Math.pow(2, 10 * (v - 1)) - 0.001;
 }
 
-function Out (v)
+export function Out (v)
 {
     return 1 - Math.pow(2, -10 * v);
 }
 
-function InOut (v)
+export function InOut (v)
 {
     if ((v *= 2) < 1)
     {
@@ -19,11 +19,3 @@ function InOut (v)
         return 0.5 * (2 - Math.pow(2, -10 * (v - 1)));
     }
 }
-
-module.exports = {
-
-    In: In,
-    Out: Out,
-    InOut: InOut
-
-};

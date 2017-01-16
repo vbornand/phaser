@@ -1,6 +1,4 @@
-//  p = Point or any object with public x/y properties
-
-var Rotate = function (point, angle)
+export default function (point, angle)
 {
     var x = point.x;
     var y = point.y;
@@ -10,5 +8,3 @@ var Rotate = function (point, angle)
 
     return point;
 };
-
-module.exports = Rotate;

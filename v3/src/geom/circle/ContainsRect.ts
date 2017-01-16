@@ -1,6 +1,8 @@
-var Contains = require('./Contains');
+import Contains from './Contains';
+import Circle from './Circle';
+import Rectangle from '../rectangle';
 
-var ContainsRect = function (circle, rect)
+export default function (circle: Circle, rect: Rectangle): boolean
 {
     return (
         Contains(circle, rect.x, rect.y) &&
@@ -9,5 +11,3 @@ var ContainsRect = function (circle, rect)
         Contains(circle, rect.right, rect.bottom)
     );
 };
-
-module.exports = ContainsRect;

@@ -1,6 +1,6 @@
 //  Creates an XHRSettings Object with default values
 
-var XHRSettings = function (responseType, async, user, password, timeout)
+export default function (responseType?, async?, user?, password?, timeout?)
 {
     if (responseType === undefined) { responseType = ''; }
     if (async === undefined) { async = true; }
@@ -8,8 +8,8 @@ var XHRSettings = function (responseType, async, user, password, timeout)
     if (password === undefined) { password = ''; }
     if (timeout === undefined) { timeout = 0; }
 
-    // Before sending a request, set the xhr.responseType to "text", 
-    // "arraybuffer", "blob", or "document", depending on your data needs. 
+    // Before sending a request, set the xhr.responseType to "text",
+    // "arraybuffer", "blob", or "document", depending on your data needs.
     // Note, setting xhr.responseType = '' (or omitting) will default the response to "text".
 
     return {
@@ -34,7 +34,5 @@ var XHRSettings = function (responseType, async, user, password, timeout)
         overrideMimeType: undefined
 
     };
-    
-};
 
-module.exports = XHRSettings;
+};

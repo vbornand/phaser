@@ -1,6 +1,6 @@
-var CONST = require('./const');
+import * as CONST from './const';
 
-var EventListener = function (type, callback, priority, once)
+export default function (type, callback, priority, once)
 {
     return {
         type: type,
@@ -10,5 +10,3 @@ var EventListener = function (type, callback, priority, once)
         state: CONST.LISTENER_PENDING
     };
 };
-
-module.exports = EventListener;

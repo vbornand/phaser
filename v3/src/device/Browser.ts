@@ -1,4 +1,4 @@
-var OS = require('./OS');
+import OS  from './OS';
 
 var Browser = {
 
@@ -170,4 +170,4 @@ function init ()
     return Browser;
 }
 
-module.exports = init();
+export default init();

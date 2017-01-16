@@ -1,5 +1,5 @@
 
-var ImageWebGLRenderer = function (renderer, src, interpolationPercentage)
+export default function (renderer, src, interpolationPercentage)
 {
     var frame = src.frame;
     var alpha = src.color.worldAlpha * 255 << 24;
@@ -18,5 +18,3 @@ var ImageWebGLRenderer = function (renderer, src, interpolationPercentage)
 
     renderer.batch.add(frame.source, src.blendMode, verts, frame.uvs, index, alpha, tint, bg);
 };
-
-module.exports = ImageWebGLRenderer;

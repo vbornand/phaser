@@ -1,6 +1,4 @@
-var Floor = function (point)
+export default function (point)
 {
     return point.setTo(Math.floor(point.x), Math.floor(point.y));
-};
-
-module.exports = Floor;
+}

@@ -1,6 +1,4 @@
-import Signal from 'system/Signal.js';
-
-export const onUp = new Signal();
+//import Signal from 'system/Signal';
 
 //  list = anything that can be iterated, like a Set, Map, Array or custom object with
 //  a Symbol.iterator
@@ -36,10 +34,4 @@ export default function ProcessKeyUp (event, list = null, prevent = false) {
     {
         event.preventDefault();
     }
-
-    if (onUp.hasListeners)
-    {
-        onUp.dispatch(event);
-    }
-
 }

@@ -4,8 +4,8 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var Container = require('./Container');
-var FactoryContainer = require('../../gameobjects/FactoryContainer');
+import Container from './Container';
+import FactoryContainer from '../../gameobjects/FactoryContainer';
 
 var ContainerFactory = {
 
@@ -25,4 +25,4 @@ var ContainerFactory = {
 
 };
 
-module.exports = FactoryContainer.register(ContainerFactory);
+export default FactoryContainer.register(ContainerFactory);

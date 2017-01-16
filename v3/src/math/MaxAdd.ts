@@ -1,7 +1,5 @@
 
-var MaxAdd = function (value, amount, max)
+export default function (value, amount, max)
 {
     return Math.min(value + amount, max);
 };
-
-module.exports = MaxAdd;

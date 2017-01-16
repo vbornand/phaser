@@ -1,6 +1,8 @@
-var ParseXML = function (data)
+declare var ActiveXObject;
+
+export default function (data)
 {
-    var xml = '';
+    var xml = null;
 
     try
     {
@@ -29,5 +31,3 @@ var ParseXML = function (data)
         return xml;
     }
 };
-
-module.exports = ParseXML;

@@ -1,7 +1,7 @@
-var Rectangle = require('../rectangle/Rectangle');
-var RectangleToRectangle = require('./RectangleToRectangle');
+import Rectangle from '../rectangle/Rectangle';
+import RectangleToRectangle from './RectangleToRectangle';
 
-var GetRectangleIntersection = function (rectA, rectB, output)
+export default function (rectA, rectB, output)
 {
     if (output === undefined) { output = new Rectangle(); }
 
@@ -14,6 +14,4 @@ var GetRectangleIntersection = function (rectA, rectB, output)
     }
 
     return output;
-};
-
-module.exports = GetRectangleIntersection;
+}

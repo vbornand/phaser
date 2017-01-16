@@ -4,51 +4,66 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var EventDispatcher = require('../events/EventDispatcher');
-var GameObjectFactory = require('./systems/GameObjectFactory');
-// var GameObjectCreator = require('./systems/GameObjectCreator');
-var Loader = require('./systems/Loader');
-var MainLoop = require('./systems/MainLoop');
-var UpdateManager = require('./systems/UpdateManager');
-var Component = require('../components');
-var Camera = require('../camera/Camera');
+import EventDispatcher from '../events/EventDispatcher';
+import GameObjectFactory from './systems/GameObjectFactory';
+// import GameObjectCreator from('./systems/GameObjectCreator';
+import Loader from './systems/Loader';
+import MainLoop from './systems/MainLoop';
+import UpdateManager from './systems/UpdateManager';
+import * as Component from '../components';
+import Camera from '../camera/Camera';
 
-var Systems = function (state, config)
-{
-    this.state = state;
+export default class Systems {
 
-    this.config = config;
+    state;
+    config;
+    events;
+    textures;
+    add;
+    make;
+    input;
+    load;
+    tweens;
+    mainloop;
+    updates;
+    camera;
+    children;
+    color;
+    data;
+    fbo;
+    time;
+    transform;
 
-    this.events;
+    constructor(state, config?) {
+        this.state = state;
 
-    //  Reference to the global Game level TextureManager.
-    this.textures;
+        this.config = config;
 
-    //  State specific managers (Factory, Tweens, Loader, Physics, etc)
-    this.add;
-    this.make;
-    this.input;
-    this.load;
-    this.tweens;
-    this.mainloop;
-    this.updates;
+        this.events;
 
-    //  State specific properties (transform, data, children, etc)
-    this.camera;
-    this.children;
-    this.color;
-    this.data;
-    this.fbo;
-    this.time;
-    this.transform;
-};
+        //  Reference to the global Game level TextureManager.
+        this.textures;
 
-Systems.prototype.constructor = Systems;
+        //  State specific managers (Factory, Tweens, Loader, Physics, etc)
+        this.add;
+        this.make;
+        this.input;
+        this.load;
+        this.tweens;
+        this.mainloop;
+        this.updates;
 
-Systems.prototype = {
+        //  State specific properties (transform, data, children, etc)
+        this.camera;
+        this.children;
+        this.color;
+        this.data;
+        this.fbo;
+        this.time;
+        this.transform;
+    }
 
-    init: function ()
-    {
+    init() {
         console.log('State.Systems.init');
 
         this.textures = this.state.game.textures;
@@ -59,7 +74,7 @@ Systems.prototype = {
         //  State specific managers (Factory, Tweens, Loader, Physics, etc)
         //  All these to be set by a State Config package
 
-        this.add = new GameObjectFactory(this.state);
+        this.add = GameObjectFactory(this.state);
         // this.make = GameObjectCreator(this.state);
         this.mainloop = new MainLoop(this.state, this.state.settings.fps);
         this.updates = new UpdateManager(this.state);
@@ -99,24 +114,19 @@ Systems.prototype = {
 
         //  Here we can check which Systems to install as properties into the State object
         //  (default systems always exist in here, regardless)
-    },
+    }
 
-    begin: function (timestamp, frameDelta)
-    {
-    },
+    begin(timestamp, frameDelta) {
+    }
 
-    update: function (timestep, physicsStep)
-    {
-    },
+    update(timestep, physicsStep) {
+    }
 
-    preRender: function ()
-    {
-    },
+    preRender() {
+    }
 
-    end: function (fps, panic)
-    {
-        if (panic)
-        {
+    end(fps, panic) {
+        if (panic) {
             // This pattern introduces non-deterministic behavior, but in this case
             // it's better than the alternative (the application would look like it
             // was running very quickly until the simulation caught up to real
@@ -126,6 +136,4 @@ Systems.prototype = {
             console.warn('Main loop panicked, probably because the browser tab was put in the background. Discarding ' + discardedTime + 'ms');
         }
     }
-};
-
-module.exports = Systems;
+}

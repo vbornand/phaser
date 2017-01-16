@@ -4,76 +4,84 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var Config = require('./Config');
-var DebugHeader = require('./DebugHeader');
-var Device = require('../device');
+import Config from './Config';
+import DebugHeader from './DebugHeader';
+import * as Device from '../device';
 
-var AddToDOM = require('../dom/AddToDOM');
-var RequestAnimationFrame = require('../dom/RequestAnimationFrame');
-var DOMContentLoaded = require('../dom/DOMContentLoaded');
+import AddToDOM from '../dom/AddToDOM';
+import RequestAnimationFrame from '../dom/RequestAnimationFrame';
+import DOMContentLoaded from '../dom/DOMContentLoaded';
 
-var CreateRenderer = require('./CreateRenderer');
-var RandomDataGenerator = require('../math/random-data-generator/RandomDataGenerator');
-var StateManager = require('../state/StateManager');
-var TextureManager = require ('../textures/TextureManager');
+import CreateRenderer from './CreateRenderer';
+import RandomDataGenerator from '../math/random-data-generator/RandomDataGenerator';
+import StateManager from '../state/StateManager';
+import TextureManager from '../textures/TextureManager';
 
-var Game = function (config)
+export default class Game
 {
-    this.config = new Config(config);
+    public config: Config;
+    public renderer;
+    public canvas;
+    public context;
+    public isBooted: boolean;
+    public isRunning: boolean;
+    public raf : RequestAnimationFrame;
+    public textures;
+    public input;
+    public state: StateManager;
+    public device: typeof Device;
+    public rnd : RandomDataGenerator;
 
-    this.renderer = null;
-    this.canvas = null;
-    this.context = null;
+    constructor (config)
+    {
+        this.config = new Config(config);
 
-    this.isBooted = false;
-    this.isRunning = false;
+        this.renderer = null;
+        this.canvas = null;
+        this.context = null;
 
-    /**
-    * @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
-    * @protected
-    */
-    this.raf = new RequestAnimationFrame(this);
+        this.isBooted = false;
+        this.isRunning = false;
 
-    /**
-    * @property {Phaser.TextureManager} textures - Reference to the Phaser Texture Manager.
-    */
-    this.textures = new TextureManager();
+        /**
+        * @property {Phaser.RequestAnimationFrame} raf - Automatically handles the core game loop via requestAnimationFrame or setTimeout
+        * @protected
+        */
+        this.raf = new RequestAnimationFrame(this);
 
-    /**
-    * @property {Phaser.Cache} cache - Reference to the assets cache.
-    */
-    // this.cache = new Cache();
+        /**
+        * @property {Phaser.TextureManager} textures - Reference to the Phaser Texture Manager.
+        */
+        this.textures = new TextureManager();
 
-    /**
-    * @property {Phaser.Input} input - Reference to the input manager
-    */
-    this.input = null;
+        /**
+        * @property {Phaser.Cache} cache - Reference to the assets cache.
+        */
+        // this.cache = new Cache();
 
-    /**
-    * @property {Phaser.StateManager} state - The StateManager. Phaser instance specific.
-    */
-    this.state = new StateManager(this, this.config.stateConfig);
+        /**
+        * @property {Phaser.Input} input - Reference to the input manager
+        */
+        this.input = null;
 
-    /**
-    * @property {Phaser.Device} device - Contains device information and capabilities (singleton)
-    */
-    this.device = Device;
+        /**
+        * @property {Phaser.StateManager} state - The StateManager. Phaser instance specific.
+        */
+        this.state = new StateManager(this, this.config.stateConfig);
 
-    //  Move this somewhere else? Math perhaps? Doesn't need to be a Game level system.
-    this.rnd;
+        /**
+        * @property {Phaser.Device} device - Contains device information and capabilities (singleton)
+        */
+        this.device = Device;
+        
+        //  Wait for the DOM Ready event, then call boot.
+        DOMContentLoaded(this.boot.bind(this));
 
-    //  Wait for the DOM Ready event, then call boot.
-    DOMContentLoaded(this.boot.bind(this));
+        //  For debugging only
+        (<any>window).game = this;
+    };
 
-    //  For debugging only
-    window.game = this;
-};
-
-Game.prototype.constructor = Game;
-
-Game.prototype = {
-
-    boot: function ()
+    public boot()
     {
         this.isBooted = true;
 
@@ -95,14 +103,10 @@ Game.prototype = {
         this.config.postBoot();
 
         this.raf.start();
-    },
+    }
 
-    //  timestamp = DOMHighResTimeStamp
-    update: function (timestamp)
+    public update(timestamp)
     {
         this.state.step(timestamp);
     }
-
-};
-
-module.exports = Game;
+}

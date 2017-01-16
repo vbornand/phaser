@@ -1,11 +1,9 @@
-var Normalize = require('./Normalize');
-var Multiply = require('./Multiply');
+import Normalize from './Normalize';
+import Multiply from './Multiply';
 
-var SetMagnitude = function (point, magnitude)
+export default function (point, magnitude)
 {
     Normalize(point);
 
     return Multiply(point, magnitude, magnitude);
-};
-
-module.exports = SetMagnitude;
+}

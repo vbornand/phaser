@@ -1,4 +1,4 @@
-var Wrap = function (value, min, max)
+export default function (value, min, max)
 {
     var range = max - min;
 
@@ -16,5 +16,3 @@ var Wrap = function (value, min, max)
 
     return result + min;
 };
-
-module.exports = Wrap;

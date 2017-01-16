@@ -6,9 +6,7 @@
 * @param {string} string - The string to be reversed.
 * @return {string} The reversed string.
 */
-var ReverseString = function (string)
+export default function (string)
 {
     return string.split('').reverse().join('');
 };
-
-module.exports = ReverseString;

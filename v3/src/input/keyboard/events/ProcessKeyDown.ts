@@ -4,8 +4,7 @@
 
 //  list = anything that can be iterated, like a Set, Map, Array or custom object with
 //  a Symbol.iterator
-
-var ProcessKeyDown = function (event, list, prevent)
+export default function (event, list, prevent)
 {
     if (prevent === undefined) {  prevent = false; }
 
@@ -57,5 +56,3 @@ var ProcessKeyDown = function (event, list, prevent)
     // }
 
 };
-
-module.exports = ProcessKeyDown;

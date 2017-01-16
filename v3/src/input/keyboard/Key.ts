@@ -2,7 +2,7 @@
 
 //  keycode can be either numeric or a string
 
-var Key = function (keycode, name)
+export default function (keycode, name)
 {
     if (typeof keycode === 'string')
     {
@@ -103,5 +103,3 @@ var Key = function (keycode, name)
      */
     this._justUp = false;
 };
-
-module.exports = Key;

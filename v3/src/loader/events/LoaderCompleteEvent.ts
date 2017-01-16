@@ -1,13 +1,12 @@
-var Event = require('../../events/Event');
+import Event from '../../events/Event';
 
-var LoaderCompleteEvent = function (loader)
-{
-    Event.call(this, 'LOADER_COMPLETE_EVENT');
+export default class LoaderCompleteEvent extends Event {
 
-    this.loader = loader;
-};
+    loader;
 
-LoaderCompleteEvent.prototype = Object.create(Event.prototype);
-LoaderCompleteEvent.prototype.constructor = LoaderCompleteEvent;
+    constructor(loader) {
+        super('LOADER_COMPLETE_EVENT');
 
-module.exports = LoaderCompleteEvent;
+        this.loader = loader;
+    }
+}

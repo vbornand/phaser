@@ -1,8 +1,6 @@
-var Wrap = require('../Wrap');
+import Wrap from '../Wrap';
 
-var WrapDegrees = function (angle)
+export default function (angle)
 {
     return Wrap(angle, -180, 180);
 };
-
-module.exports = WrapDegrees;

@@ -1,8 +1,6 @@
-var MathWrap = require('../Wrap');
+import MathWrap from '../Wrap';
 
-var Wrap = function (angle)
+export default function (angle)
 {
     return MathWrap(angle, -Math.PI, Math.PI);
 };
-
-module.exports = Wrap;

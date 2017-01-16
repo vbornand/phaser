@@ -13,15 +13,18 @@
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
 
-var factories = {};
 
-var FactoryContainer = function ()
+
+export class FactoryContainer
 {
+
+    private static factories = {};
+
     // console.log('FactoryContainer is alive');
 
-    this.register = function (factory)
+    register(factory)
     {
-        if (factories.hasOwnProperty(factory.KEY))
+        if (FactoryContainer.factories.hasOwnProperty(factory.KEY))
         {
             // console.log('Already registered', factory.KEY);
 
@@ -30,7 +33,7 @@ var FactoryContainer = function ()
 
         // console.log('registering', factory.KEY);
 
-        factories[factory.KEY] = {
+        FactoryContainer.factories[factory.KEY] = {
             add: factory.add,
             make: factory.make
         };
@@ -38,27 +41,25 @@ var FactoryContainer = function ()
         return factory;
     };
 
-    this.getType = function (key)
+    getType(key)
     {
-        return factories[key];
+        return FactoryContainer.factories[key];
     };
 
-    this.load = function (dest, isFactory)
+    load(dest, isFactory)
     {
-        for (var factory in factories)
+        for (var factory in FactoryContainer.factories)
         {
-            if (factories.hasOwnProperty(factory))
+            if (FactoryContainer.factories.hasOwnProperty(factory))
             {
                 // console.log('Loading', factory);
 
-                dest[factory] = (isFactory) ? factories[factory].add : factories[factory].make;
+                dest[factory] = (isFactory) ? FactoryContainer.factories[factory].add : FactoryContainer.factories[factory].make;
             }
         }
 
         return dest;
     };
+}
 
-    return this;
-};
-
-module.exports = FactoryContainer();
+export default new FactoryContainer();

@@ -1,6 +1,6 @@
-var MergeXHRSettings = require('./MergeXHRSettings');
+import MergeXHRSettings from './MergeXHRSettings';
 
-var XHRLoader = function (file, globalXHRSettings)
+export default function (file, globalXHRSettings)
 {
     var config = MergeXHRSettings(globalXHRSettings, file.xhrSettings);
 
@@ -34,5 +34,3 @@ var XHRLoader = function (file, globalXHRSettings)
 
     return xhr;
 };
-
-module.exports = XHRLoader;

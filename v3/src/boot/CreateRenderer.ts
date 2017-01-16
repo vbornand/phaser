@@ -4,11 +4,12 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var CONST = require('../const');
-var CanvasPool = require('../dom/CanvasPool');
-var Features = require('../device/Features');
-var CanvasRenderer = require('../renderer/canvas/CanvasRenderer');
-var WebGLRenderer = require('../renderer/webgl/WebGLRenderer');
+import * as CONST from '../const';
+import CanvasPool from '../dom/CanvasPool';
+import Features from '../device/Features';
+import CanvasRenderer from '../renderer/canvas/CanvasRenderer';
+import WebGLRenderer from '../renderer/webgl/WebGLRenderer';
+import Game from './Game';
 
 /**
 * Checks if the device is capable of using the requested renderer and sets it up or an alternative if not.
@@ -16,7 +17,7 @@ var WebGLRenderer = require('../renderer/webgl/WebGLRenderer');
 * @method Phaser.Game#setUpRenderer
 * @protected
 */
-var CreateRenderer = function (game)
+export default function (game: Game)
 {
     var config = game.config;
 
@@ -70,5 +71,3 @@ var CreateRenderer = function (game)
         game.context = this.renderer.context;
     }
 };
-
-module.exports = CreateRenderer;

@@ -1,7 +1,7 @@
 //  Merges source rectangle into target rectangle and returns target
 //  Neither rect should have negative widths or heights
 
-var MergeRect = function (target, source)
+export default function (target, source)
 {
     var minX = Math.min(target.x, source.x);
     var maxX = Math.max(target.right, source.right);
@@ -17,5 +17,3 @@ var MergeRect = function (target, source)
 
     return target;
 };
-
-module.exports = MergeRect;

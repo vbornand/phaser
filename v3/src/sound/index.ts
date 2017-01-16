@@ -1,7 +1,5 @@
 //  Phaser.Sound
 
-module.exports = {
+import * as Dynamic from './dynamic';
 
-    Dynamic: require('./dynamic')
-
-};
+export { Dynamic }

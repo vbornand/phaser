@@ -1,6 +1,7 @@
-var Point = require('../point/Point');
+import Point from '../point';
+import Ellipse from './Ellipse';
 
-var Random = function (ellipse, out)
+export default function (ellipse: Ellipse, out)
 {
     if (out === undefined) { out = new Point(); }
 
@@ -11,6 +12,4 @@ var Random = function (ellipse, out)
     out.y = ellipse.y + ((s * Math.sin(p)) * ellipse.height / 2);
 
     return out;
-};
-
-module.exports = Random;
+}

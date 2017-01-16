@@ -1,5 +1,5 @@
-var GetAngle = require('./GetAngle');
-var FindT = require('./FindT');
+import GetAngle from './GetAngle';
+import FindT from './FindT';
 
 /**
 * Calculate and return the angle, in radians, of the curves tangent at the given pixel distance along the curves length.
@@ -8,7 +8,7 @@ var FindT = require('./FindT');
 * @param {number} [distance=0] - The distance along the curve to get the angle from, in pixels.
 * @return {number} The angle of the line at the specified distance along the curve. The value is in radians.
 */
-var GetAngleWithDistance = function (curve, distance)
+export default function (curve, distance)
 {
     if (distance === undefined) { distance = 0; }
 
@@ -21,5 +21,3 @@ var GetAngleWithDistance = function (curve, distance)
         return GetAngle(curve, FindT(curve, distance));
     }
 };
-
-module.exports = GetAngleWithDistance;

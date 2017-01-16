@@ -1,6 +1,4 @@
-var NormalizeRightHand = function (point)
+export default function (point)
 {
     return point.setTo(point.y * -1, point.x);
-};
-
-module.exports = NormalizeRightHand;
+}

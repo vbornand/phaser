@@ -1,6 +1,6 @@
-var Point = require('../point/Point');
+import Point from '../point';
 
-var GetMidPoint = function (line, out)
+export default function (line, out)
 {
     if (out === undefined) { out = new Point(); }
 
@@ -8,6 +8,4 @@ var GetMidPoint = function (line, out)
     out.y = (line.y1 + line.y2) / 2;
 
     return out;
-};
-
-module.exports = GetMidPoint;
+}

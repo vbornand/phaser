@@ -1,9 +1,8 @@
-var Rectangle = require('../rectangle/Rectangle');
+import Circle from './Circle';
+import Rectangle from '../rectangle';
 
-var GetBounds = function (circle, out)
+export default function (circle: Circle, out: Rectangle = new Rectangle()): Rectangle
 {
-    if (out === undefined) { out = new Rectangle(); }
-
     out.x = circle.left;
     out.y = circle.top;
     out.width = circle.diameter;
@@ -11,5 +10,3 @@ var GetBounds = function (circle, out)
 
     return out;
 };
-
-module.exports = GetBounds;

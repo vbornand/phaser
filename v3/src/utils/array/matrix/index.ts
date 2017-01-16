@@ -1,13 +1,9 @@
-module.exports = {
-
-    CheckMatrix: require('./CheckMatrix'),
-    MatrixToString: require('./MatrixToString'),
-    ReverseColumns: require('./ReverseColumns'),
-    ReverseRows: require('./ReverseRows'),
-    Rotate180: require('./Rotate180'),
-    RotateLeft: require('./RotateLeft'),
-    RotateMatrix: require('./RotateMatrix'),
-    RotateRight: require('./RotateRight'),
-    TransposeMatrix: require('./TransposeMatrix')
-
-};
+export { default as CheckMatrix } from './CheckMatrix';
+export { default as MatrixToString } from './MatrixToString';
+export { default as ReverseColumns } from './ReverseColumns';
+export { default as ReverseRows } from './ReverseRows';
+export { default as Rotate180 } from './Rotate180';
+export { default as RotateLeft } from './RotateLeft';
+export { default as RotateMatrix } from './RotateMatrix';
+export { default as RotateRight } from './RotateRight';
+export { default as TransposeMatrix } from './TransposeMatrix';

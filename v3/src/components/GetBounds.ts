@@ -1,4 +1,6 @@
-var GetBounds = function (transform)
+import { Bound } from './Bound';
+
+export default function (transform)
 {
     transform.updateAncestors();
 
@@ -7,7 +9,7 @@ var GetBounds = function (transform)
     var parent = transform.parent;
     var matrix = (parent) ? parent.world : transform.world;
 
-    var bounds = {};
+    var bounds: Bound = {};
 
     var frame = transform.gameObject.frame;
     var width = frame ? frame.cutWidth : 0;
@@ -74,5 +76,3 @@ var GetBounds = function (transform)
 
     return bounds;
 };
-
-module.exports = GetBounds;

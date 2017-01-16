@@ -2,7 +2,7 @@
 //  without creating gc (like the native splice does)
 //  Based on code by Mike Reinstein
 
-var SpliceOne = function (array, index)
+export default function (array, index)
 {
     if (index >= array.length)
     {
@@ -22,5 +22,3 @@ var SpliceOne = function (array, index)
 
     return item;
 };
-
-module.exports = SpliceOne;

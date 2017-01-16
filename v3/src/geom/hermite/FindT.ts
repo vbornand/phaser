@@ -7,7 +7,7 @@
 * @param {integer} distance - The distance into the curve in pixels. Should be a positive integer.
 * @return {number} The time (`t`) value, a float between 0 and 1.
 */
-var FindT = function (curve, distance)
+export default function (curve, distance)
 {
     if (distance <= 0)
     {
@@ -33,5 +33,3 @@ var FindT = function (curve, distance)
 
     return ((ti - 1) / curve._accuracy) + d / (dt * curve._accuracy);
 };
-
-module.exports = FindT;

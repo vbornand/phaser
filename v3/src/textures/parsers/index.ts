@@ -1,10 +1,7 @@
-
-module.exports = {
-    Canvas: require('./CanvasTextureParser'),
-    Image: require('./ImageTextureParser'),
-    SpriteSheet: require('./SpriteSheetTextureParser'),
-    JSONArray: require('./JSONArrayTextureParser'),
-    JSONHash: require('./JSONHashTextureParser'),
-    StarlingXML: require('./StarlingXMLTextureParser'),
-    Pyxel: require('./PyxelTextureParser')
-};
+export { default as Canvas } from './CanvasTextureParser';
+export { default as Image } from './ImageTextureParser';
+export { default as SpriteSheet } from './SpriteSheetTextureParser';
+export { default as JSONArray } from './JSONArrayTextureParser';
+export { default as JSONHash } from './JSONHashTextureParser';
+export { default as StarlingXML } from './StarlingXMLTextureParser';
+export { default as Pyxel } from './PyxelTextureParser';

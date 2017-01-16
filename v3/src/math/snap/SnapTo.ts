@@ -1,4 +1,4 @@
-var SnapTo = function (value, gap, start)
+export default function (value, gap, start)
 {
     if (start === undefined) { start = 0; }
 
@@ -12,5 +12,3 @@ var SnapTo = function (value, gap, start)
 
     return start + value;
 };
-
-module.exports = SnapTo;

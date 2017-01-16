@@ -4,8 +4,8 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var CONST = require('../const');
-var IsSizePowerOfTwo = require('../math/pow2/IsSizePowerOfTwo');
+import * as CONST from '../const';
+import IsSizePowerOfTwo from '../math/pow2/IsSizePowerOfTwo';
 
 /**
 *
@@ -14,110 +14,126 @@ var IsSizePowerOfTwo = require('../math/pow2/IsSizePowerOfTwo');
 * @param {object} source
 * @param {number} scaleMode
 */
-var TextureSource = function (texture, source)
+export default class TextureSource 
 {
-    this.texture = texture;
+    texture;
+    compressionAlgorithm;
+    resolution: number;
+    readonly width: number;
+    readonly height: number;
+    image;
+    scaleMode;
+    premultipliedAlpha: boolean;
+    mipmap: boolean;
+    renderable: boolean;
+    isPowerOf2: boolean;
+    glTexture;
+    glTextureIndex: number;
+    glLastUsed: number;
+    glDirty: boolean;
 
-    this.image = source;
+    constructor(texture, source) {
+        this.texture = texture;
 
-    this.compressionAlgorithm = null;
+        this.image = source;
 
-    /**
-    * The Resolution of the texture.
-    *
-    * @property resolution
-    * @type Number
-    */
-    this.resolution = 1;
-    
-    /**
-    * The width of the Texture.
-    *
-    * @property width
-    * @type Number
-    * @readOnly
-    */
-    this.width = source.naturalWidth || source.width || 0;
+        this.compressionAlgorithm = null;
 
-    /**
-    * The height of the Texture.
-    *
-    * @property height
-    * @type Number
-    * @readOnly
-    */
-    this.height = source.naturalHeight || source.height || 0;
+        /**
+        * The Resolution of the texture.
+        *
+        * @property resolution
+        * @type Number
+        */
+        this.resolution = 1;
 
-    /**
-    * The scale mode to apply when scaling this texture.
-    * NEAREST or DEFAULT
-    *
-    * @property scaleMode
-    * @type {Number}
-    * @default Phaser.scaleModes.DEFAULT;
-    */
-    this.scaleMode = CONST.scaleModes.DEFAULT;
-    // this.scaleMode = CONST.scaleModes.NEAREST;
+        /**
+        * The width of the Texture.
+        *
+        * @property width
+        * @type Number
+        * @readOnly
+        */
+        this.width = source.naturalWidth || source.width || 0;
 
-    /**
-    * Controls if RGB channels should be pre-multiplied by Alpha  (WebGL only)
-    *
-    * @property premultipliedAlpha
-    * @type Boolean
-    * @default true
-    */
-    this.premultipliedAlpha = true;
+        /**
+        * The height of the Texture.
+        *
+        * @property height
+        * @type Number
+        * @readOnly
+        */
+        this.height = source.naturalHeight || source.height || 0;
 
-    /**
-    * Set this to true if a mipmap of this texture needs to be generated. This value needs to be set before the texture is used
-    * Also the texture must be a power of two size to work
-    *
-    * @property mipmap
-    * @type {Boolean}
-    */
-    this.mipmap = false;
+        /**
+        * The scale mode to apply when scaling this texture.
+        * NEAREST or DEFAULT
+        *
+        * @property scaleMode
+        * @type {Number}
+        * @default Phaser.scaleModes.DEFAULT;
+        */
+        this.scaleMode = CONST.scaleModes.DEFAULT;
+        // this.scaleMode = CONST.scaleModes.NEAREST;
 
-    /**
-    * A BaseTexture can be set to skip the rendering phase in the WebGL Sprite Batch.
-    *
-    * You may want to do this if you have a parent Sprite with no visible texture (i.e. uses the internal `__default` texture)
-    * that has children that you do want to render, without causing a batch flush in the process.
-    *
-    * @property renderable
-    * @type Boolean
-    */
-    this.renderable = true;
+        /**
+        * Controls if RGB channels should be pre-multiplied by Alpha  (WebGL only)
+        *
+        * @property premultipliedAlpha
+        * @type Boolean
+        * @default true
+        */
+        this.premultipliedAlpha = true;
 
-    /**
-    * @property isPowerOf2
-    * @type boolean
-    */
-    this.isPowerOf2 = IsSizePowerOfTwo(this.width, this.height);
+        /**
+        * Set this to true if a mipmap of this texture needs to be generated. This value needs to be set before the texture is used
+        * Also the texture must be a power of two size to work
+        *
+        * @property mipmap
+        * @type {Boolean}
+        */
+        this.mipmap = false;
 
-    /**
-    * @property glTexture
-    */
-    this.glTexture = null;
+        /**
+        * A BaseTexture can be set to skip the rendering phase in the WebGL Sprite Batch.
+        *
+        * You may want to do this if you have a parent Sprite with no visible texture (i.e. uses the internal `__default` texture)
+        * that has children that you do want to render, without causing a batch flush in the process.
+        *
+        * @property renderable
+        * @type Boolean
+        */
+        this.renderable = true;
 
-    /**
-    * The multi texture batching index number.
-    * @property glTextureIndex
-    * @type Number
-    */
-    this.glTextureIndex = 0;
+        /**
+        * @property isPowerOf2
+        * @type boolean
+        */
+        this.isPowerOf2 = IsSizePowerOfTwo(this.width, this.height);
 
-    /**
-    * The timestamp when this texture was last used by the WebGL renderer.
-    * Can be used to purge out 'dead' textures from GPU memory.
-    * @property glLastUsed
-    * @type Number
-    */
-    this.glLastUsed = 0;
+        /**
+        * @property glTexture
+        */
+        this.glTexture = null;
 
-    /**
-    * @property glDirty
-    */
-    this.glDirty = true;
-};
+        /**
+        * The multi texture batching index number.
+        * @property glTextureIndex
+        * @type Number
+        */
+        this.glTextureIndex = 0;
 
-module.exports = TextureSource;
+        /**
+        * The timestamp when this texture was last used by the WebGL renderer.
+        * Can be used to purge out 'dead' textures from GPU memory.
+        * @property glLastUsed
+        * @type Number
+        */
+        this.glLastUsed = 0;
+
+        /**
+        * @property glDirty
+        */
+        this.glDirty = true;
+    }
+}

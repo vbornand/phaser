@@ -1,4 +1,6 @@
-var Contains = function (ellipse, x, y)
+import Ellipse from './Ellipse';    
+
+export default function (ellipse: Ellipse, x: number, y: number): boolean
 {
     if (ellipse.width <= 0 || ellipse.height <= 0)
     {
@@ -13,6 +15,4 @@ var Contains = function (ellipse, x, y)
     normy *= normy;
  
     return (normx + normy < 0.25);
-};
-
-module.exports = Contains;
+}

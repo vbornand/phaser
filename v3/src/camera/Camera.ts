@@ -4,63 +4,77 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var Component = require('../components');
-var MATH_CONST = require('../math/const');
-var WrapAngle = require('../math/angle/Wrap');
+import * as Component from '../components';
+import * as MATH_CONST from '../math/const';
+import WrapAngle from '../math/angle/Wrap';
 
-/**
-* A Camera is your view into the game world. It has a position and size and renders only those objects within its field of view.
-* The game automatically creates a single Stage sized camera on boot. Move the camera around the world with Phaser.Camera.x/y
-*
-* @class Phaser.Camera
-* @constructor
-* @param {Phaser.Game} game - Game reference to the currently running game.
-* @param {number} id - Not being used at the moment, will be when Phaser supports multiple camera
-* @param {number} x - Position of the camera on the X axis
-* @param {number} y - Position of the camera on the Y axis
-* @param {number} width - The width of the view rectangle
-* @param {number} height - The height of the view rectangle
-*/
-var Camera = function (state, x, y, viewportWidth, viewportHeight)
+export default class Camera
 {
-    /**
-     * The State that this Camera belongs to. A Camera can only belong to one State, and a State only
-     * has one Camera.
-    * @property {Phaser.State} state
-    */
-    this.state = state;
+
+    public state;
+    public game;
+    public viewportWidth;
+    public viewportHeight;
+    public transform;
+    public atLimit;
+    public bounds;
+    public view;
+    public width;
+    public height;
+
+    private _shake;
+
 
     /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    */
-    this.game = state.game;
-
-    this.viewportWidth = viewportWidth;
-
-    this.viewportHeight = viewportHeight;
-
-    this.transform = new Component.Transform(this, x, y);
-
-    /**
-    * The Camera is bound to this Rectangle and cannot move outside of it. By default it is enabled and set to the size of the World.
-    * The Rectangle can be located anywhere in the world and updated as often as you like. If you don't wish the Camera to be bound
-    * at all then set this to null. The values can be anything and are in World coordinates, with 0,0 being the top-left of the world.
+    * A Camera is your view into the game world. It has a position and size and renders only those objects within its field of view.
+    * The game automatically creates a single Stage sized camera on boot. Move the camera around the world with Phaser.Camera.x/y
     *
-    * @property {Phaser.Rectangle} bounds - The Rectangle in which the Camera is bounded. Set to null to allow for movement anywhere.
+    * @class Phaser.Camera
+    * @constructor
+    * @param {Phaser.Game} game - Game reference to the currently running game.
+    * @param {number} id - Not being used at the moment, will be when Phaser supports multiple camera
+    * @param {number} x - Position of the camera on the X axis
+    * @param {number} y - Position of the camera on the Y axis
+    * @param {number} width - The width of the view rectangle
+    * @param {number} height - The height of the view rectangle
     */
-    // this.bounds = new Phaser.Rectangle(x, y, width, height);
+    constructor (state, x, y, viewportWidth, viewportHeight)
+    {
+        /**
+         * The State that this Camera belongs to. A Camera can only belong to one State, and a State only
+         * has one Camera.
+        * @property {Phaser.State} state
+        */
+        this.state = state;
 
-    // this.bounds = new Phaser.Circle(x, y)
+        /**
+        * @property {Phaser.Game} game - A reference to the currently running Game.
+        */
+        this.game = state.game;
 
-    /**
-    * @property {boolean} atLimit - Whether this camera is flush with the World Bounds or not.
-    */
-    this.atLimit = { x: false, y: false };
-};
+        this.viewportWidth = viewportWidth;
 
-Camera.prototype.constructor = Camera;
+        this.viewportHeight = viewportHeight;
 
-Camera.prototype = {
+        this.transform = new Component.Transform(this, x, y);
+
+        /**
+        * The Camera is bound to this Rectangle and cannot move outside of it. By default it is enabled and set to the size of the World.
+        * The Rectangle can be located anywhere in the world and updated as often as you like. If you don't wish the Camera to be bound
+        * at all then set this to null. The values can be anything and are in World coordinates, with 0,0 being the top-left of the world.
+        *
+        * @property {Phaser.Rectangle} bounds - The Rectangle in which the Camera is bounded. Set to null to allow for movement anywhere.
+        */
+        // this.bounds = new Phaser.Rectangle(x, y, width, height);
+
+        // this.bounds = new Phaser.Circle(x, y)
+
+        /**
+        * @property {boolean} atLimit - Whether this camera is flush with the World Bounds or not.
+        */
+        this.atLimit = { x: false, y: false };
+    };
+
 
     /**
     * Method called to ensure the camera doesn't venture outside of the game world.
@@ -69,7 +83,7 @@ Camera.prototype = {
     * @method Phaser.Camera#checkBounds
     * @protected
     */
-    checkBounds: function ()
+    protected checkBounds()
     {
         this.atLimit.x = false;
         this.atLimit.y = false;
@@ -132,190 +146,119 @@ Camera.prototype = {
                 this._shake.y = 0;
             }
         }
-
     }
 
-};
+    get x(): any
+    {
+        return this.transform._posX;
+    }
 
-Object.defineProperties(Camera.prototype, {
+    set x(value)
+    {
+        this.transform._posX = value;
+        this.transform.dirty = true;
+    }
 
-    //  Transform getters / setters
+    get y(): any
+    {
+        return this.transform._posY;
+    }
 
-    x: {
+    set y(value)
+    {
+        this.transform._posY = value;
+        this.transform.dirty = true;
+    }
 
-        enumerable: true,
+    get right(): any
+    {
+        return this.transform._posX + (this.viewportWidth * this.transform._scaleX);
+    }
 
-        get: function ()
-        {
-            return this.transform._posX;
-        },
+    get bottom(): any
+    {
+        return this.transform._posY + (this.viewportHeight * this.transform._scaleY);
+    }
 
-        set: function (value)
-        {
-            this.transform._posX = value;
-            this.transform.dirty = true;
-        }
+    get scale(): any
+    {
+        return this.transform._scaleX;
+    }
 
-    },
-
-    y: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform._posY;
-        },
-
-        set: function (value)
-        {
-            this.transform._posY = value;
-            this.transform.dirty = true;
-        }
-
-    },
-
-    right: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform._posX + (this.viewportWidth * this.transform._scaleX);
-        }
-
-    },
-
-    bottom: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform._posY + (this.viewportHeight * this.transform._scaleY);
-        }
-
-    },
-
-    scale: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform._scaleX;
-        },
-
-        set: function (value)
-        {
-            this.transform._scaleX = value;
+    set scale(value)
+    {
+        this.transform._scaleX = value;
             this.transform._scaleY = value;
             this.transform.dirty = true;
             this.transform.updateCache();
-        }
+    }
 
-    },
+    get scaleX(): any
+    {
+        return this.transform._scaleX;
+    }
 
-    scaleX: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform._scaleX;
-        },
-
-        set: function (value)
-        {
-            this.transform._scaleX = value;
+    set scaleX(value)
+    {
+        this.transform._scaleX = value;
             this.transform.dirty = true;
             this.transform.updateCache();
-        }
+    }
 
-    },
+    get scaleY(): any
+    {
+        return this.transform._scaleY;
+    }
 
-    scaleY: {
+    set scaleY(value)
+    {
+        this.transform._scaleY = value;
+        this.transform.dirty = true;
+        this.transform.updateCache();
+    }
 
-        enumerable: true,
+    get pivotX(): any
+    {
+        return this.transform._pivotX;
+    }
 
-        get: function ()
-        {
-            return this.transform._scaleY;
-        },
+    set pivotX(value)
+    {
+        this.transform._pivotX = value;
+        this.transform.dirty = true;
+        this.transform.updateCache();
+    }
 
-        set: function (value)
-        {
-            this.transform._scaleY = value;
-            this.transform.dirty = true;
-            this.transform.updateCache();
-        }
+    get pivotY(): any
+    {
+        return this.transform._pivotY;
+    }
 
-    },
+    set pivotY(value)
+    {
+        this.transform._pivotY = value;
+        this.transform.dirty = true;
+        this.transform.updateCache();
+    }
 
-    pivotX: {
+    get angle(): any
+    {
+        return WrapAngle(this.rotation * MATH_CONST.RAD_TO_DEG);
+    }
 
-        enumerable: true,
+    set angle(value)
+    {
+        this.rotation = WrapAngle(value) * MATH_CONST.DEG_TO_RAD;
+    }
 
-        get: function ()
-        {
-            return this.transform._pivotX;
-        },
+    get rotation(): any
+    {
+        return this.transform._rotation;
+    }
 
-        set: function (value)
-        {
-            this.transform._pivotX = value;
-            this.transform.dirty = true;
-            this.transform.updateCache();
-        }
-
-    },
-
-    pivotY: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform._pivotY;
-        },
-
-        set: function (value)
-        {
-            this.transform._pivotY = value;
-            this.transform.dirty = true;
-            this.transform.updateCache();
-        }
-
-    },
-
-    angle: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return WrapAngle(this.rotation * MATH_CONST.RAD_TO_DEG);
-        },
-
-        set: function (value)
-        {
-            this.rotation = WrapAngle(value) * MATH_CONST.DEG_TO_RAD;
-        }
-
-    },
-
-    rotation: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform._rotation;
-        },
-
-        set: function (value)
-        {
-            if (this.transform._rotation === value)
+    set rotation(value)
+    {
+        if (this.transform._rotation === value)
             {
                 return;
             }
@@ -334,10 +277,6 @@ Object.defineProperties(Camera.prototype, {
             {
                 this.transform.hasLocalRotation = false;
             }
-        }
+    }
 
-    },
-
-});
-
-module.exports = Camera;
+}

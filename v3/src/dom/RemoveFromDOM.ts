@@ -1,9 +1,7 @@
-var RemoveFromDOM = function (element)
+export default function (element)
 {
     if (element.parentNode)
     {
         element.parentNode.removeChild(element);
     }
-};
-
-module.exports = RemoveFromDOM;
+}

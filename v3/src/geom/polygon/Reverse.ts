@@ -1,8 +1,6 @@
-var Reverse = function (polygon)
+export default function (polygon)
 {
     polygon.points.reverse();
 
     return polygon;
-};
-
-module.exports = Reverse;
+}

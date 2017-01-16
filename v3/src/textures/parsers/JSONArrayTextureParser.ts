@@ -13,7 +13,7 @@
 * @param {object} json - The JSON data from the Texture Atlas. Must be in Array format.
 * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
 */
-var JSONArrayTextureParser = function (texture, sourceIndex, json)
+export default function (texture, sourceIndex, json)
 {
     //  Malformed?
     if (!json['frames'])
@@ -57,6 +57,4 @@ var JSONArrayTextureParser = function (texture, sourceIndex, json)
     }
 
     return texture;
-};
-
-module.exports = JSONArrayTextureParser;
+}

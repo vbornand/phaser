@@ -1,4 +1,4 @@
-function In (v, amplitude, period)
+export function In (v, amplitude, period)
 {
     if (amplitude === undefined) { amplitude = 0.1; }
     if (period === undefined) { period = 0.1; }
@@ -28,7 +28,7 @@ function In (v, amplitude, period)
     }
 }
 
-function Out (v, amplitude, period)
+export function Out (v, amplitude, period)
 {
     if (amplitude === undefined) { amplitude = 0.1; }
     if (period === undefined) { period = 0.1; }
@@ -58,7 +58,7 @@ function Out (v, amplitude, period)
     }
 }
 
-function InOut (v, amplitude, period)
+export function InOut (v, amplitude, period)
 {
     if (amplitude === undefined) { amplitude = 0.1; }
     if (period === undefined) { period = 0.1; }
@@ -94,11 +94,3 @@ function InOut (v, amplitude, period)
         }
     }
 }
-
-module.exports = {
-
-    In: In,
-    Out: Out,
-    InOut: InOut
-
-};

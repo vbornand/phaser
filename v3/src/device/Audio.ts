@@ -1,5 +1,5 @@
-var OS = require('./OS');
-var Browser = require('./Browser');
+import OS from './OS';
+import Browser from './Browser';
 
 var Audio = {
 
@@ -136,4 +136,4 @@ function init ()
     return Audio;
 }
 
-module.exports = init();
+export default init();

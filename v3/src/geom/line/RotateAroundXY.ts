@@ -1,5 +1,4 @@
-
-var RotateAroundXY = function (line, x, y, angle)
+export default function (line, x, y, angle)
 {
     var c = Math.cos(angle);
     var s = Math.sin(angle);
@@ -17,6 +16,4 @@ var RotateAroundXY = function (line, x, y, angle)
     line.y2 = tx * s + ty * c + y;
 
     return line;
-};
-
-module.exports = RotateAroundXY;
+}

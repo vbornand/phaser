@@ -1,8 +1,6 @@
-var Ellipse = require('./Ellipse');
+import Ellipse from './Ellipse';
 
-var Clone = function (source)
+export default function (source: Ellipse): Ellipse
 {
     return new Ellipse(source.x, source.y, source.width, source.height);
 };
-
-module.exports = Clone;

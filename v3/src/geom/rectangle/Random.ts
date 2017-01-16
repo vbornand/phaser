@@ -1,6 +1,6 @@
-var Point = require('../point/Point');
+import Point from '../point';
 
-var Random = function (rect, out)
+export default function (rect, out)
 {
     if (out === undefined) { out = new Point(); }
 
@@ -9,5 +9,3 @@ var Random = function (rect, out)
 
     return out;
 };
-
-module.exports = Random;

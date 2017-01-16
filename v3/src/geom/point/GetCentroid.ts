@@ -1,6 +1,6 @@
-var Point = require('./Point');
+import Point from './Point';
 
-var GetCentroid = function (points, out)
+export default function (points, out)
 {
     if (out === undefined) { out = new Point(); }
 
@@ -33,6 +33,4 @@ var GetCentroid = function (points, out)
     }
 
     return out;
-};
-
-module.exports = GetCentroid;
+}

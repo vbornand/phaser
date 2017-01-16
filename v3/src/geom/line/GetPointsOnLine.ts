@@ -7,7 +7,7 @@
 * @param {array} [results] - The array to store the results in. If not provided a new one will be generated.
 * @return {array} An array of coordinates.
 */
-var GetPointsOnLine = function (line, stepRate, results)
+export default function (line, stepRate, results)
 {
     if (stepRate === undefined) { stepRate = 1; }
     if (results === undefined) { results = []; }
@@ -52,6 +52,4 @@ var GetPointsOnLine = function (line, stepRate, results)
     }
 
     return results;
-};
-
-module.exports = GetPointsOnLine;
+}

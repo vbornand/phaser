@@ -1,6 +1,6 @@
-//  The center of the Rectangle object, expressed as a Point object 
+//  The center of the Rectangle object, expressed as a Point object
 
-var GetCenter = function (rect, out)
+export default function (rect, out)
 {
     if (out === undefined) { out = { x: 0, y: 0 }; }
 
@@ -9,5 +9,3 @@ var GetCenter = function (rect, out)
 
     return out;
 };
-
-module.exports = GetCenter;

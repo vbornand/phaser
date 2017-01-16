@@ -1,4 +1,4 @@
-function In (v)
+export function In (v)
 {
     v = 1 - v;
 
@@ -20,7 +20,7 @@ function In (v)
     }
 }
 
-function Out (v)
+export function Out (v)
 {
     if (v < 1 / 2.75)
     {
@@ -40,7 +40,7 @@ function Out (v)
     }
 }
 
-function InOut (v)
+export function InOut (v)
 {
     var reverse = false;
 
@@ -80,11 +80,3 @@ function InOut (v)
         return v * 0.5 + 0.5;
     }
 }
-
-module.exports = {
-
-    In: In,
-    Out: Out,
-    InOut: InOut
-
-};

@@ -1,6 +1,5 @@
-
-var Between = require('../../math/Between');
-var GetObjectValue = require('../../utils/GetObjectValue');
+import Between from '../../math/Between';
+import GetObjectValue from '../../utils/GetObjectValue';
 
 //  Phaser.Sound.Dynamic.FX
 
@@ -22,119 +21,141 @@ var GetObjectValue = require('../../utils/GetObjectValue');
 // reverb,              //An array: [durationInSeconds, decayRateInSeconds, reverse]
 // timeout              //A number, in seconds, which is the maximum duration for sound effects
 
-var FX = function (ctx, config)
+export default class FX
 {
-    this.audioContext = ctx;
+    public audioContext;
+    public frequencyValue: number;
+    public attack: number;
+    public decay: number;
+    public type: string;
+    public volumeValue: number;
+    public panValue: number;
+    public wait: number;
+    public pitchBendAmount: number;
+    public reverse: boolean;
+    public randomValue: number;
+    public dissonance: number;
+    public echo: boolean;
+    public echoDelay: number;
+    public echoFeedback: number;
+    public echoFilter: number;
+    public reverb: boolean;
+    public reverbDuration: number;
+    public reverbDecay: number;
+    public reverbReverse: boolean;
+    public timeout: boolean;
+    public volume;
+    public pan;
 
-    this.frequencyValue = GetObjectValue(config, 'frequency', 200);
-    this.attack = GetObjectValue(config, 'attack', 0);
-    this.decay = GetObjectValue(config, 'decay', 1);
-    this.type = GetObjectValue(config, 'type', 'sine');
-    this.volumeValue = GetObjectValue(config, 'volume', 1);
-    this.panValue = GetObjectValue(config, 'pan', 0);
-    this.wait = GetObjectValue(config, 'wait', 0);
-    this.pitchBendAmount = GetObjectValue(config, 'pitchBend', 0);
-    this.reverse = GetObjectValue(config, 'reverse', false);
-    this.randomValue = GetObjectValue(config, 'random', 0);
-    this.dissonance = GetObjectValue(config, 'dissonance', 0);
-    this.echo = GetObjectValue(config, 'echo', false);
-    this.echoDelay = GetObjectValue(config, 'echo.delay', 0);
-    this.echoFeedback = GetObjectValue(config, 'echo.feedback', 0);
-    this.echoFilter = GetObjectValue(config, 'echo.filter', 0);
-    this.reverb = GetObjectValue(config, 'reverb', false);
-    this.reverbDuration = GetObjectValue(config, 'reverb.duration', 0);
-    this.reverbDecay = GetObjectValue(config, 'reverb.decay', 0);
-    this.reverbReverse = GetObjectValue(config, 'reverb.reverse', false);
-    this.timeout = GetObjectValue(config, 'timeout', false);
-
-    this.volume = ctx.createGain();
-    this.pan = (!ctx.createStereoPanner) ? ctx.createPanner() : ctx.createStereoPanner();
-
-    this.volume.connect(this.pan);
-    this.pan.connect(ctx.destination);
-
-    //  Set the values
-
-    this.volume.gain.value = this.volumeValue;
-
-    if (!ctx.createStereoPanner)
+    constructor (ctx, config)
     {
-        this.pan.setPosition(this.panValue, 0, 1 - Math.abs(this.panValue));
+        this.audioContext = ctx;
+
+        this.frequencyValue = GetObjectValue(config, 'frequency', 200);
+        this.attack = GetObjectValue(config, 'attack', 0);
+        this.decay = GetObjectValue(config, 'decay', 1);
+        this.type = GetObjectValue(config, 'type', 'sine');
+        this.volumeValue = GetObjectValue(config, 'volume', 1);
+        this.panValue = GetObjectValue(config, 'pan', 0);
+        this.wait = GetObjectValue(config, 'wait', 0);
+        this.pitchBendAmount = GetObjectValue(config, 'pitchBend', 0);
+        this.reverse = GetObjectValue(config, 'reverse', false);
+        this.randomValue = GetObjectValue(config, 'random', 0);
+        this.dissonance = GetObjectValue(config, 'dissonance', 0);
+        this.echo = GetObjectValue(config, 'echo', false);
+        this.echoDelay = GetObjectValue(config, 'echo.delay', 0);
+        this.echoFeedback = GetObjectValue(config, 'echo.feedback', 0);
+        this.echoFilter = GetObjectValue(config, 'echo.filter', 0);
+        this.reverb = GetObjectValue(config, 'reverb', false);
+        this.reverbDuration = GetObjectValue(config, 'reverb.duration', 0);
+        this.reverbDecay = GetObjectValue(config, 'reverb.decay', 0);
+        this.reverbReverse = GetObjectValue(config, 'reverb.reverse', false);
+        this.timeout = GetObjectValue(config, 'timeout', false);
+
+        this.volume = ctx.createGain();
+        this.pan = (!ctx.createStereoPanner) ? ctx.createPanner() : ctx.createStereoPanner();
+
+        this.volume.connect(this.pan);
+        this.pan.connect(ctx.destination);
+
+        //  Set the values
+
+        this.volume.gain.value = this.volumeValue;
+
+        if (!ctx.createStereoPanner)
+        {
+            this.pan.setPosition(this.panValue, 0, 1 - Math.abs(this.panValue));
+        }
+        else
+        {
+            this.pan.pan.value = this.panValue;
+        }
+
+        //  Create an oscillator, gain and pan nodes, and connect them together to the destination
+
+        var oscillator = ctx.createOscillator();
+
+        oscillator.connect(this.volume);
+        oscillator.type = this.type;
+
+        //  Optionally randomize the pitch if `randomValue` > 0.
+        //  A random pitch is selected that's within the range specified by `frequencyValue`.
+        //  The random pitch will be either above or below the target frequency.
+
+        if (this.randomValue > 0)
+        {
+            oscillator.frequency.value = Between(
+                this.frequencyValue - this.randomValue / 2,
+                this.frequencyValue + this.randomValue / 2
+            );
+        }
+        else
+        {
+            oscillator.frequency.value = this.frequencyValue;
+        }
+
+        //  Apply effects
+
+        if (this.attack > 0)
+        {
+            this.fadeIn(this.volume);
+        }
+
+        this.fadeOut(this.volume);
+
+        if (this.pitchBendAmount > 0)
+        {
+            this.pitchBend(oscillator);
+        }
+
+        if (this.echo)
+        {
+            this.addEcho(this.volume);
+        }
+
+        if (this.reverb)
+        {
+            this.addReverb(this.volume);
+        }
+
+        if (this.dissonance > 0)
+        {
+            this.addDissonance();
+        }
+
+        this.play(oscillator);
+
+        var _this = this;
+
+        oscillator.onended = function ()
+        {
+            console.log('onended');
+            _this.pan.disconnect();
+            _this.volume.disconnect();
+        };
     }
-    else
-    {
-        this.pan.pan.value = this.panValue;
-    }
 
-    //  Create an oscillator, gain and pan nodes, and connect them together to the destination
-
-    var oscillator = ctx.createOscillator();
-
-    oscillator.connect(this.volume);
-    oscillator.type = this.type;
-
-    //  Optionally randomize the pitch if `randomValue` > 0.
-    //  A random pitch is selected that's within the range specified by `frequencyValue`.
-    //  The random pitch will be either above or below the target frequency.
-
-    if (this.randomValue > 0)
-    {
-        oscillator.frequency.value = Between(
-            this.frequencyValue - this.randomValue / 2,
-            this.frequencyValue + this.randomValue / 2
-        );
-    }
-    else
-    {
-        oscillator.frequency.value = this.frequencyValue;
-    }
-
-    //  Apply effects
-
-    if (this.attack > 0)
-    {
-        this.fadeIn(this.volume);
-    }
-
-    this.fadeOut(this.volume);
-
-    if (this.pitchBendAmount > 0)
-    {
-        this.pitchBend(oscillator);
-    }
-
-    if (this.echo)
-    {
-        this.addEcho(this.volume);
-    }
-
-    if (this.reverb)
-    {
-        this.addReverb(this.volume);
-    }
-
-    if (this.dissonance > 0)
-    {
-        this.addDissonance();
-    }
-
-    this.play(oscillator);
-
-    var _this = this;
-
-    oscillator.onended = function ()
-    {
-        console.log('onended');
-        _this.pan.disconnect();
-        _this.volume.disconnect();
-    };
-};
-
-FX.prototype.constructor = FX;
-
-FX.prototype = {
-
-    play: function (oscillator)
+    play(oscillator)
     {
         oscillator.start(this.audioContext.currentTime + this.wait);
 
@@ -145,25 +166,25 @@ FX.prototype = {
         //need a longer sound
 
         oscillator.stop(this.audioContext.currentTime + this.wait + 2);
-    },
+    }
 
-    fadeIn: function (volume)
+    fadeIn(volume)
     {
         volume.gain.value = 0;
 
         volume.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + this.wait);
 
         volume.gain.linearRampToValueAtTime(this.volumeValue, this.audioContext.currentTime + this.wait + this.attack);
-    },
+    }
 
-    fadeOut: function (volume)
+    fadeOut(volume)
     {
         volume.gain.linearRampToValueAtTime(this.volumeValue, this.audioContext.currentTime + this.wait + this.attack);
 
         volume.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + this.wait + this.attack + this.decay);
-    },
+    }
 
-    addReverb: function (volume)
+    addReverb (volume)
     {
         var convolver = this.audioContext.createConvolver();
 
@@ -172,9 +193,9 @@ FX.prototype = {
         volume.connect(convolver);
 
         convolver.connect(this.pan);
-    },
+    }
 
-    addEcho: function (volume)
+    addEcho (volume)
     {
         var feedback = this.audioContext.createGain();
         var delay = this.audioContext.createDelay();
@@ -212,9 +233,9 @@ FX.prototype = {
         //  so that the echo effect is directed to the correct speaker
 
         delay.connect(this.pan);
-    },
+    }
 
-    pitchBend: function (oscillator)
+    pitchBend(oscillator)
     {
         var frequency = oscillator.frequency.value;
 
@@ -231,9 +252,9 @@ FX.prototype = {
             oscillator.frequency.linearRampToValueAtTime(frequency + this.pitchBendAmount, this.audioContext.currentTime + this.wait + this.attack + this.decay);
         }
 
-    },
+    }
 
-    addDissonance: function ()
+    addDissonance()
     {
         //  Create two more oscillators and gain nodes
 
@@ -297,9 +318,9 @@ FX.prototype = {
 
         this.play(d1);
         this.play(d2);
-    },
+    }
 
-    impulseResponse: function (duration, decay, reverse)
+    impulseResponse(duration, decay, reverse, audioContext?)
     {
         //  The length of the buffer.
         var length = this.audioContext.sampleRate * duration;
@@ -325,7 +346,4 @@ FX.prototype = {
         //  Return the `impulse`.
         return impulse;
     }
-
-};
-
-module.exports = FX;
+}

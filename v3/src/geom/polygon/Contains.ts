@@ -6,7 +6,7 @@
 * @param {number} y - The Y value of the coordinate to test.
 * @return {boolean} True if the coordinates are within this polygon, otherwise false.
 */
-var Contains = function (polygon, x, y)
+export default function (polygon, x, y)
 {
     //  Adapted from http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html by Jonas Raoni Soares Silva
 
@@ -27,6 +27,4 @@ var Contains = function (polygon, x, y)
     }
 
     return inside;
-};
-
-module.exports = Contains;
+}

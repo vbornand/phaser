@@ -1,6 +1,2 @@
-module.exports = {
-
-    Extend: require('./Extend'),
-    IsPlainObject: require('./IsPlainObject')
-
-};
+export { default as Extend } from './Extend'
+export { default as IsPlainObject } from './IsPlainObject'

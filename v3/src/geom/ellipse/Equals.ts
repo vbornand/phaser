@@ -1,4 +1,6 @@
-var Equals = function (ellipse, toCompare)
+import Ellipse from './Ellipse';
+
+export default function (ellipse: Ellipse, toCompare: Ellipse): boolean
 {
     return (
         ellipse.x === toCompare.x &&
@@ -7,5 +9,3 @@ var Equals = function (ellipse, toCompare)
         ellipse.height === toCompare.height
     );
 };
-
-module.exports = Equals;

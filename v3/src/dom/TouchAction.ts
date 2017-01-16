@@ -6,7 +6,7 @@
 * @param {string} [value] - The touch action to set. Defaults to 'none'.
 * @return {HTMLCanvasElement} The source canvas.
 */
-var TouchAction = function (canvas, value)
+export default function (canvas, value)
 {
     if (value === undefined) { value = 'none'; }
 
@@ -16,6 +16,4 @@ var TouchAction = function (canvas, value)
 
     return canvas;
 
-};
-
-module.exports = TouchAction;
+}

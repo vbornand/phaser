@@ -19,7 +19,7 @@
 * @param {Array<any[]>} array - The matrix to transpose.
 * @return {Array<any[]>} A new transposed matrix
 */
-var TransposeMatrix = function (array)
+export default function (array)
 {
     var sourceRowCount = array.length;
     var sourceColCount = array[0].length;
@@ -38,5 +38,3 @@ var TransposeMatrix = function (array)
 
     return result;
 };
-
-module.exports = TransposeMatrix;

@@ -1,3 +1,5 @@
+declare class CocoonJS { }
+
 var OS = {
 
     /**
@@ -41,37 +43,37 @@ var OS = {
     * @default
     */
     cocoonJS: false,
-    
+
     /**
     * @property {boolean} cocoonJSApp - Is this game running with CocoonJS.App?
     * @default
     */
     cocoonJSApp: false,
-    
+
     /**
     * @property {boolean} cordova - Is the game running under Apache Cordova?
     * @default
     */
     cordova: false,
-    
+
     /**
     * @property {boolean} node - Is the game running under Node.js?
     * @default
     */
     node: false,
-    
+
     /**
     * @property {boolean} nodeWebkit - Is the game running under Node-Webkit?
     * @default
     */
     nodeWebkit: false,
-    
+
     /**
     * @property {boolean} electron - Is the game running under GitHub Electron?
     * @default
     */
     electron: false,
-    
+
     /**
     * @property {boolean} ejecta - Is the game running under Ejecta?
     * @default
@@ -140,6 +142,8 @@ var OS = {
 
 };
 
+var process;
+
 function init ()
 {
     var ua = navigator.userAgent;
@@ -205,29 +209,29 @@ function init ()
     }
 
     //  WebApp mode in iOS
-    if (navigator.standalone)
+    if ((<any>navigator).standalone)
     {
         OS.webApp = true;
     }
-    
-    if (window.cordova !== undefined)
+
+    if ((<any>window).cordova !== undefined)
     {
         OS.cordova = true;
     }
-    
+
     if ((typeof process !== 'undefined') && (typeof process.versions.node !== 'undefined'))
     {
         OS.node = true;
     }
-    
+
     if (OS.node && typeof process.versions === 'object')
     {
         OS.nodeWebkit = !!process.versions['node-webkit'];
-        
+
         OS.electron = !!process.versions.electron;
     }
-    
-    if (navigator.isCocoonJS)
+
+    if ((<any>navigator).isCocoonJS)
     {
         OS.cocoonJS = true;
 
@@ -241,7 +245,7 @@ function init ()
         }
     }
 
-    if (window.ejecta !== undefined)
+    if ((<any>window).ejecta !== undefined)
     {
         OS.ejecta = true;
     }
@@ -259,4 +263,4 @@ function init ()
     return OS;
 }
 
-module.exports = init();
+export default init();

@@ -1,6 +1,4 @@
-var Ceil = function (point)
+export default function (point)
 {
     return point.setTo(Math.ceil(point.x), Math.ceil(point.y));
-};
-
-module.exports = Ceil;
+}

@@ -1,11 +1,11 @@
-var Factorial = function (value)
+export default function (value: number) : number
 {
     if (value === 0)
     {
         return 1;
     }
 
-    var res = value;
+    var res: number = value;
 
     while (--value)
     {
@@ -14,5 +14,3 @@ var Factorial = function (value)
 
     return res;
 };
-
-module.exports = Factorial;

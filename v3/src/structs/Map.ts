@@ -8,24 +8,29 @@ var map = new Map([
 ]);
 */
 
-var Map = function (elements)
+export default class Map
 {
-    this.entries = {};
+    entries;
 
-    if (Array.isArray(elements))
+    constructor(elements?)
     {
-        for (var i = 0; i < elements.length; i++)
+        this.entries = {};
+
+        if (Array.isArray(elements))
         {
-            this.add(elements[i][0], elements[i][1]);
+            for (var i = 0; i < elements.length; i++)
+            {
+                this.add(elements[i][0], elements[i][1]);
+            }
         }
     }
-};
 
-Map.prototype.constructor = Map;
+    add(a, b?)
+    {
+        return this;
+    }
 
-Map.prototype = {
-
-    set: function (key, value)
+    set(key, value)
     {
         if (!this.entries.hasOwnProperty(key))
         {
@@ -33,9 +38,9 @@ Map.prototype = {
         }
 
         return this;
-    },
+    }
 
-    delete: function (key)
+    delete(key)
     {
         if (this.entries.hasOwnProperty(key))
         {
@@ -43,19 +48,19 @@ Map.prototype = {
         }
 
         return this;
-    },
+    }
 
-    keys: function ()
+    keys ()
     {
 
-    },
+    }
 
-    values: function ()
+    values ()
     {
 
-    },
+    }
 
-    dump: function ()
+    dump()
     {
         console.group('Map');
 
@@ -66,9 +71,9 @@ Map.prototype = {
         }
 
         console.groupEnd();
-    },
+    }
 
-    get: function (property, value)
+    get(property, value)
     {
         for (var i = 0; i < this.entries.length; i++)
         {
@@ -79,10 +84,10 @@ Map.prototype = {
                 return entry;
             }
         }
-    },
+    }
 
     //  For when you know this Map will be modified during the iteration
-    each: function (callback)
+    each (callback)
     {
         var temp = this.entries.slice();
 
@@ -93,10 +98,10 @@ Map.prototype = {
                 break;
             }
         }
-    },
+    }
 
     //  For when you absolutely know this Map won't be modified during the iteration
-    iterate: function (callback)
+    iterate (callback)
     {
         for (var i = 0; i < this.entries.length; i++)
         {
@@ -105,19 +110,19 @@ Map.prototype = {
                 break;
             }
         }
-    },
+    }
 
-    clear: function ()
+    clear ()
     {
         this.entries.length = 0;
-    },
+    }
 
-    contains: function (value)
+    contains (value)
     {
         return (this.entries.indexOf(value) > -1);
-    },
+    }
 
-    union: function (set)
+    union (set)
     {
         var newMap = new Map();
 
@@ -132,9 +137,9 @@ Map.prototype = {
         });
 
         return newMap;
-    },
+    }
 
-    intersect: function (set)
+    intersect(set)
     {
         var newMap = new Map();
 
@@ -147,9 +152,9 @@ Map.prototype = {
         });
 
         return newMap;
-    },
+    }
 
-    difference: function (set)
+    difference (set)
     {
         var newMap = new Map();
 
@@ -164,26 +169,13 @@ Map.prototype = {
         return newMap;
     }
 
-};
-
-Object.defineProperties(Map.prototype, {
-
-    size: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.entries.length;
-        },
-
-        set: function (value)
-        {
-            return this.entries.length = value;
-        }
-
+    get size()
+    {
+        return this.entries.length;
     }
 
-});
-
-module.exports = Map;
+    set size(value)
+    {
+        this.entries.length = value;
+    }
+}

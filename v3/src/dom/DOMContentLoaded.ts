@@ -4,11 +4,11 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var OS = require('../device/OS');
+import OS from '../device/OS';
 
 var isBooted = false;
 
-var DOMContentLoaded = function (callback)
+export default function (callback)
 {
     if (isBooted)
     {
@@ -18,7 +18,7 @@ var DOMContentLoaded = function (callback)
     if (document.readyState === 'complete' || document.readyState === 'interactive')
     {
         isBooted = true;
-        
+
         callback();
 
         return;
@@ -50,5 +50,3 @@ var DOMContentLoaded = function (callback)
         window.addEventListener('load', check, true);
     }
 };
-
-module.exports = DOMContentLoaded;

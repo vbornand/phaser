@@ -5,7 +5,7 @@
  * @param {array} [output] - The array to append the points to. If not specified a new array will be created.
  * @return {array} The flattened array.
  */
-var GetNumberArray = function (polygon, output)
+export default function (polygon, output)
 {
     if (output === undefined) { output = []; }
 
@@ -16,6 +16,4 @@ var GetNumberArray = function (polygon, output)
     }
 
     return output;
-};
-
-module.exports = GetNumberArray;
+}

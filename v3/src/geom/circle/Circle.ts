@@ -1,22 +1,49 @@
-var Circle = function (x, y, radius)
+import Area from './Area';
+import Circumference from './Circumference';
+import CircumferencePoint from './CircumferencePoint';
+import Clone from './Clone';
+import Contains from './Contains';
+import ContainsPoint from './ContainsPoint';
+import ContainsRect from './ContainsRect';
+import CopyFrom from './CopyFrom';
+import Equals from './Equals';
+import GetBounds from './GetBounds';
+import Offset from './Offset';
+import OffsetPoint from './OffsetPoint';
+import Random from './Random';
+
+export default class Circle
 {
-    if (x === undefined) { x = 0; }
-    if (y === undefined) { y = 0; }
-    if (radius === undefined) { radius = 0; }
+    public static Area = Area;
+    public static Circumference = Circumference;
+    public static CircumferencePoint = CircumferencePoint;
+    public static Clone = Clone;
+    public static Contains = Contains;
+    public static ContainsPoint = ContainsPoint;
+    public static ContainsRect = ContainsRect;
+    public static CopyFrom = CopyFrom;
+    public static Equals = Equals;
+    public static GetBounds = GetBounds;
+    public static Offset = Offset;
+    public static OffsetPoint = OffsetPoint;
+    public static Random = Random;
 
-    this.x = x;
+    private _radius: number;
+    private _diameter: number;
 
-    this.y = y;
+    public x: number;
+    public y: number;
 
-    this._radius = radius;
-    this._diameter = radius * 2;
-};
+    constructor (x: number = 0, y: number = 0, radius: number = 0)
+    {
+        this.x = x;
+        this.y = y;
 
-Circle.prototype.constructor = Circle;
-
-Circle.prototype = {
-
-    setTo: function (x, y, radius)
+        this._radius = radius;
+        this._diameter = radius * 2;
+    }
+    
+    setTo(x: number, y: number, radius: number): Circle
     {
         this.x = x;
         this.y = y;
@@ -24,130 +51,72 @@ Circle.prototype = {
         this._diameter = radius * 2;
 
         return this;
-    },
+    }
 
-    setEmpty: function ()
+    setEmpty(): Circle
     {
         return this.setTo(0, 0, 0);
-    },
+    }
 
-    setPosition: function (x, y)
+    setPosition(x: number, y: number = x): Circle
     {
-        if (y === undefined) { y = x; }
-
         this.x = x;
         this.y = y;
-
         return this;
-    },
+    }
 
-    isEmpty: function ()
+    isEmpty(): boolean
     {
         return (this._radius <= 0);
     }
 
-};
-
-Object.defineProperties(Circle.prototype, {
-
-    radius: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._radius;
-        },
-
-        set: function (value)
-        {
-            this._radius = value;
-            this._diameter = value * 2;
-        }
-
-    },
-
-    diameter: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._diameter;
-        },
-
-        set: function (value)
-        {
-            this._diameter = value;
-            this._radius = value * 0.5;
-        }
-
-    },
-
-    left: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.x - this._radius;
-        },
-
-        set: function (value)
-        {
-            this.x = value + this._radius;
-        }
-
-    },
-
-    right: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.x + this._radius;
-        },
-
-        set: function (value)
-        {
-            this.x = value - this._radius;
-        }
-
-    },
-
-    top: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.y - this._radius;
-        },
-
-        set: function (value)
-        {
-            this.y = value + this._radius;
-        }
-
-    },
-
-    bottom: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.y + this._radius;
-        },
-
-        set: function (value)
-        {
-            this.y = value - this._radius;
-        }
-
+    get radius(): number {
+        return this._radius;
     }
 
-});
+    set radius(value: number) {
+        this._radius = value;
+        this._diameter = value * 2;
+    }
 
-module.exports = Circle;
+    get diameter(): number {
+        return this._diameter;
+    }
+
+    set diameter(value: number) {
+        this._diameter = value;
+        this._radius = value * 0.5;
+    }
+
+    get left(): number {
+        return this.x - this._radius;
+    }
+
+    set left(value: number) {
+        this.x = value + this._radius;
+    }
+
+    get right(): number {
+        return this.x + this._radius;
+    }
+
+    set right(value: number) {
+        this.x = value - this._radius;
+    }
+
+    get top(): number {
+        return this.y - this._radius;
+    }
+
+    set top(value: number) {
+        this.y = value + this._radius;
+    }
+
+    get bottom(): number {
+        return this.y + this._radius;
+    }
+
+    set bottom(value: number) {
+        this.y = value - this._radius;
+    }
+};

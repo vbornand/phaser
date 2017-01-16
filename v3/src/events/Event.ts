@@ -1,28 +1,25 @@
-var Event = function (type)
-{
-    this.type = type;
+export default class Event {
 
-    this.target;
+    type;
+    target;
+    private _propagate;
 
-    this._propagate = true;
-};
+    constructor(type) {
+        this.type = type;
 
-Event.prototype.constructor = Event;
+        this.target;
 
-Event.prototype = {
+        this._propagate = true;
+    }
 
-    reset: function (target)
-    {
+    reset (target) {
         this.target = target;
 
         this._propagate = true;
-    },
+    }
 
-    stopPropagation: function ()
-    {
+    stopPropagation () {
         this._propagate = false;
     }
 
-};
-
-module.exports = Event;
+}

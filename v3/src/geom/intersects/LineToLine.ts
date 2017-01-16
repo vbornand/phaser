@@ -1,6 +1,6 @@
-var Point = require('../point/Point');
+import Point from '../point';
 
-var LineToLine = function (line1, line2, asSegment, out)
+export default function (line1, line2, asSegment, out)
 {
     if (asSegment === undefined) { asSegment = true; }
     if (out === undefined) { out = new Point(); }
@@ -44,6 +44,4 @@ var LineToLine = function (line1, line2, asSegment, out)
     }
 
     return out;
-};
-
-module.exports = LineToLine;
+}

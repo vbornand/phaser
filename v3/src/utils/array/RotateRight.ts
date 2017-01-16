@@ -6,7 +6,7 @@
 * @param {integer} [total=1] - The number of times to shift the array. Only the most recently shifted element is returned.
 * @return {any} The shifted value.
 */
-var RotateRight = function (array, total)
+export default function (array, total)
 {
     if (total === undefined) { total = 1; }
 
@@ -20,5 +20,3 @@ var RotateRight = function (array, total)
 
     return element;
 };
-
-module.exports = RotateRight;

@@ -4,9 +4,7 @@
 * @param {any} source - The object to copy from.
 * @return {Ellipse} This Circle object.
 */
-var CopyFrom = function (source, dest)
+export default function (source, dest)
 {
     return dest.setTo(source.x, source.y, source.width, source.height);
 };
-
-module.exports = CopyFrom;

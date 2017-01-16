@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": false,
+        "suppressImplicitAnyIndexErrors":true,
+        "module": "commonjs",
+        "target": "ES5",
+        "outDir": "dist/",
+        "emitDecoratorMetadata": false,
+        "experimentalDecorators": false,
+        "sourceMap": true,
+        "declaration": true,
+        "declarationDir": "dts",
+        "lib": [
+            "dom",
+            "es2015.collection",
+            "es2015.promise",
+            "es5"
+        ],
+        "moduleResolution": "node"
+    },
+    // "files": [
+    //     "adal.authentication.ts",
+    //     "adal.authentication.context.ts",
+    //     "index.ts",
+    //     "custom.typings.d.ts"
+    // ],
+    "exclude": [
+        "node_modules"
+    ],
+    "include": [
+        "src/**/*"
+    ]
+}

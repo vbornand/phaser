@@ -19,7 +19,7 @@
 * @param {number} [spacing=0] - If the frames have been drawn with spacing between them, specify the amount here.
 * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
 */
-var SpriteSheetTextureParser = function (texture, sourceIndex, x, y, width, height, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
+export default function (texture, sourceIndex, x, y, width, height, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
 {
     if (startFrame === undefined) { startFrame = 0; }
     if (endFrame === undefined) { endFrame = -1; }
@@ -81,6 +81,4 @@ var SpriteSheetTextureParser = function (texture, sourceIndex, x, y, width, heig
     }
 
     return texture;
-};
-
-module.exports = SpriteSheetTextureParser;
+}

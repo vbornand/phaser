@@ -1,7 +1,2 @@
 //  Phaser.Sound.Dynamic
-
-module.exports = {
-
-    FX: require('./FX')
-
-};
+export { default as FX } from './FX';

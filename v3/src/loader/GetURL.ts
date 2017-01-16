@@ -1,4 +1,4 @@
-var GetURL = function (file, baseURL)
+export default function (file, baseURL)
 {
     if (!file.url)
     {
@@ -14,5 +14,3 @@ var GetURL = function (file, baseURL)
         return baseURL + file.url;
     }
 };
-
-module.exports = GetURL;

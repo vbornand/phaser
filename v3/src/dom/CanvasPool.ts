@@ -4,7 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var CONST = require('../const');
+import * as CONST from '../const';
 
 /**
  * The pool into which the canvas elements are placed.
@@ -29,7 +29,7 @@ var CanvasPool = function ()
 {
     /**
     * Creates a new Canvas DOM element, or pulls one from the pool if free.
-    * 
+    *
     * @method Phaser.CanvasPool.create
     * @static
     * @param {any} parent - The parent of the canvas element.
@@ -37,12 +37,8 @@ var CanvasPool = function ()
     * @param {number} height - The height of the canvas element.
     * @return {HTMLCanvasElement} The canvas element.
     */
-    var create = function (parent, width, height, type)
+    var create = function (parent, width = 1, height = 1, type = CONST.CANVAS)
     {
-        if (width === undefined) { width = 1; }
-        if (height === undefined) { height = 1; }
-        if (type === undefined) { type = CONST.CANVAS; }
-
         var canvas;
         var container = first(type);
 
@@ -78,19 +74,19 @@ var CanvasPool = function ()
         return canvas;
     };
 
-    var create2D = function (parent, width, height)
+    var create2D = function (parent, width?, height?)
     {
         return create(parent, width, height, CONST.CANVAS);
     };
 
-    var createWebGL = function (parent, width, height)
+    var createWebGL = function (parent, width?, height?)
     {
         return create(parent, width, height, CONST.WEBGL);
     };
 
     /**
     * Gets the first free canvas index from the pool.
-    * 
+    *
     * @static
     * @method Phaser.CanvasPool.getFirst
     * @return {number}
@@ -113,7 +109,7 @@ var CanvasPool = function ()
     /**
     * Looks up a canvas based on its parent, and if found puts it back in the pool, freeing it up for re-use.
     * The canvas has its width and height set to 1, and its parent attribute nulled.
-    * 
+    *
     * @static
     * @method Phaser.CanvasPool.remove
     * @param {any|HTMLCanvasElement} parent - The parent of the canvas element.
@@ -137,7 +133,7 @@ var CanvasPool = function ()
 
     /**
     * Gets the total number of used canvas elements in the pool.
-    * 
+    *
     * @static
     * @method Phaser.CanvasPool.getTotal
     * @return {number} The number of in-use (parented) canvas elements in the pool.
@@ -159,7 +155,7 @@ var CanvasPool = function ()
 
     /**
     * Gets the total number of free canvas elements in the pool.
-    * 
+    *
     * @static
     * @method Phaser.CanvasPool.getFree
     * @return {number} The number of free (un-parented) canvas elements in the pool.
@@ -182,4 +178,4 @@ var CanvasPool = function ()
 };
 
 //  If we export the called function here, it'll only be invoked once (not every time it's required).
-module.exports = CanvasPool();
+export default CanvasPool();

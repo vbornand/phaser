@@ -1,12 +1,14 @@
-var CacheEntry = function (key, url, data)
+export default class CacheEntry
 {
-    this.key = key;
+    public key;
+    public url;
+    public data;
 
-    this.url = url;
+    constructor(key, url, data)
+    {
+      this.key = key;
+      this.url = url;
+      this.data = data;
+    };
 
-    this.data = data;
-};
-
-CacheEntry.prototype.constructor = CacheEntry;
-
-module.exports = CacheEntry;
+}

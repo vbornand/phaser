@@ -1,6 +1,4 @@
-var Perp = function (point)
+export default function (point)
 {
     return point.setTo(-point.y, point.x);
-};
-
-module.exports = Perp;
+}

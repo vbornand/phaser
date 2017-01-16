@@ -1,8 +1,8 @@
-var Dot = require('./Dot');
-var Point = require('./Point');
-var GetMagnitudeSq = require('./GetMagnitudeSq');
+import Dot from './Dot';
+import Point from './Point';
+import GetMagnitudeSq from './GetMagnitudeSq';
 
-var Project = function (pointA, pointB, out)
+export default function (pointA, pointB, out)
 {
     if (out === undefined) { out = new Point(); }
 
@@ -15,6 +15,4 @@ var Project = function (pointA, pointB, out)
     }
 
     return out;
-};
-
-module.exports = Project;
+}

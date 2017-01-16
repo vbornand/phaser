@@ -12,101 +12,101 @@
 * @param {Phaser.Game} game - A reference to the currently running game.
 * @param {boolean} [forceSetTimeOut=false] - Tell Phaser to use setTimeOut even if raf is available.
 */
-function RequestAnimationFrame (game)
+
+export default class RequestAnimationFrame
 {
-    /**
-    * @property {Phaser.Game} game - The currently running game.
-    */
-    this.game = game;
 
-    /**
-    * @property {boolean} isRunning - true if RequestAnimationFrame is running, otherwise false.
-    * @default
-    */
-    this.isRunning = false;
+  public game;
+  public isRunning;
+  public tick;
+  public isSetTimeOut;
+  public timeOutID;
 
-    this.tick = 0;
+  constructor (game)
+  {
+      /**
+      * @property {Phaser.Game} game - The currently running game.
+      */
+      this.game = game;
 
-    /**
-    * @property {boolean} isSetTimeOut  - True if the browser is using setTimeout instead of rAf.
-    */
-    this.isSetTimeOut = false;
+      /**
+      * @property {boolean} isRunning - true if RequestAnimationFrame is running, otherwise false.
+      * @default
+      */
+      this.isRunning = false;
 
-    /**
-    * @property {number} timeOutID - The callback setTimeout or rAf callback ID used when calling cancel.
-    */
-    this.timeOutID = null;
+      this.tick = 0;
 
-    var _this = this;
+      /**
+      * @property {boolean} isSetTimeOut  - True if the browser is using setTimeout instead of rAf.
+      */
+      this.isSetTimeOut = false;
 
-    //  timestamp = DOMHighResTimeStamp
-    var step = function (timestamp)
-    {
-        _this.tick = timestamp;
+      /**
+      * @property {number} timeOutID - The callback setTimeout or rAf callback ID used when calling cancel.
+      */
+      this.timeOutID = null;
 
-        _this.timeOutID = window.requestAnimationFrame(step);
+      var _this = this;
 
-        _this.game.update(timestamp);
-    };
+  }
 
-    var stepTimeout = function ()
-    {
-        _this.tick = Date.now();
 
-        // _this.game.update(_this.tick);
+      /**
+      * Starts the requestAnimationFrame running or setTimeout if unavailable in browser
+      * @method Phaser.RequestAnimationFrame#start
+      */
+      public start()
+      {
+          let _this = this;
+          this.isRunning = true;
 
-        // _this.timeOutID = window.setTimeout(stepTimeout, _this.game.time.timeToCall);
-    };
+          if (this.game.config.forceSetTimeOut)
+          {
+              this.isSetTimeOut = true;
 
-    /**
-    * Starts the requestAnimationFrame running or setTimeout if unavailable in browser
-    * @method Phaser.RequestAnimationFrame#start
-    */
-    this.start = function ()
-    {
-        this.isRunning = true;
+              this.timeOutID = window.setTimeout(() =>
+              {
+                   _this.tick = Date.now();
+              }, 0);
+          }
+          else
+          {
+              this.isSetTimeOut = false;
+              this.timeOutID = window.requestAnimationFrame(this.step.bind(this));
+          }
+      }
 
-        if (this.game.config.forceSetTimeOut)
-        {
-            this.isSetTimeOut = true;
+      step(timestamp: any)
+      {
+          this.tick = timestamp;
+          this.timeOutID = window.requestAnimationFrame(this.step.bind(this));
+          this.game.update(timestamp);
+      }
 
-            this.timeOutID = window.setTimeout(stepTimeout, 0);
-        }
-        else
-        {
-            this.isSetTimeOut = false;
+      /**
+      * Stops the requestAnimationFrame from running.
+      * @method Phaser.RequestAnimationFrame#stop
+      */
+      public stop()
+      {
+          this.isRunning = false;
 
-            this.timeOutID = window.requestAnimationFrame(step);
-        }
-    };
+          if (this.isSetTimeOut)
+          {
+              clearTimeout(this.timeOutID);
+          }
+          else
+          {
+              window.cancelAnimationFrame(this.timeOutID);
+          }
+      };
 
-    /**
-    * Stops the requestAnimationFrame from running.
-    * @method Phaser.RequestAnimationFrame#stop
-    */
-    this.stop = function ()
-    {
-        this.isRunning = false;
+      public destroy()
+      {
+          this.stop();
 
-        if (this.isSetTimeOut)
-        {
-            clearTimeout(this.timeOutID);
-        }
-        else
-        {
-            window.cancelAnimationFrame(this.timeOutID);
-        }
-    };
-
-    this.destroy = function ()
-    {
-        this.stop();
-
-        this.game = undefined;
-    };
+          this.game = undefined;
+      };
 
 }
-
-RequestAnimationFrame.prototype.constructor = RequestAnimationFrame;
-
-module.exports = RequestAnimationFrame;

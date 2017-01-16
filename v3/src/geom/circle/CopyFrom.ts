@@ -1,12 +1,12 @@
+import Circle from './Circle';
+
 /**
 * Copies the x, y and diameter properties from any given object to this Circle.
 * @method Phaser.Circle#copyFrom
 * @param {any} source - The object to copy from.
 * @return {Circle} This Circle object.
 */
-var CopyFrom = function (source, dest)
+export default function (source: Circle, dest: Circle): Circle
 {
     return dest.setTo(source.x, source.y, source.radius);
 };
-
-module.exports = CopyFrom;

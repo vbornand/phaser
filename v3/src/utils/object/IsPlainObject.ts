@@ -5,7 +5,7 @@
 * @param {object} obj - The object to inspect.
 * @return {boolean} - true if the object is plain, otherwise false.
 */
-var IsPlainObject = function (obj)
+export default function (obj)
 {
     // Not plain objects:
     // - Any object or value whose internal [[Class]] property is not "[object Object]"
@@ -33,5 +33,3 @@ var IsPlainObject = function (obj)
     // |obj| is a plain object, created by {} or constructed with new Object
     return true;
 };
-
-module.exports = IsPlainObject;

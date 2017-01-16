@@ -1,45 +1,43 @@
-var DrawImageBatch = require('./batches/DrawImageBatch');
+//import DrawImageBatch from './batches/DrawImageBatch';
 
-var BatchManager = function (renderer, batchSize)
-{
-    this.renderer = renderer;
+export default class BatchManager {
 
-    this.currentBatch = null;
+    renderer;
+    currentBatch;
+    drawImageBatch;
+    singleTextureBatch;
+    gl;
 
-    this.drawImageBatch = new DrawImageBatch(this, batchSize);
+    constructor(renderer, batchSize) {
+        this.renderer = renderer;
 
-    // this.pixelBatch = new Batch.Pixel(this, batchSize);
-    // this.fxBatch = new Batch.FX(this, batchSize);
-};
+        this.currentBatch = null;
 
-BatchManager.prototype.constructor = BatchManager;
+        //this.drawImageBatch = new DrawImageBatch(this, batchSize);
 
-BatchManager.prototype = {
+        // this.pixelBatch = new Batch.Pixel(this, batchSize);
+        // this.fxBatch = new Batch.FX(this, batchSize);
+    }
 
-    init: function ()
-    {
+    init() {
         this.drawImageBatch.init();
 
         // this.pixelBatch.init();
         // this.fxBatch.init();
 
         this.currentBatch = this.drawImageBatch;
-    },
+    }
 
-    start: function ()
-    {
+    start() {
         this.currentBatch.start();
-    },
+    }
 
-    stop: function ()
-    {
+    stop() {
         this.currentBatch.stop();
-    },
+    }
 
-    setBatch: function (newBatch)
-    {
-        if (this.currentBatch.type === newBatch.type)
-        {
+    setBatch(newBatch) {
+        if (this.currentBatch.type === newBatch.type) {
             return false;
         }
 
@@ -51,24 +49,22 @@ BatchManager.prototype = {
         this.currentBatch.start(true);
 
         return true;
-    },
+    }
 
     //  Add a new entry into the current sprite batch
-//    add: function (source, blendMode, verts, uvs, textureIndex, alpha, tintColors, bgColors)
-    add: function (source, blendMode, )
-    {
+    //    add: function (source, blendMode, verts, uvs, textureIndex, alpha, tintColors, bgColors)
+    add(source, blendMode, ) {
         var hasFlushed = false;
 
         //  Check Batch Size and flush if needed
-        if (this.drawImageBatch.size >= this.drawImageBatch.maxSize)
-        {
+        if (this.drawImageBatch.size >= this.drawImageBatch.maxSize) {
             this.drawImageBatch.flush();
 
             hasFlushed = true;
         }
 
         this.drawImageBatch.add();
-    },
+    }
 
     /*
     addPixel: function (x0, y0, x1, y1, x2, y2, x3, y3, color)
@@ -85,14 +81,10 @@ BatchManager.prototype = {
     },
     */
 
-    destroy: function ()
-    {
+    destroy() {
         this.singleTextureBatch.destroy();
 
         this.renderer = null;
         this.gl = null;
     }
-
-};
-
-module.exports = BatchManager;
+}

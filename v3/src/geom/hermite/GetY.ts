@@ -5,7 +5,7 @@
 * @param {number} [t=0] - The time value along the curve from which to extract a point. This is a value between 0 and 1, where 0 represents the start of the curve and 1 the end.
 * @return {number} The Y component of a point on the curve based on the `t` (time) value.
 */
-var GetY = function (curve, t)
+export default function (curve, t)
 {
     if (t === undefined)
     {
@@ -28,6 +28,4 @@ var GetY = function (curve, t)
     var t3 = t * t2;
 
     return (t3 * curve._ay + t2 * curve._by + t * curve._v1y + curve._p1y);
-};
-
-module.exports = GetY;
+}

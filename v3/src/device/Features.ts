@@ -1,6 +1,6 @@
-var OS = require('./OS');
-var Browser = require('./Browser');
-var CanvasPool = require('../dom/CanvasPool');
+import OS from './OS';
+import Browser from './Browser';
+import CanvasPool from '../dom/CanvasPool';
 
 var Features = {
 
@@ -151,7 +151,7 @@ function init ()
 
                 //  Can't be done on a webgl context
                 var image = ctx2D.createImageData(1, 1);
-    
+
                 /**
                 * Test to see if ImageData uses CanvasPixelArray or Uint8ClampedArray.
                 *
@@ -169,7 +169,7 @@ function init ()
                 return false;
             }
         }
-        
+
         return false;
     };
 
@@ -179,11 +179,11 @@ function init ()
 
     Features.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+    (<any>navigator).getUserMedia = (<any>navigator).getUserMedia || (<any>navigator).webkitGetUserMedia || (<any>navigator).mozGetUserMedia || (<any>navigator).msGetUserMedia || (<any>navigator).GetUserMedia;
 
-    window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+    window.URL = window.URL || (<any>window).webkitURL || (<any>window).mozURL || (<any>window).msURL;
 
-    Features.getUserMedia = Features.getUserMedia && !!navigator.getUserMedia && !!window.URL;
+    Features.getUserMedia = Features.getUserMedia && !!(<any>navigator).getUserMedia && !!window.URL;
 
     // Older versions of firefox (< 21) apparently claim support but user media does not actually work
     if (Browser.firefox && Browser.firefoxVersion < 21)
@@ -204,7 +204,7 @@ function init ()
         Features.canvasBitBltShift = false;
     }
 
-    navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+    navigator.vibrate = (<any>navigator).vibrate || (<any>navigator).webkitVibrate || (<any>navigator).mozVibrate || (<any>navigator).msVibrate;
 
     if (navigator.vibrate)
     {
@@ -227,4 +227,4 @@ function init ()
     return Features;
 }
 
-module.exports = init();
+export default init();

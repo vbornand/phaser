@@ -11,7 +11,7 @@
 * @return {object} The random object that was selected.
 */
 
-var GetRandomElement = function (array, start, length)
+export default function (array, start, length)
 {
     if (start === undefined) { start = 0; }
     if (length === undefined) { length = array.length; }
@@ -20,5 +20,3 @@ var GetRandomElement = function (array, start, length)
 
     return (array[randomIndex] === undefined) ? null : array[randomIndex];
 };
-
-module.exports = GetRandomElement;

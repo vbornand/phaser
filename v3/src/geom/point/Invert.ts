@@ -4,9 +4,7 @@
 * @param {any} source - The object to copy from.
 * @return {Circle} This Circle object.
 */
-var Invert = function (point)
+export default function (point)
 {
     return point.setTo(point.y, point.x);
-};
-
-module.exports = Invert;
+}

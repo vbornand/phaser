@@ -1,6 +1,4 @@
-//  p = Point or any object with public x/y properties
-
-var RotateAround = function (point, x, y, angle)
+export default function (point, x, y, angle)
 {
     var c = Math.cos(angle);
     var s = Math.sin(angle);
@@ -13,5 +11,3 @@ var RotateAround = function (point, x, y, angle)
 
     return point;
 };
-
-module.exports = RotateAround;

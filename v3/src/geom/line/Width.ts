@@ -1,6 +1,4 @@
-var Width = function (line)
+export default function (line)
 {
     return Math.abs(line.x1 - line.x2);
-};
-
-module.exports = Width;
+}

@@ -1,7 +1,7 @@
-var Dot = require('./Dot');
-var Point = require('./Point');
+import Point from './Point';
+import Dot from './Dot';
 
-var ProjectUnit = function (pointA, pointB, out)
+export default function (pointA, pointB, out)
 {
     if (out === undefined) { out = new Point(); }
 
@@ -14,6 +14,4 @@ var ProjectUnit = function (pointA, pointB, out)
     }
 
     return out;
-};
-
-module.exports = ProjectUnit;
+}

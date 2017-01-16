@@ -1,4 +1,5 @@
-var CanvasInterpolation = {
+export default class CanvasInterpolation
+{
 
     /**
     * Sets the CSS image-rendering property on the given canvas to be 'crisp' (aka 'optimize contrast' on webkit).
@@ -8,7 +9,7 @@ var CanvasInterpolation = {
     * @param {HTMLCanvasElement} canvas - The canvas to set image-rendering crisp on.
     * @return {HTMLCanvasElement} Returns the source canvas.
     */
-    setCrisp: function (canvas)
+    public static setCrisp (canvas)
     {
         var types = [ 'optimizeSpeed', 'crisp-edges', '-moz-crisp-edges', '-webkit-optimize-contrast', 'optimize-contrast', 'pixelated' ];
 
@@ -20,7 +21,7 @@ var CanvasInterpolation = {
         canvas.style.msInterpolationMode = 'nearest-neighbor';
 
         return canvas;
-    },
+    }
 
     /**
     * Sets the CSS image-rendering property on the given canvas to be 'bicubic' (aka 'auto').
@@ -30,14 +31,11 @@ var CanvasInterpolation = {
     * @param {HTMLCanvasElement} canvas The canvas to set image-rendering bicubic on.
     * @return {HTMLCanvasElement} Returns the source canvas.
     */
-    setBicubic: function (canvas)
+    public static setBicubic (canvas)
     {
         canvas.style['image-rendering'] = 'auto';
         canvas.style.msInterpolationMode = 'bicubic';
 
         return canvas;
     }
-
-};
-
-module.exports = CanvasInterpolation;
+}

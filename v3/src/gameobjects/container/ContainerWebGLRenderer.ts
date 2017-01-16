@@ -1,5 +1,5 @@
 
-var ContainerWebGLRenderer = function (renderer, src, interpolationPercentage)
+export default function (renderer, src, interpolationPercentage)
 {
     var alpha = src.color.worldAlpha * 255 << 24;
 
@@ -18,5 +18,3 @@ var ContainerWebGLRenderer = function (renderer, src, interpolationPercentage)
         child.render(renderer, child);
     }
 };
-
-module.exports = ContainerWebGLRenderer;

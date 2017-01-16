@@ -1,7 +1,3 @@
-module.exports = {
-
-    Bezier: require('./BezierInterpolation'),
-    CatmullRom: require('./CatmullRomInterpolation'),
-    Linear: require('./LinearInterpolation')
-
-};
+export { default as Bezier } from "./BezierInterpolation";
+export { default as CatmullRom } from "./CatmullRomInterpolation";
+export { default as Linear } from "./LinearInterpolation";

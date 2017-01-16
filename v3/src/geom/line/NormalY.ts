@@ -1,9 +1,7 @@
-var MATH_CONST = require('../../math/const');
-var Angle = require('./Angle');
+import * as MATH_CONST from '../../math/const';
+import Angle from './Angle';
 
-var NormalY = function (line)
+export default function (line)
 {
     return Math.sin(Angle(line) - MATH_CONST.TAU);
-};
-
-module.exports = NormalY;
+}

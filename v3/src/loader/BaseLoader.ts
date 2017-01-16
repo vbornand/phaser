@@ -1,49 +1,63 @@
 
-var CONST = require('./const');
-var Set = require('../structs/Set');
-var XHRSettings = require('./XHRSettings');
-var Event = require('./events/');
-var EventDispatcher = require('../events/EventDispatcher');
+import * as CONST from './const';
+import Set from '../structs/Set';
+import XHRSettings from './XHRSettings';
+import * as Event from './events/';
+import EventDispatcher from '../events/EventDispatcher';
 
-var BaseLoader = function ()
+export default class BaseLoader
 {
-    //  To finish the loader ...
-    //  
-    //  3) Progress update
-    //  4) JSON loader
-    //  5) XML Loader
-    //  6) Multi File support (atlas + data)
-    //  7) Atlas Loader
 
-    this.events = new EventDispatcher();
+    public events;
+    public baseURL;
+    public enableParallel;
+    public maxParallelDownloads;
+    public xhr;
+    public crossOrigin;
+    public list;
+    public inflight;
+    public failed;
+    public queue;
+    public storage;
+    public path;
+    public tag;
 
-    //  Move to a 'setURL' method?
-    this.baseURL = '';
-    this.path = '';
+    protected _state;
 
-    //  Read from Game / State Config
-    this.enableParallel = true;
-    this.maxParallelDownloads = 4;
+    constructor ()
+    {
+      //  To finish the loader ...
+      //
+      //  3) Progress update
+      //  4) JSON loader
+      //  5) XML Loader
+      //  6) Multi File support (atlas + data)
+      //  7) Atlas Loader
 
-    //  xhr specific global settings (can be overridden on a per-file basis)
-    this.xhr = XHRSettings();
+      this.events = new EventDispatcher();
 
-    this.crossOrigin = undefined;
+      //  Move to a 'setURL' method?
+      this.baseURL = '';
+      this.path = '';
 
-    this.list = new Set();
-    this.inflight = new Set();
-    this.failed = new Set();
-    this.queue = new Set();
-    this.storage = new Set();
+      //  Read from Game / State Config
+      this.enableParallel = true;
+      this.maxParallelDownloads = 4;
 
-    this._state = CONST.LOADER_IDLE;
-};
+      //  xhr specific global settings (can be overridden on a per-file basis)
+      this.xhr = XHRSettings();
 
-BaseLoader.prototype.contructor = BaseLoader;
+      this.crossOrigin = undefined;
 
-BaseLoader.prototype = {
+      this.list = new Set();
+      this.inflight = new Set();
+      this.failed = new Set();
+      this.queue = new Set();
+      this.storage = new Set();
+      this._state = CONST.LOADER_IDLE;
+    }
 
-    addFile: function (file)
+    addFile(file)
     {
         if (!this.isReady())
         {
@@ -55,21 +69,21 @@ BaseLoader.prototype = {
         this.list.set(file);
 
         return this;
-    },
+    }
 
     //  Is the Loader actively loading (or processing loaded files)
-    isLoading: function ()
+    isLoading()
     {
         return (this._state === CONST.LOADER_LOADING || this._state === CONST.LOADER_PROCESSING);
-    },
+    }
 
     //  Is the Loader ready to start a new load?
-    isReady: function ()
+    isReady()
     {
         return (this._state === CONST.LOADER_IDLE || this._state === CONST.LOADER_COMPLETE || this._state === CONST.LOADER_FAILED);
-    },
+    }
 
-    start: function ()
+    start()
     {
         console.log('BaseLoader start. Files to load:', this.list.size);
 
@@ -98,14 +112,14 @@ BaseLoader.prototype = {
 
             this.processLoadQueue();
         }
-    },
+    }
 
-    updateProgress: function ()
+    updateProgress()
     {
 
-    },
+    }
 
-    processLoadQueue: function ()
+    processLoadQueue()
     {
         // console.log('======== BaseLoader processLoadQueue');
         // console.log('List size', this.list.size);
@@ -131,10 +145,10 @@ BaseLoader.prototype = {
             }
 
         });
-    },
+    }
 
     //  private
-    loadFile: function (file)
+    loadFile(file)
     {
         // console.log('LOADING', file.key);
 
@@ -146,9 +160,9 @@ BaseLoader.prototype = {
         }
 
         file.load(this.nextFile.bind(this), this.baseURL);
-    },
+    }
 
-    nextFile: function (previousFile, success)
+    nextFile (previousFile, success)
     {
         // console.log('LOADED:', previousFile.src, success);
 
@@ -175,9 +189,9 @@ BaseLoader.prototype = {
             // console.log('nextFile calling finishedLoading');
             this.finishedLoading();
         }
-    },
+    }
 
-    finishedLoading: function ()
+    finishedLoading()
     {
         // console.log('---> BaseLoader.finishedLoading PROCESSING', this.queue.size, 'files');
 
@@ -193,10 +207,10 @@ BaseLoader.prototype = {
 
             file.onProcess(_this.processUpdate.bind(_this));
         });
-    },
+    }
 
     //  Called automatically by the File when it has finished processing
-    processUpdate: function (file)
+    processUpdate(file)
     {
         // console.log('-> processUpdate', file.key, file.state);
 
@@ -236,9 +250,9 @@ BaseLoader.prototype = {
 
             this.removeFromQueue(file);
         }
-    },
+    }
 
-    removeFromQueue: function (file)
+    removeFromQueue(file)
     {
         this.queue.delete(file);
 
@@ -247,9 +261,9 @@ BaseLoader.prototype = {
             //  We've processed all the files we loaded
             this.processComplete();
         }
-    },
+    }
 
-    processComplete: function ()
+    processComplete()
     {
         console.log('Loader Complete. Loaded:', this.storage.size, 'Failed:', this.failed.size);
 
@@ -257,17 +271,19 @@ BaseLoader.prototype = {
         this.inflight.clear();
         this.queue.clear();
 
-        if (this.processCallback)
-        {
-            this.processCallback();
-        }
+        this.processCallback();
 
         this._state = CONST.LOADER_COMPLETE;
 
         this.events.dispatch(new Event.LOADER_COMPLETE_EVENT(this));
-    },
+    }
 
-    reset: function ()
+    protected processCallback()
+    {
+
+    }
+
+    reset()
     {
         this.list.clear();
         this.inflight.clear();
@@ -280,14 +296,11 @@ BaseLoader.prototype = {
         this.baseURL = '';
 
         this._state = CONST.LOADER_IDLE;
-    },
+    }
 
-    destroy: function ()
+    destroy()
     {
         this.reset();
         this._state = CONST.LOADER_DESTROYED;
     }
-
-};
-
-module.exports = BaseLoader;
+  }

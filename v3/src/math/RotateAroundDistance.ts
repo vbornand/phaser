@@ -1,6 +1,4 @@
-//  p = Point or any object with public x/y properties
-
-var RotateAroundDistance = function (point, x, y, angle, distance)
+export default function (point, x, y, angle, distance)
 {
     var t = angle + Math.atan2(point.y - y, point.x - x);
 
@@ -9,5 +7,3 @@ var RotateAroundDistance = function (point, x, y, angle, distance)
 
     return point;
 };
-
-module.exports = RotateAroundDistance;

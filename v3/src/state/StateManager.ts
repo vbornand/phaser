@@ -4,13 +4,25 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var CONST = require('../const');
-var NOOP = require('../utils/NOOP');
-var State = require('./State');
-var Settings = require('./Settings');
-var Systems = require('./Systems');
-var GetObjectValue = require('../utils/GetObjectValue');
+import * as CONST from '../const';
+import NOOP from '../utils/NOOP';
+import State from './State';
+import Settings from './Settings';
+import Systems from './Systems';
+import GetObjectValue from '../utils/GetObjectValue';
+import Game from '../boot/Game';
 // var LoaderEvent = require('../loader/events/');
+
+
+export default class StateManager {
+
+    private _pending;
+    private _start;
+    public active;
+
+    public keys;
+    public game: Game;
+    public states;
 
 /**
 * The State Manager is responsible for loading, setting up and switching game states.
@@ -19,50 +31,46 @@ var GetObjectValue = require('../utils/GetObjectValue');
 * @constructor
 * @param {Phaser.Game} game - A reference to the currently running game.
 */
-var StateManager = function (game, stateConfig)
-{
-    this.game = game;
-
-    //  Everything kept in here
-    this.keys = {};
-    this.states = [];
-
-    //  Only active states are kept in here
-    this.active = [];
-
-    this._pending = [];
-
-    if (stateConfig)
+    constructor (game: Game, stateConfig)
     {
-        if (Array.isArray(stateConfig))
+        this.game = game;
+
+        //  Everything kept in here
+        this.keys = {};
+        this.states = [];
+
+        //  Only active states are kept in here
+        this.active = [];
+
+        this._pending = [];
+
+        if (stateConfig)
         {
-            for (var i = 0; i < stateConfig.length; i++)
+            if (Array.isArray(stateConfig))
             {
-                //  The i === 0 part just starts the first State given
+                for (var i = 0; i < stateConfig.length; i++)
+                {
+                    //  The i === 0 part just starts the first State given
+                    this._pending.push({
+                        index: i,
+                        key: 'default',
+                        state: stateConfig[i],
+                        autoStart: (i === 0)
+                    });
+                }
+            }
+            else
+            {
                 this._pending.push({
-                    index: i,
+                    index: 0,
                     key: 'default',
-                    state: stateConfig[i],
-                    autoStart: (i === 0)
+                    state: stateConfig,
+                    autoStart: true
                 });
             }
         }
-        else
-        {
-            this._pending.push({
-                index: 0,
-                key: 'default',
-                state: stateConfig,
-                autoStart: true
-            });
-        }
     }
-};
-
-StateManager.prototype.constructor = StateManager;
-
-StateManager.prototype = {
-
+    
     /**
     * The Boot handler is called by Phaser.Game when it first starts up.
     * The renderer is available by now.
@@ -70,7 +78,7 @@ StateManager.prototype = {
     * @method Phaser.StateManager#boot
     * @private
     */
-    boot: function ()
+    boot()
     {
         // this.game.onPause.add(this.pause, this);
         // this.game.onResume.add(this.resume, this);
@@ -84,9 +92,9 @@ StateManager.prototype = {
 
         //  Clear the pending list
         this._pending = [];
-    },
+    }
 
-    getKey: function (key, stateConfig)
+    getKey(key, stateConfig)
     {
         if (!key) { key = 'default'; }
 
@@ -109,7 +117,7 @@ StateManager.prototype = {
         {
             return key;
         }
-    },
+    }
 
     /**
     * Adds a new State into the StateManager. You must give each State a unique key by which you'll identify it.
@@ -121,7 +129,7 @@ StateManager.prototype = {
     * @param {Phaser.State|object|function} state  - The state you want to switch to.
     * @param {boolean} [autoStart=false]  - If true the State will be started immediately after adding it.
     */
-    add: function (key, stateConfig, autoStart)
+    add(key, stateConfig, autoStart)
     {
         if (autoStart === undefined) { autoStart = false; }
 
@@ -181,9 +189,9 @@ StateManager.prototype = {
         }
 
         return newState;
-    },
+    }
 
-    createStateFromInstance: function (key, newState)
+    createStateFromInstance(key, newState)
     {
         newState.game = this.game;
 
@@ -197,9 +205,9 @@ StateManager.prototype = {
         }
 
         return newState;
-    },
+    }
 
-    createStateFromObject: function (key, stateConfig)
+    createStateFromObject(key, stateConfig)
     {
         var newState = new State(stateConfig);
 
@@ -213,9 +221,9 @@ StateManager.prototype = {
         }
 
         return this.setupCallbacks(newState, stateConfig);
-    },
+    }
 
-    createStateFromFunction: function (key, state)
+    createStateFromFunction(key, state)
     {
         var newState = new state();
 
@@ -240,12 +248,10 @@ StateManager.prototype = {
             //  Default required functions
             return this.setupCallbacks(newState);
         }
-    },
+    }
 
-    setupCallbacks: function (newState, stateConfig)
+    setupCallbacks(newState, stateConfig = newState)
     {
-        if (stateConfig === undefined) { stateConfig = newState; }
-
         //  Extract callbacks or set NOOP
 
         newState.init = GetObjectValue(stateConfig, 'init', NOOP);
@@ -259,9 +265,9 @@ StateManager.prototype = {
         newState.render = GetObjectValue(stateConfig, 'render', NOOP);
 
         return newState;
-    },
+    }
 
-    createStateFrameBuffer: function (newState)
+    createStateFrameBuffer(newState)
     {
         var x = newState.settings.x;
         var y = newState.settings.y;
@@ -280,19 +286,19 @@ StateManager.prototype = {
         var height = newState.settings.height;
 
         newState.sys.fbo = this.game.renderer.createFBO(newState, x, y, width, height);
-    },
+    }
 
-    getState: function (key)
+    getState(key)
     {
         return this.keys[key];
-    },
+    }
 
-    getStateIndex: function (state)
+    getStateIndex(state)
     {
         return this.states.indexOf(state);
-    },
+    }
 
-    getActiveStateIndex: function (state)
+    getActiveStateIndex(state)
     {
         for (var i = 0; i < this.active.length; i++)
         {
@@ -303,16 +309,16 @@ StateManager.prototype = {
         }
 
         return -1;
-    },
+    }
 
-    isActive: function (key)
+    isActive(key)
     {
         var state = this.getState(key);
 
         return (state && state.settings.active && this.active.indexOf(state) !== -1);
-    },
+    }
 
-    start: function (key)
+    start(key)
     {
         //  if not booted, then put state into a holding pattern
         if (!this.game.isBooted)
@@ -377,9 +383,9 @@ StateManager.prototype = {
             }
 
         }
-    },
+    }
 
-    loadComplete: function (event)
+    loadComplete(event)
     {
         var state = event.loader.state;
 
@@ -392,9 +398,9 @@ StateManager.prototype = {
         }
 
         this.startCreate(state);
-    },
+    }
 
-    startCreate: function (state)
+    startCreate(state)
     {
         if (state.create)
         {
@@ -413,9 +419,9 @@ StateManager.prototype = {
         state.sys.updates.running = true;
 
         state.sys.mainloop.start();
-    },
+    }
 
-    pause: function (key)
+    pause(key)
     {
         var index = this.getActiveStateIndex(key);
 
@@ -429,9 +435,9 @@ StateManager.prototype = {
 
             this.active.sort(this.sortStates.bind(this));
         }
-    },
+    }
 
-    sortStates: function (stateA, stateB)
+    sortStates(stateA, stateB)
     {
         //  Sort descending
         if (stateA.index < stateB.index)
@@ -446,11 +452,11 @@ StateManager.prototype = {
         {
             return 0;
         }
-    },
+    }
 
     //  See if we can reduce this down to just update and render
 
-    step: function (timestamp)
+    step(timestamp)
     {
         for (var i = 0; i < this.active.length; i++)
         {
@@ -461,10 +467,10 @@ StateManager.prototype = {
                 state.sys.mainloop.step(timestamp);
             }
         }
-    },
+    }
 
     /*
-    preUpdate: function ()
+    preUpdate ()
     {
         for (var i = 0; i < this.active.length; i++)
         {
@@ -477,9 +483,9 @@ StateManager.prototype = {
 
             state.preUpdate();
         }
-    },
+    }
 
-    update: function ()
+    update ()
     {
         for (var i = 0; i < this.active.length; i++)
         {
@@ -502,9 +508,9 @@ StateManager.prototype = {
 
             state.update();
         }
-    },
+    }
 
-    postUpdate: function ()
+    postUpdate()
     {
         for (var i = 0; i < this.active.length; i++)
         {
@@ -517,9 +523,9 @@ StateManager.prototype = {
 
             state.postUpdate();
         }
-    },
+    }
 
-    render: function ()
+    render()
     {
         for (var i = 0; i < this.active.length; i++)
         {
@@ -533,10 +539,10 @@ StateManager.prototype = {
 
             this.game.renderer.render(state);
         }
-    },
+    }
     */
 
-    renderChildren: function (renderer, state, interpolationPercentage)
+    renderChildren(renderer, state, interpolationPercentage)
     {
         //  Populates the display list
         for (var c = 0; c < state.sys.children.list.length; c++)
@@ -547,6 +553,4 @@ StateManager.prototype = {
         }
     }
 
-};
-
-module.exports = StateManager;
+}

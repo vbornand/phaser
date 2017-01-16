@@ -1,4 +1,4 @@
-var RoundAwayFromZero = require('../../math/RoundAwayFromZero');
+import RoundAwayFromZero from '../../math/RoundAwayFromZero';
 
 /**
 * Create an array of numbers (positive and/or negative) progressing from `start`
@@ -33,7 +33,7 @@ var RoundAwayFromZero = require('../../math/RoundAwayFromZero');
 * NumberArrayStep(0);
 * // => []
 */
-var NumberArrayStep = function (start, end, step)
+export default function (start, end, step)
 {
     if (start === undefined) { start = 0; }
     if (end === undefined) { end = null; }
@@ -57,5 +57,3 @@ var NumberArrayStep = function (start, end, step)
 
     return result;
 };
-
-module.exports = NumberArrayStep;

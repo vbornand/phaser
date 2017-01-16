@@ -1,6 +1,6 @@
-var GetMagnitude = require('./GetMagnitude');
+import GetMagnitude from './GetMagnitude';
 
-var Normalize = function (point)
+export default function (point)
 {
     if (point.x !== 0 && point.y !== 0)
     {
@@ -11,6 +11,4 @@ var Normalize = function (point)
     }
 
     return point;
-};
-
-module.exports = Normalize;
+}

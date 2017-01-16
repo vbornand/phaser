@@ -1,6 +1,4 @@
-var GetMagnitudeSq = function (point)
+export default function (point)
 {
     return (point.x * point.x) + (point.y * point.y);
-};
-
-module.exports = GetMagnitudeSq;
+}

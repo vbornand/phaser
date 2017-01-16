@@ -1,10 +1,8 @@
-var Point = require('./Point');
+import Point from './Point';
 
-var Negative = function (point, out)
+export default function (point, out)
 {
     if (out === undefined) { out = new Point(); }
 
     return out.setTo(-point.x, -point.y);
-};
-
-module.exports = Negative;
+}

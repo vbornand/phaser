@@ -1,10 +1,10 @@
-var GetAspectRatio = require('./GetAspectRatio');
+import GetAspectRatio from './GetAspectRatio';
 
 //  Fits the target rectangle around the source rectangle.
 //  Preserves aspect ration.
 //  Scales and centers the target rectangle to the source rectangle
 
-var FitOutside = function (target, source)
+export default function (target, source)
 {
     var ratio = GetAspectRatio(target);
 
@@ -24,5 +24,3 @@ var FitOutside = function (target, source)
         (source.bottom / 2) - target.height / 2
     );
 };
-
-module.exports = FitOutside;

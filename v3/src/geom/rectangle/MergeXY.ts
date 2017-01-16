@@ -1,5 +1,5 @@
 
-var MergeXY = function (target, x, y)
+export default function (target, x, y)
 {
     var minX = Math.min(target.x, x);
     var maxX = Math.max(target.right, x);
@@ -15,5 +15,3 @@ var MergeXY = function (target, x, y)
 
     return target;
 };
-
-module.exports = MergeXY;

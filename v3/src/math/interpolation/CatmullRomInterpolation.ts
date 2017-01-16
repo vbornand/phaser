@@ -1,6 +1,6 @@
-var CatmullRom = require('../CatmullRom');
+import CatmullRom from '../CatmullRom';
 
-var CatmullRomInterpolation = function (v, k)
+export default function (v, k)
 {
     var m = v.length - 1;
     var f = m * k;
@@ -30,5 +30,3 @@ var CatmullRomInterpolation = function (v, k)
         return CatmullRom(v[i ? i - 1 : 0], v[i], v[m < i + 1 ? m : i + 1], v[m < i + 2 ? m : i + 2], f - i);
     }
 };
-
-module.exports = CatmullRomInterpolation;

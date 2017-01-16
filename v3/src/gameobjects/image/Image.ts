@@ -4,9 +4,9 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var CONST = require('../../const');
-var GameObject = require('../GameObject');
-var ImageWebGLRenderer = require('./ImageWebGLRenderer');
+import * as CONST from '../../const';
+import GameObject from '../GameObject';
+import ImageWebGLRenderer from './ImageWebGLRenderer';
 
 /**
 * An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
@@ -21,55 +21,32 @@ var ImageWebGLRenderer = require('./ImageWebGLRenderer');
 * @param {string} [key] - The texture used by the Image during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture, BitmapData or PIXI.Texture.
 * @param {string|number} [frame] - If this Image is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
 */
-var Image = function (state, x, y, key, frame)
-{
-    var _texture = state.game.textures.get(key);
-    var _frame = _texture.get(frame);
+export default class Image extends GameObject {
 
-    GameObject.call(this, state, x, y, _texture, _frame);
+    constructor(state, x, y, key, frame) {
+        var _texture = state.game.textures.get(key);
+        var _frame = _texture.get(frame);
 
-    this.type = CONST.IMAGE;
+        super(state, x, y, _texture, _frame);
 
-    this.render = ImageWebGLRenderer;
-};
+        this.type = CONST.IMAGE;
 
-Image.prototype = Object.create(GameObject.prototype);
-Image.prototype.constructor = Image;
-
-Object.defineProperties(Image.prototype, {
-
-    width: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform._scaleX * this.frame.realWidth;
-        },
-
-        set: function (value)
-        {
-            this.scaleX = value / this.frame.realWidth;
-        }
-
-    },
-
-    height: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.transform._scaleY * this.frame.realHeight;
-        },
-
-        set: function (value)
-        {
-            this.scaleY = value / this.frame.realHeight;
-        }
-
+        this.render = ImageWebGLRenderer;
     }
 
-});
+    get width() {
+        return this.transform._scaleX * this.frame.realWidth;
+    }
 
-module.exports = Image;
+    set width(value) {
+        this.scaleX = value / this.frame.realWidth;
+    }
+   
+    get height() {
+        return this.transform._scaleY * this.frame.realHeight;
+    }
+
+    set height(value) {
+        this.scaleY = value / this.frame.realHeight;
+    }
+}

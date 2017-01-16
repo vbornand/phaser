@@ -1,4 +1,4 @@
-var SetToAngle = function (line, x, y, angle, length)
+export default function (line, x, y, angle, length)
 {
     line.x1 = x;
     line.y1 = y;
@@ -7,6 +7,4 @@ var SetToAngle = function (line, x, y, angle, length)
     line.y2 = y + (Math.sin(angle) * length);
 
     return line;
-};
-
-module.exports = SetToAngle;
+}

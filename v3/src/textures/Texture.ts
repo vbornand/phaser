@@ -4,8 +4,9 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var Frame = require('./Frame');
-var TextureSource = require('./TextureSource');
+import Frame from './Frame';
+import TextureSource from './TextureSource';
+import TextureManager from './TextureManager';
 
 /**
 * A Texture consists of a source, usually an Image from the Cache, or a Canvas, and a collection
@@ -23,45 +24,49 @@ var TextureSource = require('./TextureSource');
 * @param {object} source
 * @param {number} scaleMode
 */
-var Texture = function (manager, key, source)
+export default class Texture
 {
-    this.manager = manager;
+    manager;
+    source: TextureSource[];
+    frames;
+    frameTotal;
+    key;
 
-    if (!Array.isArray(source))
+    constructor (manager: TextureManager, key, source)
     {
-        source = [ source ];
+        this.manager = manager;
+
+        if (!Array.isArray(source))
+        {
+            source = [ source ];
+        }
+
+        this.key = key;
+
+        /**
+        * The source that is used to create the texture.
+        * Usually an Image, but can also be a Canvas.
+        *
+        * @property source
+        * @type array
+        */
+        this.source = [];
+
+        /**
+        * @property {object} frames - Frames
+        */
+        this.frames = {};
+
+        this.frameTotal = 0;
+
+        //  Load the Sources
+        for (var i = 0; i < source.length; i++)
+        {
+            this.source.push(new TextureSource(this, source[i]));
+        }
     }
 
-    this.key = key;
-
-    /**
-    * The source that is used to create the texture.
-    * Usually an Image, but can also be a Canvas.
-    *
-    * @property source
-    * @type array
-    */
-    this.source = [];
-
-    /**
-    * @property {object} frames - Frames
-    */
-    this.frames = {};
-
-    this.frameTotal = 0;
-
-    //  Load the Sources
-    for (var i = 0; i < source.length; i++)
-    {
-        this.source.push(new TextureSource(this, source[i]));
-    }
-};
-
-Texture.prototype.constructor = Texture;
-
-Texture.prototype = {
-
-    add: function (name, sourceIndex, x, y, width, height)
+    add (name, sourceIndex, x, y, width, height)
     {
         var frame = new Frame(this, name, sourceIndex, x, y, width, height);
 
@@ -70,9 +75,9 @@ Texture.prototype = {
         this.frameTotal++;
 
         return frame;
-    },
+    }
 
-    get: function (name)
+    get (name)
     {
         if (name === undefined || name === null || this.frameTotal === 1)
         {
@@ -91,9 +96,9 @@ Texture.prototype = {
         {
             return frame;
         }
-    },
+    }
 
-    setTextureIndex: function (index)
+    setTextureIndex(index)
     {
         for (var i = 0; i < this.source.length; i++)
         {
@@ -105,14 +110,14 @@ Texture.prototype = {
         }
 
         return index;
-    },
+    }
 
     /**
     * Destroys this base texture
     *
     * @method destroy
     */
-    destroy: function ()
+    destroy()
     {
         //  Need to iterate though the TextureSources, and unload each one
         //  then clear out the frames
@@ -126,31 +131,4 @@ Texture.prototype = {
         this.source = null;
         */
     }
-
-};
-
-/**
-* Helper function that creates a base texture from the given canvas element.
-*
-* @static
-* @method fromCanvas
-* @param canvas {Canvas} The canvas element source of the texture
-* @param scaleMode {Number} See {{#crossLink "PIXI/scaleModes:property"}}Phaser.scaleModes{{/crossLink}} for possible values
-* @return {BaseTexture}
-Phaser.Texture.fromCanvas = function (canvas, scaleMode)
-{
-    if (canvas.width === 0)
-    {
-        canvas.width = 1;
-    }
-
-    if (canvas.height === 0)
-    {
-        canvas.height = 1;
-    }
-
-    return new Phaser.Texture(canvas, scaleMode);
-};
-*/
-
-module.exports = Texture;
+}

@@ -1,8 +1,7 @@
-var Contains = require('./Contains');
+import Ellipse from './Ellipse';
+import Contains from './Contains';
 
-var ContainsPoint = function (ellipse, point)
+export default function (ellipse: Ellipse, point: any): boolean
 {
     return Contains(ellipse, point.x, point.y);
 };
-
-module.exports = ContainsPoint;

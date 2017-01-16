@@ -1,7 +1,7 @@
 //  Merges the target Rectangle with a list of points.
 //  The points is an array of objects with public x/y properties.
 
-var MergePoints = function (target, points)
+export default function (target, points)
 {
     var minX = target.x;
     var maxX = target.right;
@@ -23,5 +23,3 @@ var MergePoints = function (target, points)
 
     return target;
 };
-
-module.exports = MergePoints;

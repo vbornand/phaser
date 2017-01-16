@@ -1,5 +1,5 @@
 
-var ImageCanvasRenderer = function (renderer, src, interpolationPercentage)
+export default function (renderer, src, interpolationPercentage)
 {
     var frame = src.frame;
     var alpha = src.color.worldAlpha * 255 << 24;
@@ -17,5 +17,3 @@ var ImageCanvasRenderer = function (renderer, src, interpolationPercentage)
 
     renderer.batch.add(frame.source, src.blendMode, data, frame.uvs, alpha, tint, bg);
 };
-
-module.exports = ImageCanvasRenderer;

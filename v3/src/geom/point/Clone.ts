@@ -1,8 +1,6 @@
-var Point = require('./Point');
+import Point from './Point';
 
-var Clone = function (source)
+export default function (source)
 {
     return new Point(source.x, source.y);
-};
-
-module.exports = Clone;
+}

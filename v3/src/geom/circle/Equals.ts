@@ -1,4 +1,6 @@
-var Equals = function (circle, toCompare)
+import Circle from './Circle';
+
+export default function (circle: Circle, toCompare: Circle): boolean
 {
     return (
         circle.x === toCompare.x &&
@@ -6,5 +8,3 @@ var Equals = function (circle, toCompare)
         circle.radius === toCompare.radius
     );
 };
-
-module.exports = Equals;

@@ -1,8 +1,6 @@
-var Factorial = require('./Factorial');
+import Factorial from './Factorial'
 
-var Bernstein = function (n, i)
+export default function(n: number, i: number)
 {
     return Factorial(n) / Factorial(i) / Factorial(n - i);
 };
-
-module.exports = Bernstein;

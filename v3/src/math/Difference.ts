@@ -1,6 +1,4 @@
-var Difference = function (a, b)
+export default function (a, b)
 {
     return Math.abs(a - b);
 };
-
-module.exports = Difference;

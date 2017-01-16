@@ -1,4 +1,4 @@
-var Equals = function (rect, toCompare)
+export default function (rect, toCompare)
 {
     return (
         rect.x === toCompare.x &&
@@ -7,5 +7,3 @@ var Equals = function (rect, toCompare)
         rect.height === toCompare.height
     );
 };
-
-module.exports = Equals;

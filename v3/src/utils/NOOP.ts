@@ -1,7 +1,5 @@
 
-var NOOP = function ()
+export default function ()
 {
     //  NOOP (No Operation) Callback
 };
-
-module.exports = NOOP;

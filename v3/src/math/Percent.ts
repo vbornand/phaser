@@ -1,4 +1,4 @@
-var Percent = function (a, b, base)
+export default function (a, b, base)
 {
     if (base === undefined) { base = 0; }
 
@@ -15,5 +15,3 @@ var Percent = function (a, b, base)
         return (a - base) / b;
     }
 };
-
-module.exports = Percent;

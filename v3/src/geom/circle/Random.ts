@@ -1,5 +1,5 @@
-var Point = require('../point/Point');
-
+import Circle from './Circle';
+import Point from '../point';
 /**
 * Returns a uniformly distributed random point from anywhere within this Circle.
 * 
@@ -8,7 +8,7 @@ var Point = require('../point/Point');
 *     If no object is provided a new Phaser.Point object will be created. In high performance areas avoid this by re-using an existing object.
 * @return {Phaser.Point} An object containing the random point in its `x` and `y` properties.
 */
-var Random = function (circle, out)
+export default function (circle: Circle, out: any): any
 {
     if (out === undefined) { out = new Point(); }
 
@@ -23,5 +23,3 @@ var Random = function (circle, out)
 
     return out;
 };
-
-module.exports = Random;

@@ -1,4 +1,4 @@
-var AddToDOM = function (element, parent, overflowHidden)
+export default function (element, parent, overflowHidden?)
 {
     if (overflowHidden === undefined) { overflowHidden = true; }
 
@@ -33,5 +33,3 @@ var AddToDOM = function (element, parent, overflowHidden)
 
     return element;
 };
-
-module.exports = AddToDOM;

@@ -1,4 +1,4 @@
-function In (v)
+export function In (v)
 {
     if (v === 0)
     {
@@ -14,7 +14,7 @@ function In (v)
     }
 }
 
-function Out (v)
+export function Out (v)
 {
     if (v === 0)
     {
@@ -30,7 +30,7 @@ function Out (v)
     }
 }
 
-function InOut (v)
+export function InOut (v)
 {
     if (v === 0)
     {
@@ -45,11 +45,3 @@ function InOut (v)
         return 0.5 * (1 - Math.cos(Math.PI * v));
     }
 }
-
-module.exports = {
-
-    In: In,
-    Out: Out,
-    InOut: InOut
-
-};

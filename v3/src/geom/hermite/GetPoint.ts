@@ -1,4 +1,4 @@
-var Point = require('../point/Point');
+import Point from '../point';
 
 /**
 * Get a point on the curve using the `t` (time) value, which must be between 0 and 1.
@@ -8,7 +8,7 @@ var Point = require('../point/Point');
 * @param {Phaser.Point|Object} [point] - An optional Phaser.Point, or Object containing public `x` and `y` properties. If given the resulting values will be stored in the Objects `x` and `y` properties. If omitted a new Phaser.Point object is created.
 * @return {Phaser.Point} An Object with the x, y coordinate of the curve at the specified `t` value set in its `x` and `y` properties.
 */
-var GetPoint = function (curve, t, out)
+export default function (curve, t, out)
 {
     if (t === undefined) { t = 0; }
     if (out === undefined) { out = new Point(); }
@@ -30,6 +30,4 @@ var GetPoint = function (curve, t, out)
     out.y = t3 * curve._ay + t2 * curve._by + t * curve._v1y + curve._p1y;
 
     return out;
-};
-
-module.exports = GetPoint;
+}

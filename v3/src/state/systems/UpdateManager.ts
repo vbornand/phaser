@@ -9,29 +9,32 @@
 *
 * @class
 */
-var UpdateManager = function (state)
+export default class UpdateManager
 {
-    this.state = state;
+    state;
+    game;
+    list;
+    running;
+    processed;
 
-    this.game = state.game;
-
-    this.list = [];
-
-    // this.i = 1;
-
-    this.running = false;
-    
-    this.processed = 0;
-};
-
-UpdateManager.prototype.constructor = UpdateManager;
-
-UpdateManager.prototype = {
-
-    stop: function ()
+    constructor(state)
     {
-        if (!this.running)
-        {
+        this.state = state;
+
+        this.game = state.game;
+
+        this.list = [];
+
+        // this.i = 1;
+
+        this.running = false;
+
+        this.processed = 0;
+    }
+
+    stop()
+    {
+        if (!this.running) {
             return;
         }
 
@@ -40,19 +43,17 @@ UpdateManager.prototype = {
         this.list.length = 0;
 
         // this.i++;
-    },
+    }
 
-    start: function ()
+    start()
     {
-        if (!this.running)
-        {
+        if (!this.running) {
             return;
         }
 
         var len = this.list.length;
 
-        if (len === 0)
-        {
+        if (len === 0) {
             return;
         }
 
@@ -60,22 +61,17 @@ UpdateManager.prototype = {
 
         this.processed = 0;
 
-        for (var i = 0; i < len; i++)
-        {
+        for (var i = 0; i < len; i++) {
             //  Because it may have already been processed (as a child of another Transform that was updated)
-            if (this.list[i] && this.list[i]._dirty)
-            {
+            if (this.list[i] && this.list[i]._dirty) {
                 this.processed++;
                 this.list[i].update();
             }
         }
-    },
+    }
 
-    add: function (transform)
+    add(transform)
     {
         this.list.push(transform);
     }
-
-};
-
-module.exports = UpdateManager;
+}

@@ -1,6 +1,4 @@
-var Height = function (line)
+export default function (line)
 {
     return Math.abs(line.y1 - line.y2);
-};
-
-module.exports = Height;
+}

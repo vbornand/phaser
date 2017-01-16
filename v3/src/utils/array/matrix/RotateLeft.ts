@@ -1,8 +1,6 @@
-var RotateMatrix = require('./RotateMatrix)';
+import RotateMatrix from './RotateMatrix';
 
-var RotateLeft = function (matrix)
+export default function (matrix)
 {
     return RotateMatrix(matrix, -90);
 };
-
-module.exports = RotateLeft;

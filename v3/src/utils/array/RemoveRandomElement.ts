@@ -1,4 +1,4 @@
-var SpliceOne = require('./SpliceOne');
+import SpliceOne from './SpliceOne';
 
 /**
 * Removes a random object from the given array and returns it.
@@ -13,7 +13,7 @@ var SpliceOne = require('./SpliceOne');
 * @return {object} The random object that was removed.
 */
 
-var RemoveRandomElement = function (array, start, length)
+export default function (array, start, length)
 {
     if (start === undefined) { start = 0; }
     if (length === undefined) { length = array.length; }
@@ -22,5 +22,3 @@ var RemoveRandomElement = function (array, start, length)
 
     return SpliceOne(array, randomIndex);
 };
-
-module.exports = RemoveRandomElement;

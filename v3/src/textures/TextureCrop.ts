@@ -4,7 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var Clamp = require('../math/Clamp');
+import Clamp from '../math/Clamp';
 
 /**
 *
@@ -13,7 +13,7 @@ var Clamp = require('../math/Clamp');
 * @param {object} source
 * @param {number} scaleMode
 */
-var TextureCrop = function (gameObject, width, height, x, y)
+export default function (gameObject, width, height, x, y)
 {
     var frame = gameObject.frame;
 
@@ -44,5 +44,3 @@ var TextureCrop = function (gameObject, width, height, x, y)
 
     return gameObject;
 };
-
-module.exports = TextureCrop;

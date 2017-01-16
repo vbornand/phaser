@@ -1,61 +1,70 @@
-/**
+﻿/**
 * @author       Richard Davey <rich@photonstorm.com>
 * @author       Mat Groves (@Doormat23)
 * @copyright    2016 Photon Storm Ltd.
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var CONST = require('../../const');
-var CreateEmptyTexture = require('./utils/CreateEmptyTexture');
+import * as CONST from '../../const';
+import CreateEmptyTexture from './utils/CreateEmptyTexture';
 
-var WebGLRenderer = function (game)
-{
-    this.game = game;
+export default class WebGLRenderer {
 
-    this.type = CONST.WEBGL;
+    gl;
+    view;
+    config;
+    contextLost;
+    width;
+    height;
+    blendModes;
+    game;
+    autoResize;
+    type;
+    resolution;
+    multiTexture;
+    maxTextures;    
 
-    this.width = game.config.width * game.config.resolution;
-    this.height = game.config.height * game.config.resolution;
-    this.resolution = game.config.resolution;
+    constructor(game) {
+        this.game = game;
 
-    this.view = game.canvas;
+        this.type = CONST.WEBGL;
 
-    //   All of these settings will be able to be controlled via the Game Config
-    this.config = {
-        clearBeforeRender: true,
-        transparent: false,
-        autoResize: false,
-        preserveDrawingBuffer: false,
+        this.width = game.config.width * game.config.resolution;
+        this.height = game.config.height * game.config.resolution;
+        this.resolution = game.config.resolution;
 
-        WebGLContextOptions: {
-            alpha: true,
-            antialias: true,
-            premultipliedAlpha: true,
-            stencil: true,
-            preserveDrawingBuffer: false
+        this.view = game.canvas;
+
+        //   All of these settings will be able to be controlled via the Game Config
+        this.config = {
+            clearBeforeRender: true,
+            transparent: false,
+            autoResize: false,
+            preserveDrawingBuffer: false,
+
+            WebGLContextOptions: {
+                alpha: true,
+                antialias: true,
+                premultipliedAlpha: true,
+                stencil: true,
+                preserveDrawingBuffer: false
+            }
         }
-    };
 
-    this.contextLost = false;
-    this.maxTextures = 1;
-    this.multiTexture = false;
-    this.blendModes = [];
+        this.contextLost = false;
+        this.maxTextures = 1;
+        this.multiTexture = false;
+        this.blendModes = [];
 
-    this.gl = null;
+        this.gl = null;
 
-    this.init();
-};
+        this.init();
+    }
 
-WebGLRenderer.prototype.constructor = WebGLRenderer;
-
-WebGLRenderer.prototype = {
-
-    init: function ()
-    {
+    init() {
         this.gl = this.view.getContext('webgl', this.config.WebGLContextOptions) || this.view.getContext('experimental-webgl', this.config.WebGLContextOptions);
 
-        if (!this.gl)
-        {
+        if (!this.gl) {
             this.contextLost = true;
             throw new Error('This browser does not support WebGL. Try using the Canvas renderer.');
         }
@@ -64,9 +73,9 @@ WebGLRenderer.prototype = {
 
         /*
         //  Will need supporting
-
+ 
         this.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
-
+ 
         if (this.maxTextures === 1)
         {
             this.multiTexture = false;
@@ -75,7 +84,7 @@ WebGLRenderer.prototype = {
         {
             this.createMultiEmptyTextures();
         }
-
+ 
         this.emptyTexture = CreateEmptyTexture(this.gl, 1, 1, 0, 0);
         */
 
@@ -89,23 +98,23 @@ WebGLRenderer.prototype = {
 
         /*
         //  Will need supporting
-
+ 
         this.extensions.compression = {};
-
+ 
         var etc1 = gl.getExtension('WEBGL_compressed_texture_etc1') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_etc1');
         var pvrtc = gl.getExtension('WEBGL_compressed_texture_pvrtc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_pvrtc');
         var s3tc = gl.getExtension('WEBGL_compressed_texture_s3tc') || gl.getExtension('WEBKIT_WEBGL_compressed_texture_s3tc');
-
+ 
         if (etc1)
         {
             this.extensions.compression.ETC1 = etc1;
         }
-
+ 
         if (pvrtc)
         {
             this.extensions.compression.PVRTC = pvrtc;
         }
-
+ 
         if (s3tc)
         {
             this.extensions.compression.S3TC = s3tc;
@@ -114,10 +123,10 @@ WebGLRenderer.prototype = {
 
         //  Map Blend Modes
 
-        var add = [ gl.SRC_ALPHA, gl.DST_ALPHA ];
-        var normal = [ gl.ONE, gl.ONE_MINUS_SRC_ALPHA ];
-        var multiply = [ gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA ];
-        var screen = [ gl.SRC_ALPHA, gl.ONE ];
+        var add = [gl.SRC_ALPHA, gl.DST_ALPHA];
+        var normal = [gl.ONE, gl.ONE_MINUS_SRC_ALPHA];
+        var multiply = [gl.DST_COLOR, gl.ONE_MINUS_SRC_ALPHA];
+        var screen = [gl.SRC_ALPHA, gl.ONE];
 
         this.blendModes = [
             normal, add, multiply, screen, normal,
@@ -125,10 +134,9 @@ WebGLRenderer.prototype = {
             normal, normal, normal, normal,
             normal, normal, normal, normal
         ];
-    },
+    }
 
-    resize: function (width, height)
-    {
+    resize(width, height) {
         var res = this.game.config.resolution;
 
         this.width = width * res;
@@ -137,8 +145,7 @@ WebGLRenderer.prototype = {
         this.view.width = this.width;
         this.view.height = this.height;
 
-        if (this.autoResize)
-        {
+        if (this.autoResize) {
             this.view.style.width = (this.width / res) + 'px';
             this.view.style.height = (this.height / res) + 'px';
         }
@@ -152,7 +159,7 @@ WebGLRenderer.prototype = {
         //  Needed?
         // this.projection.x = (this.width / 2) / res;
         // this.projection.y = -(this.height / 2) / res;
-    },
+    }
 
     /**
      * Renders the State.
@@ -163,13 +170,11 @@ WebGLRenderer.prototype = {
      *   by the amount of time that will be simulated the next time update()
      *   runs. Useful for interpolating frames.
      */
-    render: function (state, interpolationPercentage)
-    {
+    render(state, interpolationPercentage) {
         // console.log('%c render start ', 'color: #ffffff; background: #00ff00;');
 
         //  No point rendering if our context has been blown up!
-        if (this.contextLost)
-        {
+        if (this.contextLost) {
             return;
         }
 
@@ -178,48 +183,44 @@ WebGLRenderer.prototype = {
         var gl = this.gl;
 
         /*
-
+ 
         //  This is the old render loop - add what you need here to replace it,
         //  but please allow each State to render to its own Quad FBO
-
+ 
         var fbo = state.sys.fbo;
-
+ 
         fbo.activate();
-
+ 
         //  clear is needed for the FBO, otherwise corruption ...
         gl.clear(gl.COLOR_BUFFER_BIT);
-
+ 
         this.setBlendMode(CONST.blendModes.NORMAL);
-
+ 
         this.batch.start();
-
+ 
         //  Could move to the State Systems or MainLoop
         this.game.state.renderChildren(this, state, interpolationPercentage);
-
+ 
         this.batch.stop();
-
+ 
         //  Call state.render here, so we can do some extra shizzle on the top
         //  Maybe pass in the FBO texture too?
-
+ 
         fbo.render(null);
-
+ 
         //  Unbind the fbo texture and replace it with an empty texture.
         //  If we forget this we corrupt the main context texture!
         //  or get `RENDER WARNING: there is no texture bound to the unit 0` spam in the console
         gl.bindTexture(gl.TEXTURE_2D, this.emptyTexture);
-
+ 
         */
 
         // console.log('%c render end ', 'color: #ffffff; background: #ff0000;');
 
         //  Add Post-render hook
-    },
-
-    destroy: function ()
-    {
-        this.gl = null;
     }
 
-};
-
-module.exports = WebGLRenderer;
+    destroy() {
+        this.gl = null;
+    }
+}

@@ -5,7 +5,7 @@
 * @param {any[]} array - The array to shuffle.
 * @return {any[]} The original array, now shuffled.
 */
-var Shuffle = function (array)
+export default function (array)
 {
     for (var i = array.length - 1; i > 0; i--)
     {
@@ -17,5 +17,3 @@ var Shuffle = function (array)
 
     return array;
 };
-
-module.exports = Shuffle;

@@ -1,10 +1,10 @@
-var Pad = require('../../string/Pad');
-var CheckMatrix = require('./CheckMatrix');
+import Pad from '../../string/Pad';
+import CheckMatrix from './CheckMatrix';
 
 //  Generates a string (which you can pass to console.log) from the given
 //  Array Matrix.
 
- var MatrixToString = function (matrix)
+ export default function (matrix)
  {
     var str = '';
 
@@ -55,5 +55,3 @@ var CheckMatrix = require('./CheckMatrix');
 
     return str;
 };
-
-module.exports = MatrixToString;

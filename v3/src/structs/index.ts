@@ -1,4 +1,2 @@
-module.exports = {
-    Set: require('./Set'),
-    Map: require('./Map')
-};
+export { default as Map } from './Map';
+export { default as Set } from './Set';

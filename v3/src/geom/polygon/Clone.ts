@@ -1,8 +1,6 @@
-var Polygon = require('./Polygon');
+import Polygon from './Polygon';
 
-var Clone = function (polygon)
+export default function (polygon)
 {
     return new Polygon(polygon.points);
-};
-
-module.exports = Clone;
+}

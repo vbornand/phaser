@@ -1,5 +1,4 @@
-
-var SinCosTableGenerator = function (length, sinAmp, cosAmp, frequency)
+export default function (length, sinAmp, cosAmp, frequency)
 {
     if (sinAmp === undefined) { sinAmp = 1; }
     if (cosAmp === undefined) { cosAmp = 1; }
@@ -25,5 +24,3 @@ var SinCosTableGenerator = function (length, sinAmp, cosAmp, frequency)
         length: length
     };
 };
-
-module.exports = SinCosTableGenerator;

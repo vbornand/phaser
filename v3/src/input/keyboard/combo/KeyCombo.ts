@@ -1,12 +1,11 @@
-var GetObjectValue = require('../../../utils/GetObjectValue');
+import GetObjectValue from '../../../utils/GetObjectValue';
 
 //  Keys can be either:
-//  
+//
 //  A string (ATARI)
 //  An array of either integers (key codes) or strings, or a mixture of both
 //  An array of objects (such as Key objects) with a public 'keyCode' property
-
-var KeyCombo = function (keys, config)
+export default function (keys, config)
 {
     //  Can't have a zero or single length combo (string or array based)
     if (keys.length < 2)
@@ -65,5 +64,3 @@ var KeyCombo = function (keys, config)
     //  If previously matched and they press Key 1 again, will it reset?
     this.resetOnMatch = GetObjectValue(config, 'resetOnMatch', false);
 };
-
-module.exports = KeyCombo;

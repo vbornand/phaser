@@ -14,7 +14,7 @@
 * @param {Phaser.Rectangle|object} rect - The rectangle, or rectangle-like object, to check for intersection with.
 * @return {boolean} True if the line intersects with the rectangle edges, or starts or ends within the rectangle.
 */
-var LineToRectangle = function (line, rect)
+export default function (line, rect)
 {
     var x1 = line.x1;
     var y1 = line.y2;
@@ -81,6 +81,4 @@ var LineToRectangle = function (line, rect)
     }
 
     return false;
-};
-
-module.exports = LineToRectangle;
+}

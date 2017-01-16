@@ -6,105 +6,110 @@
 
 // My thanks to Isaac Sukin for creating MainLoop.js, on which lots of this is based.
 
-var MainLoop = function (state, framerate)
-{
-    /**
-    * @property {Phaser.State} state
-    */
-    this.state = state;
+export default class MainLoop {
 
-    /**
-    * @property {Phaser.Game} game - A reference to the currently running Game.
-    */
-    this.game = state.game;
+    state;
+    game;
+    timestep;
+    physicsStep;
+    frameDelta;
+    lastFrameTimeMs;
+    fps;
+    lastFpsUpdate;
+    framesThisSecond;
+    numUpdateSteps;
+    minFrameDelay;
+    running;
+    started;
+    panic;
 
-    // The amount of time (in milliseconds) to simulate each time update() runs.
-    this.timestep = 1000 / framerate;
+    constructor(state, framerate) {
+        /**
+        * @property {Phaser.State} state
+        */
+        this.state = state;
 
-    this.physicsStep = 1 / framerate;
+        /**
+        * @property {Phaser.Game} game - A reference to the currently running Game.
+        */
+        this.game = state.game;
 
-    // The cumulative amount of in-app time that hasn't been simulated yet.
-    // See the comments inside animate() for details.
-    this.frameDelta = 0;
+        // The amount of time (in milliseconds) to simulate each time update() runs.
+        this.timestep = 1000 / framerate;
 
-    // The timestamp in milliseconds of the last time the main loop was run.
-    // Used to compute the time elapsed between frames.
-    this.lastFrameTimeMs = 0;
+        this.physicsStep = 1 / framerate;
 
-    // An exponential moving average of the frames per second.
-    this.fps = 60;
+        // The cumulative amount of in-app time that hasn't been simulated yet.
+        // See the comments inside animate() for details.
+        this.frameDelta = 0;
 
-    // The timestamp (in milliseconds) of the last time the `fps` moving
-    // average was updated.
-    this.lastFpsUpdate = 0;
+        // The timestamp in milliseconds of the last time the main loop was run.
+        // Used to compute the time elapsed between frames.
+        this.lastFrameTimeMs = 0;
 
-    // The number of frames delivered in the current second.
-    this.framesThisSecond = 0;
+        // An exponential moving average of the frames per second.
+        this.fps = 60;
 
-    // The number of times update() is called in a given frame. This is only
-    // relevant inside of animate(), but a reference is held externally so that
-    // this variable is not marked for garbage collection every time the main
-    // loop runs.
-    this.numUpdateSteps = 0;
+        // The timestamp (in milliseconds) of the last time the `fps` moving
+        // average was updated.
+        this.lastFpsUpdate = 0;
 
-    // The minimum amount of time in milliseconds that must pass since the last
-    // frame was executed before another frame can be executed. The
-    // multiplicative inverse caps the FPS (the default of zero means there is
-    // no cap).
-    this.minFrameDelay = 0;
+        // The number of frames delivered in the current second.
+        this.framesThisSecond = 0;
 
-    // Whether the main loop is running.
-    this.running = false;
+        // The number of times update() is called in a given frame. This is only
+        // relevant inside of animate(), but a reference is held externally so that
+        // this variable is not marked for garbage collection every time the main
+        // loop runs.
+        this.numUpdateSteps = 0;
 
-    // `true` if `MainLoop.start()` has been called and the most recent time it
-    // was called has not been followed by a call to `MainLoop.stop()`. This is
-    // different than `running` because there is a delay of a few milliseconds
-    // after `MainLoop.start()` is called before the application is considered
-    // "running." This delay is due to waiting for the next frame.
-    this.started = false;
+        // The minimum amount of time in milliseconds that must pass since the last
+        // frame was executed before another frame can be executed. The
+        // multiplicative inverse caps the FPS (the default of zero means there is
+        // no cap).
+        this.minFrameDelay = 0;
 
-    // Whether the simulation has fallen too far behind real time.
-    // Specifically, `panic` will be set to `true` if too many updates occur in
-    // one frame. This is only relevant inside of animate(), but a reference is
-    // held externally so that this variable is not marked for garbage
-    // collection every time the main loop runs.
-    this.panic = false;
-};
+        // Whether the main loop is running.
+        this.running = false;
 
-MainLoop.prototype.constructor = MainLoop;
+        // `true` if `MainLoop.start()` has been called and the most recent time it
+        // was called has not been followed by a call to `MainLoop.stop()`. This is
+        // different than `running` because there is a delay of a few milliseconds
+        // after `MainLoop.start()` is called before the application is considered
+        // "running." This delay is due to waiting for the next frame.
+        this.started = false;
 
-MainLoop.prototype = {
+        // Whether the simulation has fallen too far behind real time.
+        // Specifically, `panic` will be set to `true` if too many updates occur in
+        // one frame. This is only relevant inside of animate(), but a reference is
+        // held externally so that this variable is not marked for garbage
+        // collection every time the main loop runs.
+        this.panic = false;
+    }
 
-    setMaxFPS: function (fps)
-    {
-        if (fps === 0)
-        {
+    setMaxFPS(fps) {
+        if (fps === 0) {
             this.stop();
         }
-        else
-        {
+        else {
             this.minFrameDelay = 1000 / fps;
         }
-    },
+    }
 
-    getMaxFPS: function ()
-    {
+    getMaxFPS() {
         return 1000 / this.minFrameDelay;
-    },
+    }
 
-    resetFrameDelta: function ()
-    {
+    resetFrameDelta() {
         var oldFrameDelta = this.frameDelta;
 
         this.frameDelta = 0;
 
         return oldFrameDelta;
-    },
+    }
 
-    start: function ()
-    {
-        if (this.started)
-        {
+    start() {
+        if (this.started) {
             return this;
         }
 
@@ -114,15 +119,13 @@ MainLoop.prototype = {
         this.lastFrameTimeMs = window.performance.now();
         this.lastFpsUpdate = window.performance.now();
         this.framesThisSecond = 0;
-    },
+    }
 
     //  timestamp = DOMHighResTimeStamp
-    step: function (timestamp)
-    {
+    step(timestamp) {
         // Throttle the frame rate (if minFrameDelay is set to a non-zero value by
         // `MainLoop.setMaxAllowedFPS()`).
-        if (timestamp < this.lastFrameTimeMs + this.minFrameDelay)
-        {
+        if (timestamp < this.lastFrameTimeMs + this.minFrameDelay) {
             return;
         }
 
@@ -144,8 +147,7 @@ MainLoop.prototype = {
         // moving average of all frames per second, with an alpha of 0.25. This
         // means that more recent seconds affect the estimated frame rate more than
         // older seconds.
-        if (timestamp > this.lastFpsUpdate + 1000)
-        {
+        if (timestamp > this.lastFpsUpdate + 1000) {
             // Compute the new exponential moving average with an alpha of 0.25.
             // Using constants inline is okay here.
             this.fps = 0.25 * this.framesThisSecond + 0.75 * this.fps;
@@ -160,18 +162,15 @@ MainLoop.prototype = {
 
         var step = this.timestep;
 
-        while (this.frameDelta >= step)
-        {
+        while (this.frameDelta >= step) {
             // this.update(this.timestep);
 
             this.state.sys.update(step, this.physicsStep);
 
-            for (var c = 0; c < this.state.sys.children.list.length; c++)
-            {
+            for (var c = 0; c < this.state.sys.children.list.length; c++) {
                 var child = this.state.sys.children.list[c];
 
-                if (child.exists)
-                {
+                if (child.exists) {
                     child.update(step);
                 }
             }
@@ -181,8 +180,7 @@ MainLoop.prototype = {
 
             this.frameDelta -= this.timestep;
 
-            if (++this.numUpdateSteps >= 240)
-            {
+            if (++this.numUpdateSteps >= 240) {
                 this.panic = true;
                 break;
             }
@@ -192,8 +190,7 @@ MainLoop.prototype = {
 
         this.state.sys.updates.start();
 
-        if (this.state.settings.visible && this.state.sys.color.alpha !== 0)
-        {
+        if (this.state.settings.visible && this.state.sys.color.alpha !== 0) {
             this.game.renderer.render(this.state, this.frameDelta / this.timestep);
         }
 
@@ -203,10 +200,10 @@ MainLoop.prototype = {
         this.state.sys.end(this.fps, this.panic);
 
         this.panic = false;
-    },
+    }
 
     /*
-    update: function (timestep)
+    update (timestep)
     {
         this.state.sys.update(timestep);
 
@@ -235,17 +232,13 @@ MainLoop.prototype = {
                 child.update(timestep);
             }
         }
-    },
+    }
     */
 
-    stop: function ()
-    {
+    stop() {
         this.running = false;
         this.started = false;
 
         return this;
     }
-
-};
-
-module.exports = MainLoop;
+}

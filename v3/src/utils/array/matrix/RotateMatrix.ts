@@ -1,5 +1,5 @@
-var CheckMatrix = require('./CheckMatrix');
-var TransposeMatrix = require('./TransposeMatrix');
+import CheckMatrix from './CheckMatrix';
+import TransposeMatrix from './TransposeMatrix';
 
 /**
 * Rotates the given matrix (array of arrays).
@@ -11,7 +11,7 @@ var TransposeMatrix = require('./TransposeMatrix');
 * @param {number|string} direction - The amount to rotate: the rotation in degrees (90, -90, 270, -270, 180) or a string command ('rotateLeft', 'rotateRight' or 'rotate180').
 * @return {Array<any[]>} The rotated matrix. The source matrix should be discarded for the returned matrix.
 */
-var RotateMatrix = function (matrix, direction)
+export default function (matrix, direction)
 {
     if (direction === undefined) { direction = 90; }
 
@@ -47,5 +47,3 @@ var RotateMatrix = function (matrix, direction)
 
     return matrix;
 };
-
-module.exports = RotateMatrix;

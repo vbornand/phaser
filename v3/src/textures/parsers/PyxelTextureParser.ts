@@ -13,7 +13,7 @@
 * @param {object} json - The JSON data from the Texture Atlas. Must be in Pyxel JSON format.
 * @return {Phaser.FrameData} A FrameData object containing the parsed frames.
 */
-var PyxelTextureParser = function (texture, json)
+export default function (texture, json, dummy?)
 {
     //  Malformed? There are a few keys to check here.
     var signature = [ 'layers', 'tilewidth', 'tileheight', 'tileswide', 'tileshigh' ];
@@ -36,6 +36,9 @@ var PyxelTextureParser = function (texture, json)
         return;
     }
 
+    return;
+    
+    /*
     var data = new Phaser.FrameData();
 
     var tileheight = json['tileheight'];
@@ -60,6 +63,5 @@ var PyxelTextureParser = function (texture, json)
     }
 
     return data;
-};
-
-module.exports = PyxelTextureParser;
+    */
+}

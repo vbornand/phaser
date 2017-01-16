@@ -1,13 +1,9 @@
-var RectangleToValues = function (rect, left, right, top, bottom, tolerance)
+export default function (rect, left, right, top, bottom, tolerance = 0)
 {
-    if (tolerance === undefined) { tolerance = 0; }
-
     return !(
         left > rect.right + tolerance ||
         right < rect.left - tolerance ||
         top > rect.bottom + tolerance ||
         bottom < rect.top - tolerance
     );
-};
-
-module.exports = RectangleToValues;
+}

@@ -1,6 +1,5 @@
 //  Return boolean (true if it reached the end of the combo, false if not)
-
-var AdvanceKeyCombo = function (event, combo)
+export default function (event, combo)
 {
     combo.timeLastMatched = event.timeStamp;
     combo.index++;
@@ -15,5 +14,3 @@ var AdvanceKeyCombo = function (event, combo)
         return false;
     }
 };
-
-module.exports = AdvanceKeyCombo;

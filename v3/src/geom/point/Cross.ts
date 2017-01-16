@@ -1,6 +1,4 @@
-var Cross = function (pointA, pointB)
+export default function (pointA, pointB)
 {
     return ((pointA.x * pointB.y) - (pointA.y * pointB.x));
-};
-
-module.exports = Cross;
+}

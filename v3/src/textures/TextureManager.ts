@@ -4,8 +4,8 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var Parser = require('./parsers');
-var Texture = require('./Texture');
+import * as Parser from './parsers';
+import Texture from './Texture';
 
 /**
 * Textures are managed by the global TextureManager. This is a singleton class that is
@@ -18,34 +18,34 @@ var Texture = require('./Texture');
 * @class Phaser.TextureManager
 * @constructor
 */
-var TextureManager = function ()
+export default class TextureManager
 {
-    this.list = {};
-};
+    public list;
 
-TextureManager.prototype.constructor = TextureManager;
+    constructor()
+    {
+        this.list = {};
+    };
 
-TextureManager.prototype = {
-
-    addImage: function (key, source)
+    addImage (key, source)
     {
         var texture = this.create(key, source);
-        
+
         Parser.Image(texture, 0);
 
         return texture;
-    },
+    }
 
-    addCanvas: function (key, source)
+    addCanvas (key, source)
     {
         var texture = this.create(key, source);
-        
+
         Parser.Canvas(texture, 0);
 
         return texture;
-    },
+    }
 
-    addAtlas: function (key, source, data)
+    addAtlas (key, source, data)
     {
         //  Is it a Hash or an Array?
 
@@ -57,9 +57,9 @@ TextureManager.prototype = {
         {
             return this.addAtlasJSONHash(key, source, data);
         }
-    },
+    }
 
-    addAtlasJSONArray: function (key, source, data)
+    addAtlasJSONArray (key, source, data)
     {
         var texture = this.create(key, source);
 
@@ -76,9 +76,9 @@ TextureManager.prototype = {
         }
 
         return texture;
-    },
+    }
 
-    addAtlasJSONHash: function (key, source, data)
+    addAtlasJSONHash (key, source, data)
     {
         var texture = this.create(key, source);
 
@@ -95,9 +95,9 @@ TextureManager.prototype = {
         }
 
         return texture;
-    },
+    }
 
-    addSpriteSheet: function (key, source, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
+    addSpriteSheet (key, source, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
     {
         var texture = this.create(key, source);
 
@@ -107,9 +107,9 @@ TextureManager.prototype = {
         Parser.SpriteSheet(texture, 0, 0, 0, width, height, frameWidth, frameHeight, startFrame, endFrame, margin, spacing);
 
         return texture;
-    },
+    }
 
-    addSpriteSheetFromAtlas: function (key, atlasKey, atlasFrame, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
+    addSpriteSheetFromAtlas (key, atlasKey, atlasFrame, frameWidth, frameHeight, startFrame, endFrame, margin, spacing)
     {
         var atlas = this.get(atlasKey);
         var sheet = atlas.get(atlasFrame);
@@ -122,9 +122,9 @@ TextureManager.prototype = {
 
             return texture;
         }
-    },
+    }
 
-    addAtlasStarlingXML: function (key, source, data)
+    addAtlasStarlingXML (key, source, data)
     {
         var texture = this.create(key, source);
 
@@ -141,9 +141,9 @@ TextureManager.prototype = {
         }
 
         return texture;
-    },
+    }
 
-    addAtlasPyxel: function (key, source, data)
+    addAtlasPyxel (key, source, data)
     {
         var texture = this.create(key, source);
 
@@ -160,9 +160,9 @@ TextureManager.prototype = {
         }
 
         return texture;
-    },
+    }
 
-    create: function (key, source)
+    create (key, source)
     {
         var texture = new Texture(this, key, source);
 
@@ -170,14 +170,14 @@ TextureManager.prototype = {
 
         return texture;
 
-    },
+    }
 
-    exists: function (key)
+    exists (key)
     {
         return (this.list.hasOwnProperty(key));
-    },
+    }
 
-    get: function (key)
+    get (key)
     {
         if (key === undefined) { key = '__DEFAULT'; }
 
@@ -189,25 +189,25 @@ TextureManager.prototype = {
         {
             return this.list['__MISSING'];
         }
-    },
+    }
 
-    cloneFrame: function (key, frame)
+    cloneFrame (key, frame)
     {
         if (this.list[key])
         {
             return this.list[key].get(frame).clone();
         }
-    },
+    }
 
-    getFrame: function (key, frame)
+    getFrame (key, frame)
     {
         if (this.list[key])
         {
             return this.list[key].get(frame);
         }
-    },
+    }
 
-    setTexture: function (gameObject, key, frame)
+    setTexture (gameObject, key, frame)
     {
         if (this.list[key])
         {
@@ -216,7 +216,7 @@ TextureManager.prototype = {
         }
 
         return gameObject;
-    },
+    }
 
     /**
     * Passes all Textures to the given callback.
@@ -226,7 +226,7 @@ TextureManager.prototype = {
     * @param {object} [thisArg] - Value to use as `this` when executing callback.
     * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
     */
-    each: function (callback, thisArg)
+    each (callback, thisArg)
     {
         var args = [ null ];
 
@@ -243,6 +243,4 @@ TextureManager.prototype = {
         }
     }
 
-};
-
-module.exports = TextureManager;
+}

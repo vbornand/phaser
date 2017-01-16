@@ -1,4 +1,4 @@
-var FloorAll = function (rect)
+export default function (rect)
 {
     rect.x = Math.floor(rect.x);
     rect.y = Math.floor(rect.y);
@@ -7,5 +7,3 @@ var FloorAll = function (rect)
 
     return rect;
 };
-
-module.exports = FloorAll;

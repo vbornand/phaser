@@ -7,13 +7,13 @@
 * This would return: `bob---` as it has padded it out to 6 characters, using the `-` on the right.
 *
 * You can also use it to pad numbers (they are always returned as strings):
-* 
+*
 * `pad(512, 6, '0', 1)`
 *
 * Would return: `000512` with the string padded to the left.
 *
 * If you don't specify a direction it'll pad to both sides:
-* 
+*
 * `pad('c64', 7, '*')`
 *
 * Would return: `**c64**`
@@ -25,11 +25,11 @@
 * @param {integer} [dir=3] - The direction dir = 1 (left), 2 (right), 3 (both).
 * @return {string} The padded string.
 */
-var Pad = function (str, len, pad, dir)
+export default function (str, len?, pad?, dir?)
 {
-    if (len === undefined) { var len = 0; }
-    if (pad === undefined) { var pad = ' '; }
-    if (dir === undefined) { var dir = 3; }
+    if (len === undefined) { len = 0; }
+    if (pad === undefined) { pad = ' '; }
+    if (dir === undefined) { dir = 3; }
 
     str = str.toString();
 
@@ -58,5 +58,3 @@ var Pad = function (str, len, pad, dir)
     return str;
 
 };
-
-module.exports = Pad;

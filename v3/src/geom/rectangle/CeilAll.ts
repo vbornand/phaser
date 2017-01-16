@@ -1,4 +1,4 @@
-var CeilAll = function (rect)
+export default function (rect)
 {
     rect.x = Math.ceil(rect.x);
     rect.y = Math.ceil(rect.y);
@@ -7,5 +7,3 @@ var CeilAll = function (rect)
 
     return rect;
 };
-
-module.exports = CeilAll;

@@ -1,6 +1,6 @@
-var Linear = require('../Linear');
+import Linear from '../Linear';
 
-var LinearInterpolation = function (v, k)
+export default function (v, k)
 {
     var m = v.length - 1;
     var f = m * k;
@@ -18,5 +18,3 @@ var LinearInterpolation = function (v, k)
 
     return Linear(v[i], v[(i + 1 > m) ? m : i + 1], f - i);
 };
-
-module.exports = LinearInterpolation;

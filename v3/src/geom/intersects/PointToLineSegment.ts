@@ -1,6 +1,6 @@
-var PointToLine = require('./PointToLine');
+import PointToLine from './PointToLine';
 
-var PointToLineSegment = function (point, line)
+export default function (point, line)
 {
     if (!PointToLine(point, line))
     {
@@ -13,6 +13,4 @@ var PointToLineSegment = function (point, line)
     var yMax = Math.max(line.y1, line.y2);
 
     return ((point.x >= xMin && point.x <= xMax) && (point.y >= yMin && point.y <= yMax));
-};
-
-module.exports = PointToLineSegment;
+}

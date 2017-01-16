@@ -7,7 +7,7 @@
 * @param {float} max - The maximum bounds.
 * @return {number} The clamped value.
 */
-var Clamp = function (v, min, max)
+export default function (v, min, max)
 {
     if (v < min)
     {
@@ -22,5 +22,3 @@ var Clamp = function (v, min, max)
         return v;
     }
 };
-
-module.exports = Clamp;

@@ -1,7 +1,7 @@
-//  The size of the Rectangle object, expressed as a Point object 
+//  The size of the Rectangle object, expressed as a Point object
 //  with the values of the width and height properties.
 
-var GetSize = function (rect, out)
+export default function (rect, out)
 {
     if (out === undefined) { out = { x: 0, y: 0 }; }
 
@@ -10,5 +10,3 @@ var GetSize = function (rect, out)
 
     return out;
 };
-
-module.exports = GetSize;

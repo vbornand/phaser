@@ -1,81 +1,95 @@
-var GetURL = require('./GetURL');
-var CONST = require('./const');
-var XHRLoader = require('./XHRLoader');
-var XHRSettings = require('./XHRSettings');
-var MergeXHRSettings = require('./MergeXHRSettings');
+import GetURL from './GetURL';
+import * as CONST from './const';
+import XHRLoader from './XHRLoader';
+import XHRSettings from './XHRSettings';
+import MergeXHRSettings from './MergeXHRSettings';
 
-var File = function (type, key, url, responseType, xhrSettings)
+export default class File
 {
-    //  file type (image, json, etc) for sorting within the Loader
-    this.type = type;
+    type;
+    key;
+    url;
+    src;
+    xhrSettings;
+    xhrLoader;
+    state;
+    bytesTotal;
+    bytesLoaded;
+    percentComplete;
+    crossOrigin;
+    data;
+    linkFile;
+    linkType;
+    callback;
 
-    //  unique cache key (unique within its file type)
-    this.key = key;
-
-    //  The URL of the file, not including baseURL
-    this.url = url;
-
-    //  Set when the Loader calls 'load' on this file
-    this.src = '';
-
-    this.xhrSettings = XHRSettings(responseType);
-
-    if (xhrSettings)
+    constructor (type, key, url, responseType, xhrSettings)
     {
-        this.xhrSettings = MergeXHRSettings(this.xhrSettings, xhrSettings);
+        //  file type (image, json, etc) for sorting within the Loader
+        this.type = type;
+
+        //  unique cache key (unique within its file type)
+        this.key = key;
+
+        //  The URL of the file, not including baseURL
+        this.url = url;
+
+        //  Set when the Loader calls 'load' on this file
+        this.src = '';
+
+        this.xhrSettings = XHRSettings(responseType);
+
+        if (xhrSettings)
+        {
+            this.xhrSettings = MergeXHRSettings(this.xhrSettings, xhrSettings);
+        }
+
+        this.xhrLoader = null;
+
+        this.state = CONST.FILE_PENDING;
+
+        //  Set by onProgress (only if loading via XHR)
+        this.bytesTotal = 0;
+        this.bytesLoaded = -1;
+        this.percentComplete = -1;
+
+        //  For CORs based loading.
+        //  If this is undefined then the File will check BaseLoader.crossOrigin and use that (if set)
+        this.crossOrigin = undefined;
+
+        //  The actual processed file data
+        this.data = undefined;
+
+        //  Multipart file? (i.e. an atlas and its json together)
+        this.linkFile = undefined;
+        this.linkType = '';
+
+        this.callback = null;
     }
 
-    this.xhrLoader = null;
-
-    this.state = CONST.FILE_PENDING;
-
-    //  Set by onProgress (only if loading via XHR)
-    this.bytesTotal = 0;
-    this.bytesLoaded = -1;
-    this.percentComplete = -1;
-
-    //  For CORs based loading.
-    //  If this is undefined then the File will check BaseLoader.crossOrigin and use that (if set)
-    this.crossOrigin = undefined;
-
-    //  The actual processed file data
-    this.data = undefined;
-
-    //  Multipart file? (i.e. an atlas and its json together)
-    this.linkFile = undefined;
-    this.linkType = '';
-
-    this.callback = null;
-};
-
-File.prototype.constructor = File;
-
-File.prototype = {
-
-    resetXHR: function ()
+    resetXHR ()
     {
         this.xhrLoader.onload = undefined;
         this.xhrLoader.onerror = undefined;
         this.xhrLoader.onprogress = undefined;
-    },
+    }
 
     //  Called when the Image loads
     //  ProgressEvent
-    onLoad: function (event)
+    onLoad (event)
     {
         this.resetXHR();
 
         this.callback(this, true);
-    },
+    }
 
-    onError: function (event)
+    onError (event)
     {
         this.resetXHR();
 
         this.callback(this, false);
-    },
+    }
 
-    onProgress: function (event)
+    onProgress (event)
     {
         if (event.lengthComputable)
         {
@@ -86,18 +100,18 @@ File.prototype = {
         }
 
         // console.log(this.percentComplete + '% (' + this.bytesLoaded + ' bytes)');
-    },
+    }
 
-    onProcess: function (callback)
+    onProcess (callback)
     {
         this.state = CONST.FILE_PROCESSING;
 
         this.onComplete();
 
         callback(this);
-    },
+    }
 
-    onComplete: function ()
+    onComplete ()
     {
         if (this.linkFile)
         {
@@ -117,10 +131,10 @@ File.prototype = {
         {
             this.state = CONST.FILE_COMPLETE;
         }
-    },
+    }
 
     //  Called by the Loader, starts the actual file downloading
-    load: function (callback, baseURL, globalXHR)
+    load (callback, baseURL, globalXHR)
     {
         if (baseURL === undefined) { baseURL = ''; }
 
@@ -137,6 +151,4 @@ File.prototype = {
             this.xhrLoader = XHRLoader(this, globalXHR);
         }
     }
-};
-
-module.exports = File;
+}

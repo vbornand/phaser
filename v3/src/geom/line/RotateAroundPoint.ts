@@ -1,8 +1,6 @@
-var RotateAroundXY = require('./RotateAroundXY');
+import RotateAroundXY from './RotateAroundXY';
 
-var RotateAroundPoint = function (line, point, angle)
+export default function (line, point, angle)
 {
     return RotateAroundXY(line, point.x, point.y, angle);
-};
-
-module.exports = RotateAroundPoint;
+}

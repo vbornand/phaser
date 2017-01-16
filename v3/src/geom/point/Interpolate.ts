@@ -1,6 +1,6 @@
-var Point = require('./Point');
+import Point from './Point';
 
-var Interpolate = function (pointA, pointB, t, out)
+export default function (pointA, pointB, t, out)
 {
     if (t === undefined) { t = 0; }
     if (out === undefined) { out = new Point(); }
@@ -9,6 +9,4 @@ var Interpolate = function (pointA, pointB, t, out)
     out.y = pointA.y + ((pointB.y - pointA.y) * t);
 
     return out;
-};
-
-module.exports = Interpolate;
+}

@@ -4,7 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var FactoryContainer = require('../../gameobjects/FactoryContainer');
+import FactoryContainer from '../../gameobjects/FactoryContainer';
 
 /**
 * The GameObject Factory is a quick way to create many common game objects. The Factory is owned by the State.
@@ -37,4 +37,4 @@ function init (state)
     return GameObjectCreator;
 }
 
-module.exports = init;
+export default init;

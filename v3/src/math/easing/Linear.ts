@@ -5,9 +5,7 @@
 * @param {number} v - The value to be tweened.
 * @returns {number} v.
 */
-var Linear = function (v)
+export default function (v)
 {
     return v;
 };
-
-module.exports = Linear;

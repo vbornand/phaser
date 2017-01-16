@@ -10,7 +10,7 @@
 *    [ 3, 3, 3, 3, 3, 3 ]
 *];
 */
-var CheckMatrix = function (matrix)
+export default function (matrix)
 {
     if (!Array.isArray(matrix) || matrix.length < 2 || !Array.isArray(matrix[0]))
     {
@@ -31,5 +31,3 @@ var CheckMatrix = function (matrix)
 
     return true;
 };
-
-module.exports = CheckMatrix;

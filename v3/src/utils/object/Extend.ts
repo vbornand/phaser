@@ -1,19 +1,19 @@
-var IsPlainObject = require('./IsPlainObject');
+import IsPlainObject from './IsPlainObject';
 
 /**
 * This is a slightly modified version of http://api.jquery.com/jQuery.extend/
-* 
+*
 * @method Phaser.Utils.extend
 * @param {boolean} deep - Perform a deep copy?
 * @param {object} target - The target object to copy to.
 * @return {object} The extended object.
 */
-var Extend = function ()
+export default function Extend(deep?, target?, copy?)
 {
-    var options, name, src, copy, copyIsArray, clone,
-        target = arguments[0] || {},
-        i = 1,
-        length = arguments.length,
+    var options, name, src, copy, copyIsArray, clone;
+        target = arguments[0] || {};
+    var i = 1,
+        length = arguments.length;
         deep = false;
 
     // Handle a deep copy situation
@@ -78,5 +78,3 @@ var Extend = function ()
     // Return the modified object
     return target;
 };
-
-module.exports = Extend;

@@ -1,39 +1,36 @@
-var CacheEntry = require('./CacheEntry');
+import CacheEntry from './CacheEntry';
 
-var BaseCache = function ()
+export default class BaseCache
 {
-    this.entries = new Map();
-};
+    public entries: Map<any, any>;
 
-BaseCache.prototype.constructor = BaseCache;
-
-BaseCache.prototype = {
-
-    add: function (key, data)
+    constructor()
     {
-        this.files.set(key, data);
-    },
-
-    has: function (key)
-    {
-        return this.files.has(key);
-    },
-
-    get: function (key)
-    {
-        return this.files.get(key);
-    },
-
-    remove: function (key)
-    {
-        this.files.delete(key);
-    },
-
-    destroy: function ()
-    {
-        this.files.clear();
+        this.entries = new Map();
     }
 
-};
+    public add (key, data)
+    {
+        this.entries.set(key, data);
+    }
 
-module.exports = BaseCache;
+    public has (key)
+    {
+        return this.entries.has(key);
+    }
+
+    public get (key)
+    {
+        return this.entries.get(key);
+    }
+
+    public remove (key)
+    {
+        this.entries.delete(key);
+    }
+
+    public destroy ()
+    {
+        this.entries.clear();
+    }
+}

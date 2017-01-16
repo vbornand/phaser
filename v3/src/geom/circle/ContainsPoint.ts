@@ -1,8 +1,6 @@
-var Contains = require('./Contains');
+import Contains from './Contains';
 
-var ContainsPoint = function (circle, point)
+export default function (circle, point)
 {
     return Contains(circle, point.x, point.y);
 };
-
-module.exports = ContainsPoint;

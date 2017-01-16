@@ -6,7 +6,7 @@
 * @param {string} [value] - The touch action to set. Defaults to 'none'.
 * @return {HTMLCanvasElement} The source canvas.
 */
-var UserSelect = function (canvas, value)
+export default function (canvas, value)
 {
     if (value === undefined) { value = 'none'; }
 
@@ -27,6 +27,4 @@ var UserSelect = function (canvas, value)
     canvas.style['-webkit-tap-highlight-color'] = 'rgba(0, 0, 0, 0)';
 
     return canvas;
-};
-
-module.exports = UserSelect;
+}

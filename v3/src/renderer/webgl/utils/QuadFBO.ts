@@ -4,7 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-var CreateEmptyTexture = require('./CreateEmptyTexture');
+import CreateEmptyTexture from './CreateEmptyTexture';
 
 /**
 * Frame Buffer Object with drawing quad + shader
@@ -13,57 +13,75 @@ var CreateEmptyTexture = require('./CreateEmptyTexture');
 * @constructor
 * @param {Phaser.Game} game - Game reference to the currently running game.
 */
-var QuadFBO = function (renderer, parent, x, y, width, height)
-{
-    this.renderer = renderer;
+export default class QuadFBO {
 
-    this.parent = parent;
+    renderer;
+    parent;
+    gl;
+    private _x;
+    private _y;
+    private _width;
+    private _height;
+    textureIndex;
+    clipX;
+    clipY;
+    vertexBuffer;
+    indexBuffer;
+    textureBuffer;
+    vertices;
+    texture;
+    renderBuffer;
+    frameBuffer;
+    program;
+    aVertexPosition;
+    aTextureCoord;
+    private _normal;
+    private _twirl;
 
-    this.gl = renderer.gl;
+    constructor(renderer, parent, x, y, width, height) {
+        this.renderer = renderer;
 
-    this._x = x;
-    this._y = y;
-    this._width = width;
-    this._height = height;
+        this.parent = parent;
 
-    this.textureIndex = 0;
+        this.gl = renderer.gl;
 
-    this.clipX = function (x)
-    {
-        return (renderer.clipUnitX * x) - 1;
-    };
+        this._x = x;
+        this._y = y;
+        this._width = width;
+        this._height = height;
 
-    this.clipY = function (y)
-    {
-        return 1 - (renderer.clipUnitY * y);
-    };
+        this.textureIndex = 0;
 
-    this.vertexBuffer;
-    this.indexBuffer;
-    this.textureBuffer;
+        this.clipX = function (x) {
+            return (renderer.clipUnitX * x) - 1;
+        };
 
-    this.vertices;
+        this.clipY = function (y) {
+            return 1 - (renderer.clipUnitY * y);
+        };
 
-    this.texture;
-    this.renderBuffer;
-    this.frameBuffer;
+        this.vertexBuffer;
+        this.indexBuffer;
+        this.textureBuffer;
 
-    this.program;
-    this.aVertexPosition;
-    this.aTextureCoord;
+        this.vertices;
 
-    this._normal;
-    this._twirl;
+        this.texture;
+        this.renderBuffer;
+        this.frameBuffer;
 
-    this.init();
-};
+        this.program;
+        this.aVertexPosition;
+        this.aTextureCoord;
 
-QuadFBO.prototype.constructor = QuadFBO;
+        this._normal;
+        this._twirl;
 
-QuadFBO.prototype = {
+        this.init();
+    }
 
-    init: function ()
-    {
+
+    init() {
         var gl = this.gl;
 
         //  An FBO quad is made up of 2 triangles (A and B in the image below)
@@ -86,7 +104,7 @@ QuadFBO.prototype = {
 
         this.indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([ 0, 1, 2, 2, 1, 3 ]), gl.STATIC_DRAW);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0, 1, 2, 2, 1, 3]), gl.STATIC_DRAW);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
         this.vertices = new Float32Array(8);
@@ -99,7 +117,7 @@ QuadFBO.prototype = {
 
         this.textureBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.textureBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([ 0, 0, 1, 0, 0, 1, 1, 1 ]), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]), gl.STATIC_DRAW);
 
         //  Create a texture for our color buffer
         this.texture = CreateEmptyTexture(gl, width, height, 0, 0);
@@ -118,19 +136,17 @@ QuadFBO.prototype = {
 
         var fbStatus = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
 
-        if (fbStatus !== gl.FRAMEBUFFER_COMPLETE)
-        {
+        if (fbStatus !== gl.FRAMEBUFFER_COMPLETE) {
             window.console.error('FrameBuffer Error: ', this.renderer._fbErrors[fbStatus]);
         }
 
         this.createShader();
-    },
+    }
 
     //  This whole function ought to be split out into the Shader Manager
     //    so they can easily change the shader being used for an FBO.
     //  This class will have to expose those shader attribs though.
-    createShader: function ()
-    {
+    createShader() {
         //  Create the quad shader
 
         var gl = this.gl;
@@ -249,38 +265,33 @@ QuadFBO.prototype = {
 
         this.aVertexPosition = gl.getAttribLocation(this.program, 'aVertexPosition');
         this.aTextureCoord = gl.getAttribLocation(this.program, 'aTextureCoord');
-    },
+    }
 
-    setPosition: function (x, y)
-    {
+    setPosition(x, y) {
         if (x === undefined) { x = 0; }
         if (y === undefined) { y = 0; }
 
-        if (x !== this._x || y !== this._y)
-        {
+        if (x !== this._x || y !== this._y) {
             this._x = x;
             this._y = y;
 
             this.updateVerts();
         }
-    },
+    }
 
-    setSize: function (width, height)
-    {
+    setSize(width, height) {
         if (width === undefined) { width = this.renderer.width; }
         if (height === undefined) { height = this.renderer.height; }
 
-        if (width !== this._width || height !== this._height)
-        {
+        if (width !== this._width || height !== this._height) {
             this._width = width;
             this._height = height;
 
             this.updateVerts();
         }
-    },
+    }
 
-    updateVerts: function ()
-    {
+    updateVerts() {
         var x = this._x;
         var y = this._y;
 
@@ -302,20 +313,18 @@ QuadFBO.prototype = {
         //  Top Right
         this.vertices[6] = this.clipX(x + width);
         this.vertices[7] = this.clipY(y);
-    },
+    }
 
-    activate: function ()
-    {
+    activate() {
         var gl = this.gl;
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
 
         //  FBO textures always use index zero
         this.renderer.textureArray[0] = this.texture;
-    },
+    }
 
-    bindShader: function ()
-    {
+    bindShader() {
         var program = this.program;
 
         var gl = this.gl;
@@ -334,11 +343,10 @@ QuadFBO.prototype = {
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.textureBuffer);
         gl.vertexAttribPointer(this.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
-    },
+    }
 
     //  destinationBuffer MUST be set, even if just to 'null'
-    render: function (destinationBuffer)
-    {
+    render(destinationBuffer) {
         var gl = this.gl;
 
         //  Set the framebuffer to render to
@@ -349,8 +357,7 @@ QuadFBO.prototype = {
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
 
         //  The shader that will read from the fbo texture
-        if (this.renderer.shaderManager.setShader(this.program))
-        {
+        if (this.renderer.shaderManager.setShader(this.program)) {
             this.bindShader();
         }
 
@@ -359,99 +366,57 @@ QuadFBO.prototype = {
         gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
         this.renderer.drawCount++;
-    },
+    }
 
-    destroy: function ()
-    {
+    destroy() {
 
         //  TODO!
 
     }
-
-};
-
-Object.defineProperties(QuadFBO.prototype, {
-
-    x: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._x;
-        },
-
-        set: function (value)
-        {
-            if (value !== this._x)
-            {
-                this._x = value;
-                this.updateVerts();
-            }
-        }
-
-    },
-
-    y: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._y;
-        },
-
-        set: function (value)
-        {
-            if (value !== this._y)
-            {
-                this._y = value;
-                this.updateVerts();
-            }
-        }
-
-    },
-
-    width: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._width;
-        },
-
-        set: function (value)
-        {
-            if (value !== this._width)
-            {
-                this._width = value;
-                this.updateVerts();
-            }
-        }
-
-    },
-
-    height: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            return this._height;
-        },
-
-        set: function (value)
-        {
-            if (value !== this._height)
-            {
-                this._height = value;
-                this.updateVerts();
-            }
-        }
-
+    
+    get x() {
+        return this._x;
     }
 
-});
+    set x(value) {
+        if (value !== this._x) {
+            this._x = value;
+            this.updateVerts();
+        }
+    }
+    
+    get y() {
+        return this._y;
+    }
 
-module.exports = QuadFBO;
+    set y(value) {
+        if (value !== this._y) {
+            this._y = value;
+            this.updateVerts();
+        }
+    }
+
+    get width() {
+        return this._width;
+    }
+
+    set width(value) {
+        if (value !== this._width) {
+            this._width = value;
+            this.updateVerts();
+        }
+    }
+
+
+    get height() {
+        return this._height;
+    }
+
+    set height(value) {
+        if (value !== this._height) {
+            this._height = value;
+            this.updateVerts();
+        }
+    }
+}
+

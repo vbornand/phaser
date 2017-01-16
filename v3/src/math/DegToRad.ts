@@ -1,8 +1,6 @@
-var CONST = require('./const');
+import * as CONST from './const';
 
-var DegToRad = function (degrees)
+export default function (degrees)
 {
     return degrees * CONST.DEG_TO_RAD;
 };
-
-module.exports = DegToRad;

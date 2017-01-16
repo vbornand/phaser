@@ -9,34 +9,31 @@
 *
 * @class
 */
-var Children = function (gameObject)
-{
-    this.gameObject = gameObject;
+export default class Children {
 
-    //  The objects that belong to this collection.
-    //  The equivalent of the old `Sprite.children` array.
-    this.list = [];
+    gameObject;
+    position: number;
+    list;
+    children;
 
-    this.position = 0;
-};
+    constructor(gameObject) {
+        this.gameObject = gameObject;
 
-Children.prototype.constructor = Children;
+        //  The objects that belong to this collection.
+        //  The equivalent of the old `Sprite.children` array.
+        this.list = [];
 
-Children.prototype = {
+        this.position = 0;
+    }
 
-    add: function (child, skipTransform)
-    {
-        if (skipTransform === undefined) { skipTransform = false; }
-
+    add(child, skipTransform: boolean = false) {
         // console.log('--->', this.gameObject.name, 'adds new child:', child.name);
 
-        if (child.parent === this)
-        {
+        if (child.parent === this) {
             // console.log('Children.add 1');
             return child;
         }
-        else if (child.parent)
-        {
+        else if (child.parent) {
             // console.log('Children.add 2');
             child.parent.children.remove(child);
         }
@@ -45,8 +42,7 @@ Children.prototype = {
 
         this.list.push(child);
 
-        if (!skipTransform && this.gameObject.transform && child.transform)
-        {
+        if (!skipTransform && this.gameObject.transform && child.transform) {
             // console.log(this.gameObject.name, 'adds transform from', child.name);
             this.gameObject.transform.add(child.transform);
         }
@@ -54,22 +50,15 @@ Children.prototype = {
         // console.log('<--- end');
 
         return child;
-    },
+    }
 
-    addAt: function (child, index, skipTransform)
-    {
-        if (index === undefined) { index = 0; }
-        if (skipTransform === undefined) { skipTransform = false; }
-
-        if (this.list.length === 0)
-        {
+    addAt(child, index: number = 0, skipTransform: boolean = false) {
+        if (this.list.length === 0) {
             return this.add(child);
         }
 
-        if (index >= 0 && index <= this.list.length)
-        {
-            if (child.parent)
-            {
+        if (index >= 0 && index <= this.list.length) {
+            if (child.parent) {
                 child.parent.children.remove(child);
             }
 
@@ -78,38 +67,32 @@ Children.prototype = {
             this.list.splice(index, 0, child);
         }
 
-        if (!skipTransform && this.gameObject.transform && child.transform)
-        {
+        if (!skipTransform && this.gameObject.transform && child.transform) {
             this.gameObject.transform.add(child.transform);
         }
 
         return child;
 
-    },
+    }
 
-    addMultiple: function (children, skipTransform)
-    {
-        if (Array.isArray(children))
-        {
-            for (var i = 0; i < children.length; i++)
-            {
+    addMultiple(children, skipTransform) {
+        if (Array.isArray(children)) {
+            for (var i = 0; i < children.length; i++) {
                 this.add(children[i], skipTransform);
             }
         }
 
         return children;
-    },
+    }
 
-    getAt: function (index)
-    {
+    getAt(index) {
         return this.list[index];
-    },
+    }
 
-    getIndex: function (child)
-    {
+    getIndex(child) {
         //  Return -1 if given child isn't a child of this parent
         return this.list.indexOf(child);
-    },
+    }
 
     /**
     * Gets the first item from the set based on the property strictly equaling the value given.
@@ -120,18 +103,15 @@ Children.prototype = {
     * @param {any} value - The value to check if the property strictly equals.
     * @return {any} The item that was found, or null if nothing matched.
     */
-    getByKey: function (property, value)
-    {
-        for (var i = 0; i < this.list.length; i++)
-        {
-            if (this.list[i][property] === value)
-            {
+    getByKey(property, value) {
+        for (var i = 0; i < this.list.length; i++) {
+            if (this.list[i][property] === value) {
                 return this.list[i];
             }
         }
 
         return null;
-    },
+    }
 
     /**
     * Searches the Group for the first instance of a child with the `name`
@@ -142,10 +122,9 @@ Children.prototype = {
     * @param {string} name - The name to search for.
     * @return {any} The first child with a matching name, or null if none were found.
     */
-    getByName: function (name)
-    {
+    getByName(name) {
         return this.getByKey('name', name);
-    },
+    }
 
     /**
     * Returns a random child from the group.
@@ -155,20 +134,18 @@ Children.prototype = {
     * @param {integer} [length=(to top)] - Restriction on the number of values you want to randomly select from.
     * @return {any} A random child of this Group.
     */
-    getRandom: function (startIndex, length)
-    {
+    getRandom(startIndex, length) {
         if (startIndex === undefined) { startIndex = 0; }
         if (length === undefined) { length = this.list.length; }
 
-        if (length === 0 || length > this.list.length)
-        {
+        if (length === 0 || length > this.list.length) {
             return null;
         }
 
         var randomIndex = startIndex + Math.floor(Math.random() * length);
 
         return this.list[randomIndex];
-    },
+    }
 
     /**
     * Returns all children in this Group.
@@ -188,59 +165,49 @@ Children.prototype = {
     * @param {integer} [endIndex] - The last child index to search up until.
     * @return {any} A random existing child of this Group.
     */
-    getAll: function (property, value, startIndex, endIndex)
-    {
+    getAll(property, value, startIndex, endIndex) {
         if (startIndex === undefined) { startIndex = 0; }
         if (endIndex === undefined) { endIndex = this.list.length; }
 
         var output = [];
 
-        for (var i = startIndex; i < endIndex; i++)
-        {
+        for (var i = startIndex; i < endIndex; i++) {
             var child = this.list[i];
 
-            if (property)
-            {
-                if (child[property] === value)
-                {
+            if (property) {
+                if (child[property] === value) {
                     output.push(child);
                 }
             }
-            else
-            {
+            else {
                 output.push(child);
             }
         }
 
         return output;
-    },
+    }
 
-    swap: function (child1, child2)
-    {
-        if (child1 === child2)
-        {
+    swap(child1, child2) {
+        if (child1 === child2) {
             return;
         }
 
         var index1 = this.getIndex(child1);
         var index2 = this.getIndex(child2);
 
-        if (index1 < 0 || index2 < 0)
-        {
+        if (index1 < 0 || index2 < 0) {
             throw new Error('Children.swap: Supplied objects must be children of the same parent');
         }
 
         this.list[index1] = child2;
         this.list[index2] = child1;
-    },
+    }
 
     //   was setIndex
-    moveTo: function (child, index)
-    {
+    moveTo(child, index) {
         var currentIndex = this.getIndex(child);
 
-        if (currentIndex === -1 || index < 0 || index >= this.list.length)
-        {
+        if (currentIndex === -1 || index < 0 || index >= this.list.length) {
             throw new Error('Children.moveTo: The supplied index is out of bounds');
         }
 
@@ -251,107 +218,90 @@ Children.prototype = {
         this.list.splice(index, 0, child);
 
         return child;
-    },
+    }
 
-    remove: function (child, skipTransform)
-    {
+    remove(child, skipTransform?) {
         var index = this.list.indexOf(child);
 
-        if (index !== -1)
-        {
+        if (index !== -1) {
             child.parent = undefined;
 
             this.list.splice(index, 1);
 
-            if (!skipTransform && this.gameObject.transform && child.transform)
-            {
+            if (!skipTransform && this.gameObject.transform && child.transform) {
                 this.gameObject.transform.remove(child.transform);
             }
         }
-        
-        return child;
-    },
 
-    removeAt: function (index, skipTransform)
-    {
+        return child;
+    }
+
+    removeAt(index, skipTransform) {
         var child = this.list[index];
 
-        if (child)
-        {
+        if (child) {
             child.parent = undefined;
 
             this.children.splice(index, 1);
 
-            if (!skipTransform && this.gameObject.transform && child.transform)
-            {
+            if (!skipTransform && this.gameObject.transform && child.transform) {
                 this.gameObject.transform.remove(child.transform);
             }
         }
 
         return child;
-    },
+    }
 
-    removeBetween: function (beginIndex, endIndex)
-    {
+    removeBetween(beginIndex, endIndex) {
         if (beginIndex === undefined) { beginIndex = 0; }
         if (endIndex === undefined) { endIndex = this.list.length; }
 
         var range = endIndex - beginIndex;
 
-        if (range > 0 && range <= endIndex)
-        {
+        if (range > 0 && range <= endIndex) {
             var removed = this.list.splice(beginIndex, range);
 
-            for (var i = 0; i < removed.length; i++)
-            {
+            for (var i = 0; i < removed.length; i++) {
                 removed[i].parent = undefined;
             }
 
             return removed;
         }
-        else if (range === 0 && this.list.length === 0)
-        {
+        else if (range === 0 && this.list.length === 0) {
             return [];
         }
-        else
-        {
+        else {
             throw new Error('Children.removeBetween: Range Error, numeric values are outside the acceptable range');
         }
-    },
+    }
 
     /**
     * Removes all the items.
     *
     * @method Phaser.ArraySet#removeAll
     */
-    removeAll: function ()
-    {
+    removeAll() {
         var i = this.list.length;
 
-        while (i--)
-        {
+        while (i--) {
             this.remove(this.list[i]);
         }
 
         return this;
-    },
+    }
 
     //  Check to see if the given child is a child of this object, at any depth (recursively scans up the tree)
-    contains: function (child)
-    {
-        if (!child)
-        {
+    contains(child) {
+        if (!child) {
             return false;
         }
-        else if (child.parent === this)
-        {
+        else if (child.parent === this) {
             return true;
         }
-        else
-        {
+        else {
             return this.contains(child.parent);
         }
-    },
+    }
 
     /**
     * Brings the given child to the top of this group so it renders above all other children.
@@ -360,16 +310,14 @@ Children.prototype = {
     * @param {any} child - The child to bring to the top of this group.
     * @return {any} The child that was moved.
     */
-    bringToTop: function (child)
-    {
-        if (child.parent === this && this.getIndex(child) < this.list.length)
-        {
+    bringToTop(child) {
+        if (child.parent === this && this.getIndex(child) < this.list.length) {
             this.remove(child);
             this.add(child);
         }
 
         return child;
-    },
+    }
 
     /**
     * Sends the given child to the bottom of this group so it renders below all other children.
@@ -378,16 +326,14 @@ Children.prototype = {
     * @param {any} child - The child to send to the bottom of this group.
     * @return {any} The child that was moved.
     */
-    sendToBack: function (child)
-    {
-        if (child.parent === this && this.getIndex(child) > 0)
-        {
+    sendToBack(child) {
+        if (child.parent === this && this.getIndex(child) > 0) {
             this.remove(child);
             this.addAt(child, 0);
         }
 
         return child;
-    },
+    }
 
     /**
     * Moves the given child up one place in this group unless it's already at the top.
@@ -396,22 +342,19 @@ Children.prototype = {
     * @param {any} child - The child to move up in the group.
     * @return {any} The child that was moved.
     */
-    moveUp: function (child)
-    {
+    moveUp(child) {
         var a = this.getIndex(child);
 
-        if (a !== -1 && a < this.list.length - 1)
-        {
+        if (a !== -1 && a < this.list.length - 1) {
             var b = this.getAt(a + 1);
 
-            if (b)
-            {
+            if (b) {
                 this.swap(child, b);
             }
         }
 
         return child;
-    },
+    }
 
     /**
     * Moves the given child down one place in this group unless it's already at the bottom.
@@ -420,22 +363,19 @@ Children.prototype = {
     * @param {any} child - The child to move down in the group.
     * @return {any} The child that was moved.
     */
-    moveDown: function (child)
-    {
+    moveDown(child) {
         var a = this.getIndex(child);
 
-        if (a > 0)
-        {
+        if (a > 0) {
             var b = this.getAt(a - 1);
 
-            if (b)
-            {
+            if (b) {
                 this.swap(child, b);
             }
         }
 
         return child;
-    },
+    }
 
     /**
     * Reverses all children in this group.
@@ -444,17 +384,14 @@ Children.prototype = {
     *
     * @method Phaser.Group#reverse
     */
-    reverse: function ()
-    {
+    reverse() {
         this.list.reverse();
 
         return this;
-    },
+    }
 
-    shuffle: function ()
-    {
-        for (var i = this.list.length - 1; i > 0; i--)
-        {
+    shuffle() {
+        for (var i = this.list.length - 1; i > 0; i--) {
             var j = Math.floor(Math.random() * (i + 1));
             var temp = this.list[i];
             this.list[i] = this.list[j];
@@ -462,7 +399,7 @@ Children.prototype = {
         }
 
         return this;
-    },
+    }
 
     /**
     * Replaces a child of this Group with the given newChild. The newChild cannot be a member of this Group.
@@ -476,14 +413,11 @@ Children.prototype = {
     * @param {any} newChild - The child to be inserted into this group.
     * @return {any} Returns the oldChild that was replaced within this group.
     */
-    replace: function (oldChild, newChild, skipTransform)
-    {
+    replace(oldChild, newChild, skipTransform) {
         var index = this.getIndex(oldChild);
 
-        if (index !== -1)
-        {
-            if (newChild.parent)
-            {
+        if (index !== -1) {
+            if (newChild.parent) {
                 newChild.parent.remove(newChild, skipTransform);
             }
 
@@ -493,15 +427,13 @@ Children.prototype = {
 
             return oldChild;
         }
-    },
+    }
 
     //  Swaps a child from another parent, with one from this parent.
     //  child1 = the child of THIS parent
     //  child2 = the child of the OTHER parent
-    exchange: function (child1, child2, skipTransform)
-    {
-        if (child1 === child2 || child1.parent === child2.parent)
-        {
+    exchange(child1, child2, skipTransform) {
+        if (child1 === child2 || child1.parent === child2.parent) {
             return;
         }
 
@@ -510,8 +442,7 @@ Children.prototype = {
         var index1 = this.getIndex(child1);
         var index2 = parentChildren.getIndex(child2);
 
-        if (index1 < 0 || index2 < 0)
-        {
+        if (index1 < 0 || index2 < 0) {
             throw new Error('Children.swap: Supplied objects must be children of parents');
         }
 
@@ -522,7 +453,7 @@ Children.prototype = {
         this.addAt(child2, index1, skipTransform);
 
         parentChildren.addAt(child1, index2, skipTransform);
-    },
+    }
 
     /**
     * Checks for the item within this list.
@@ -531,10 +462,9 @@ Children.prototype = {
     * @param {any} item - The element to get the list index for.
     * @return {boolean} True if the item is found in the list, otherwise false.
     */
-    exists: function (child)
-    {
+    exists(child) {
         return (this.list.indexOf(child) > -1);
-    },
+    }
 
     /**
     * Sets the property `key` to the given value on all members of this list.
@@ -543,16 +473,13 @@ Children.prototype = {
     * @param {any} key - The property of the item to set.
     * @param {any} value - The value to set the property to.
     */
-    setAll: function (key, value)
-    {
-        for (var i = 0; i < this.list.length; i++)
-        {
-            if (this.list[i])
-            {
+    setAll(key, value) {
+        for (var i = 0; i < this.list.length; i++) {
+            if (this.list[i]) {
                 this.list[i][key] = value;
             }
         }
-    },
+    }
 
     /**
     * Passes all children to the given callback.
@@ -562,21 +489,18 @@ Children.prototype = {
     * @param {object} [thisArg] - Value to use as `this` when executing callback.
     * @param {...*} [arguments] - Additional arguments that will be passed to the callback, after the child.
     */
-    each: function (callback, thisArg)
-    {
-        var args = [ null ];
+    each(callback, thisArg) {
+        var args = [null];
 
-        for (var i = 1; i < arguments.length; i++)
-        {
+        for (var i = 1; i < arguments.length; i++) {
             args.push(arguments[i]);
         }
 
-        for (i = 0; i < this.list.length; i++)
-        {
+        for (i = 0; i < this.list.length; i++) {
             args[0] = this.list[i];
             callback.apply(thisArg, args);
         }
-    },
+    }
 
     /**
     * Moves all children from this Group to the Group given.
@@ -586,12 +510,9 @@ Children.prototype = {
     * @param {boolean} [silent=false] - If true the children will not dispatch the `onAddedToGroup` event for the new Group.
     * @return {Phaser.Group} The Group to which all the children were moved.
     */
-    reparent: function (newParent)
-    {
-        if (newParent !== this)
-        {
-            for (var i = 0; i < this.list.length; i++)
-            {
+    reparent(newParent) {
+        if (newParent !== this) {
+            for (var i = 0; i < this.list.length; i++) {
                 var child = this.remove(this.list[i]);
 
                 newParent.add(child);
@@ -601,9 +522,16 @@ Children.prototype = {
         return newParent;
     }
 
-};
+    /**
+    * Returns the first item and resets the cursor to the start.
+    *
+    * @name Phaser.ArraySet#first
+    * @property {any} first
+    */
+    get length() {
+        return this.list.length;
+    }
 
-Object.defineProperties(Children.prototype, {
 
     /**
     * Returns the first item and resets the cursor to the start.
@@ -611,42 +539,16 @@ Object.defineProperties(Children.prototype, {
     * @name Phaser.ArraySet#first
     * @property {any} first
     */
-    length: {
+    get first() {
+        this.position = 0;
 
-        enumerable: true,
-
-        get: function ()
-        {
-            return this.list.length;
+        if (this.list.length > 0) {
+            return this.list[0];
         }
-
-    },
-
-    /**
-    * Returns the first item and resets the cursor to the start.
-    *
-    * @name Phaser.ArraySet#first
-    * @property {any} first
-    */
-    first: {
-
-        enumerable: true,
-
-        get: function ()
-        {
-            this.position = 0;
-
-            if (this.list.length > 0)
-            {
-                return this.list[0];
-            }
-            else
-            {
-                return null;
-            }
+        else {
+            return null;
         }
-
-    },
+    }
 
     /**
     * Returns the last item and resets the cursor to the end.
@@ -654,25 +556,17 @@ Object.defineProperties(Children.prototype, {
     * @name Phaser.ArraySet#last
     * @property {any} last
     */
-    last: {
+    get last() {
+        if (this.list.length > 0) {
+            this.position = this.list.length - 1;
 
-        enumerable: true,
-
-        get: function ()
-        {
-            if (this.list.length > 0)
-            {
-                this.position = this.list.length - 1;
-
-                return this.list[this.position];
-            }
-            else
-            {
-                return null;
-            }
+            return this.list[this.position];
         }
+        else {
+            return null;
+        }
+    }
 
-    },
 
     /**
     * Returns the the next item (based on the cursor) and advances the cursor.
@@ -680,25 +574,16 @@ Object.defineProperties(Children.prototype, {
     * @name Phaser.ArraySet#next
     * @property {any} next
     */
-    next: {
+    get next() {
+        if (this.position < this.list.length) {
+            this.position++;
 
-        enumerable: true,
-
-        get: function ()
-        {
-            if (this.position < this.list.length)
-            {
-                this.position++;
-
-                return this.list[this.position];
-            }
-            else
-            {
-                return null;
-            }
+            return this.list[this.position];
         }
-
-    },
+        else {
+            return null;
+        }
+    }
 
     /**
     * Returns the the previous item (based on the cursor) and retreats the cursor.
@@ -706,26 +591,14 @@ Object.defineProperties(Children.prototype, {
     * @name Phaser.ArraySet#previous
     * @property {any} previous
     */
-    previous: {
+    get previous() {
+        if (this.position > 0) {
+            this.position--;
 
-        enumerable: true,
-
-        get: function ()
-        {
-            if (this.position > 0)
-            {
-                this.position--;
-
-                return this.list[this.position];
-            }
-            else
-            {
-                return null;
-            }
+            return this.list[this.position];
         }
-
+        else {
+            return null;
+        }
     }
-
-});
-
-module.exports = Children;
+}

@@ -1,4 +1,6 @@
-var Area = function (ellipse)
+import Ellipse from './Ellipse';
+
+export default function (ellipse: Ellipse): number
 {
     if (ellipse.isEmpty())
     {
@@ -8,5 +10,3 @@ var Area = function (ellipse)
     //  units squared
     return (ellipse.getMajorRadius() * ellipse.getMinorRadius() * Math.PI);
 };
-
-module.exports = Area;

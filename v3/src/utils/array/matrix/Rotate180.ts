@@ -1,8 +1,6 @@
-var RotateMatrix = require('./RotateMatrix)';
+import RotateMatrix from './RotateMatrix';
 
-var Rotate180 = function (matrix)
+export default function (matrix)
 {
     return RotateMatrix(matrix, 180);
 };
-
-module.exports = Rotate180;

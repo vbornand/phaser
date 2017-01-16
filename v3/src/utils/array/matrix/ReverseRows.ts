@@ -1,6 +1,4 @@
-var ReverseRows = function (matrix)
+export default function (matrix)
 {
     return matrix.reverse();
 };
-
-module.exports = ReverseRows;

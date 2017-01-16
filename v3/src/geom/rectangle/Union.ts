@@ -1,8 +1,8 @@
-var Rectangle = require('./Rectangle');
+import Rectangle from './Rectangle';
 
-var Union = function (rectA, rectB, output)
+export default function (rectA, rectB, output)
 {
-    if (output === undefined) { output = Rectangle(); }
+    if (output === undefined) { output = new Rectangle(); }
 
     var x = Math.min(rectA.x, rectB.x);
     var y = Math.min(rectA.y, rectB.y);
@@ -13,7 +13,5 @@ var Union = function (rectA, rectB, output)
         Math.max(rectA.right, rectB.right) - x,
         Math.max(rectA.bottom, rectB.bottom) - y
     );
-    
-};
 
-module.exports = Union;
+};

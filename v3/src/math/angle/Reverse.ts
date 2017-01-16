@@ -1,8 +1,6 @@
-var Normalize = require('./Normalize');
+import Normalize from './Normalize';
 
-var Reverse = function (angle)
+export default function (angle)
 {
     return Normalize(angle + Math.PI);
 };
-
-module.exports = Reverse;

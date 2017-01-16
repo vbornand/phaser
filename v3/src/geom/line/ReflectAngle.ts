@@ -1,5 +1,5 @@
-var Angle = require('./Angle');
-var NormalAngle = require('./NormalAngle');
+import Angle from './Angle';
+import NormalAngle from './NormalAngle';
 
 /**
 * Returns the reflected angle between two lines.
@@ -10,9 +10,7 @@ var NormalAngle = require('./NormalAngle');
 * @param {Phaser.Line} b - The line to be reflected from the base line.
 * @return {number} The reflected angle in radians.
 */
-var ReflectAngle = function (lineA, lineB)
+export default function (lineA, lineB)
 {
     return (2 * NormalAngle(lineB) - Math.PI - Angle(lineA));
-};
-
-module.exports = ReflectAngle;
+}
