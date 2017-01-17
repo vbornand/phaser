@@ -1,5 +1,7 @@
 # Phaser - HTML5 Game Framework
 
+[![Build Status](https://travis-ci.org/vulvulune/phaser.svg?branch=ts)](https://travis-ci.org/vulvulune/phaser)
+
 <img src="http://phaser.io/images/github/arcade-cab.png" align="right">
 
 Phaser is a fast, free, and fun open source HTML5 game framework. It uses a custom build of [Pixi.js](https://github.com/GoodBoyDigital/pixi.js/) for WebGL and Canvas rendering, and supports desktop and mobile web browsers. Games can be compiled to iOS, Android and native desktop apps via 3rd party tools. You can use JavaScript or TypeScript for development.
