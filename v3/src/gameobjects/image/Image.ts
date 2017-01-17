@@ -7,6 +7,7 @@
 import * as CONST from '../../const';
 import GameObject from '../GameObject';
 import ImageWebGLRenderer from './ImageWebGLRenderer';
+import ImageCanvasRenderer from './ImageCanvasRenderer';
 
 /**
 * An Image is a light-weight object you can use to display anything that doesn't need physics or animation.
@@ -31,7 +32,8 @@ export default class Image extends GameObject {
 
         this.type = CONST.IMAGE;
 
-        this.render = ImageWebGLRenderer;
+        //this.render = ImageWebGLRenderer;
+        this.render = ImageCanvasRenderer; 
     }
 
     get width() {
