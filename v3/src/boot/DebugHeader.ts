@@ -70,7 +70,7 @@ export default function (game: Game)
 
         if (!config.hidePhaser)
         {
-            c = c.concat('Phaser v' + CONST.VERSION + ' (' + renderType + ')');
+            c = c.concat('Phaser-TS v' + CONST.VERSION + ' (' + renderType + ')');
         }
 
         c = c.concat(' %c ' + config.gameURL);
@@ -82,7 +82,7 @@ export default function (game: Game)
     }
     else if (window['console'])
     {
-        console.log('Phaser v' + CONST.VERSION + ' / http://phaser.io');
+        console.log('Phaser-TS v' + CONST.VERSION + ' / http://phaser.io');
     }
 
     // Keep this during dev build only
