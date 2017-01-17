@@ -1,6 +1,6 @@
 import * as CONST from '../../../const';
 
-var CreateEmptyTexture = function (gl, width, height, scaleMode, textureIndex)
+export default function (gl, width, height, scaleMode, textureIndex)
 {
     var texture = gl.createTexture();
     var glScaleMode = (scaleMode === CONST.scaleModes.LINEAR) ? gl.LINEAR : gl.NEAREST;
@@ -18,6 +18,4 @@ var CreateEmptyTexture = function (gl, width, height, scaleMode, textureIndex)
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 
     return texture;
-};
-
-export default CreateEmptyTexture;
+}
