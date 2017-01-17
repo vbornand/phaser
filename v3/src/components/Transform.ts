@@ -544,9 +544,9 @@ export default class Transform {
         return vert;
     }
 
-    getVertexData(interpolationPercentage) {
+    getVertexData(interpolationPercentage, renderer) {
         if (this.interpolate || this._dirtyVertex) {
-            this.updateVertexData(interpolationPercentage);
+            this.updateVertexData(interpolationPercentage, renderer);
 
             this._dirtyVertex = false;
         }
