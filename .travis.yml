@@ -2,13 +2,8 @@ language: node_js
 
 node_js:
   - 'stable'
-  - '6'
-  - '4'
 
 sudo: false
-
-env:
-  - workerCount=3
 
 matrix:
   fast_finish: true
@@ -16,15 +11,5 @@ matrix:
 branches:
   only:
   - ts
-
-git:
-  depth: 1
-
-  language: node_js
-
-node_js:
-  - 'stable'
-  - '6'
-  - '4'
 
 script: cd v3 && npm install && npm run webpack

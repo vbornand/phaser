@@ -6,7 +6,7 @@
 
 import Settings from './Settings';
 import Systems from './Systems';
-import Loader from './systems/loader';
+import Loader from './systems/Loader';
 
 /**
 * A Base State Class.
