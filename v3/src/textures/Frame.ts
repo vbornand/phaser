@@ -10,9 +10,7 @@ import Texture from './Texture';
 /**
 * A Frame is a section of a Texture.
 *
-* Called TextureFrame during integration, will rename to Frame later.
-*
-* @class Phaser.TextureFrame
+* @class Phaser.Frame
 * @constructor
 * @param {Phaser.Texture} texture - The Texture this Frame belongs to.
 * @param {string} name - The unique (within the Texture) name of this Frame.
@@ -21,8 +19,7 @@ import Texture from './Texture';
 * @param {number} width - Width of the frame within the Texture.
 * @param {number} height - Height of the frame within the Texture.
 */
-export default class Frame
-{
+export default class Frame {
     public texture: Texture;
     public name: string;
     public source;
@@ -41,8 +38,7 @@ export default class Frame
     public autoRound;
     private data;
 
-    constructor (texture: Texture, name: string, sourceIndex, x?, y?, width?, height?)
-    {
+    constructor(texture: Texture, name: string, sourceIndex, x?, y?, width?, height?) {
         /**
         * @property {Phaser.Texture} texture - The Texture this frame belongs to.
         */
@@ -163,6 +159,14 @@ export default class Frame
                 y2: 0,
                 x3: 0,
                 y3: 0
+            },
+            drawImage: {
+                sx: x,
+                sy: y,
+                sWidth: width,
+                sHeight: height,
+                dWidth: width,
+                dHeight: height
             }
         };
 
@@ -180,25 +184,36 @@ export default class Frame
     * @param {number} destWidth - The destination width of the trimmed frame for display.
     * @param {number} destHeight - The destination height of the trimmed frame for display.
     */
-    setTrim (actualWidth, actualHeight, destX, destY, destWidth, destHeight)
-    {
+    setTrim(actualWidth, actualHeight, destX, destY, destWidth, destHeight) {
+        var data = this.data;
+        var ss = data.spriteSourceSize;
+        var di = data.drawImage;
+
         //  Store actual values
 
-        this.data.trim = true;
+        data.trim = true;
 
-        this.data.sourceSize.w = actualWidth;
-        this.data.sourceSize.h = actualHeight;
+        data.sourceSize.w = actualWidth;
+        data.sourceSize.h = actualHeight;
 
-        this.data.spriteSourceSize.x = destX;
-        this.data.spriteSourceSize.y = destY;
-        this.data.spriteSourceSize.w = destWidth;
-        this.data.spriteSourceSize.h = destHeight;
+        ss.x = destX;
+        ss.y = destY;
+        ss.w = destWidth;
+        ss.h = destHeight;
 
         //  Adjust properties
         this.x = destX;
         this.y = destY;
         this.width = destWidth;
         this.height = destHeight;
+
+        // drawImage data
+        di.sx = destX;
+        di.sy = destY;
+        di.sWidth = destWidth;
+        di.sHeight = destHeight;
+        di.dWidth = destWidth;
+        di.dHeight = destHeight;
 
         this.updateUVs();
 
@@ -211,8 +226,7 @@ export default class Frame
     * @method updateUVs
     * @private
     */
-    private updateUVs ()
-    {
+    private updateUVs() {
         var tw = this.source.width;
         var th = this.source.height;
         var uvs = this.data.uvs;
@@ -238,8 +252,7 @@ export default class Frame
     * @method updateUVsInverted
     * @private
     */
-    private updateUVsInverted ()
-    {
+    private updateUVsInverted() {
         var tw = this.source.width;
         var th = this.source.height;
         var uvs = this.data.uvs;
@@ -259,8 +272,7 @@ export default class Frame
         return this;
     }
 
-    clone ()
-    {
+    clone() {
         var clone = new Frame(this.texture, this.name, this.sourceIndex);
 
         clone.cutX = this.cutX;
@@ -282,8 +294,7 @@ export default class Frame
         return clone;
     }
 
-    destroy ()
-    {
+    destroy() {
     }
 
     /**
@@ -293,8 +304,7 @@ export default class Frame
     * @name Phaser.TextureFrame#realWidth
     * @property {any} realWidth
     */
-    get realWidth()
-    {
+    get realWidth() {
         return this.data.sourceSize.w;
     }
 
@@ -305,8 +315,7 @@ export default class Frame
    * @name Phaser.TextureFrame#realHeight
    * @property {any} realHeight
    */
-    get realHeight()
-    {
+    get realHeight() {
         return this.data.sourceSize.h;
     }
 
@@ -316,8 +325,17 @@ export default class Frame
     * @name Phaser.TextureFrame#uvs
     * @property {Object} uvs
     */
-    get uvs()
-    {   
+    get uvs() {
         return this.data.uvs;
+    }
+
+    /**
+    * Canvas Draw Image data
+    *
+    * @name Phaser.TextureFrame#canvasData
+    * @property {Object} canvasData
+    */
+    get canvasData() {
+        return this.data.drawImage;
     }
 }

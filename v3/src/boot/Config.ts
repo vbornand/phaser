@@ -66,7 +66,7 @@ export default class Config
         this.gameVersion = GetObjectValue(config, 'version', '');
 
         //  If you do: { banner: false } it won't display any banner at all
-        this.hideBanner = (GetObjectValue(config, 'banner', false) === false);
+        this.hideBanner = (GetObjectValue(config, 'banner', null) === false);
 
         this.hidePhaser = GetObjectValue(config, 'banner.hidePhaser', false);
         this.bannerTextColor = GetObjectValue(config, 'banner.text', Config.defaultBannerTextColor);

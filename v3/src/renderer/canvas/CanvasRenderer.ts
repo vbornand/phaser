@@ -1,4 +1,4 @@
-import BatchManager from './BatchManager';
+import DrawImage from './utils/DrawImage';
 
 export default class CanvasRenderer {
 
@@ -12,7 +12,7 @@ export default class CanvasRenderer {
     resolution;
     view;
     context;
-    batch
+    drawImage
     roundPixels;
     currentAlpha;
     currentBlendMode;
@@ -59,10 +59,11 @@ export default class CanvasRenderer {
 
         this.roundPixels = false;
 
-        this.batch = new BatchManager(this, 4000);
+        this.drawImage = DrawImage;
 
-        // var so = 'source-over';
-        // this.blendModes = [ so, 'lighter', so, so, so, so, so, so, so, so, so, so, so, so, so, so, so ];
+        var so = 'source-over'; 
+
+        this.blendModes = [so, 'lighter', so, so, so, so, so, so, so, so, so, so, so, so, so, so, so]; 
 
         this.currentAlpha = 1;
         this.currentBlendMode = 0;
@@ -71,9 +72,7 @@ export default class CanvasRenderer {
         this.startTime = 0;
         this.endTime = 0;
         this.drawCount = 0;
-
-        this.blendModes = [];
-
+        
         // this.tintMethod = this.tintWithPerPixel;
 
         this.init();
@@ -81,9 +80,7 @@ export default class CanvasRenderer {
 
     init() {
         this.mapBlendModes();
-
-        this.batch.init();
-
+        
         this.resize(this.width, this.height);
     }
 
@@ -172,13 +169,9 @@ export default class CanvasRenderer {
         }
 
         this.drawCount = 0;
-
-        this.batch.start();
-
+        
         //  Could move to the State Systems or MainLoop
         this.game.state.renderChildren(this, state, interpolationPercentage);
-
-        this.batch.stop();
 
         this.endTime = Date.now();
 

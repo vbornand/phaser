@@ -11,9 +11,9 @@ export default function (renderer, src, interpolationPercentage)
         return;
     }
 
-    var data = src.transform.getCanvasTransformData(interpolationPercentage);
+    var data = src.transform.getCanvasTransformData(interpolationPercentage, renderer);
     var tint = src.color._glTint;
     var bg = src.color._glBg;
 
-    renderer.batch.add(frame.source, src.blendMode, data, frame.uvs, alpha, tint, bg);
+    renderer.drawImage(frame, src.blendMode, data, alpha, tint, bg);
 };
