@@ -1,23 +1,24 @@
 import * as  CONST from './const';
 import EventListener from './EventListener';
+import EventDispatcher from './EventDispatcher';
 
 
 export default class EventBinding {
 
-    dispatcher;
+    dispatcher: EventDispatcher;
     type;
-    state;
-    active;
+    state: number;
+    active: {state: number, callback: any}[];
 
-    constructor(dispatcher, type) {
+    constructor(dispatcher: EventDispatcher, type) {
         this.dispatcher = dispatcher;
         this.type = type;
         this.state = CONST.DISPATCHER_IDLE;
         this.active = [];
     }
 
-    total() {
-        var total = 0;
+    total(): number {
+        var total: number = 0;
 
         for (var i = 0; i < this.active.length; i++) {
             if (this.active[i].state !== CONST.LISTENER_REMOVING) {

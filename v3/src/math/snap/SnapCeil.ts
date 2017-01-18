@@ -1,9 +1,5 @@
-export default function (value, gap, start)
-{
-    if (start === undefined) { start = 0; }
-
-    if (gap === 0)
-    {
+export default function (value: number, gap: number, start: number = 0): number {
+    if (gap === 0) {
         return value;
     }
 
@@ -11,4 +7,4 @@ export default function (value, gap, start)
     value = gap * Math.ceil(value / gap);
 
     return start + value;
-};
+}

@@ -1,8 +1,4 @@
-export default function (value, place, base)
-{
-    if (place === undefined) { place = 0; }
-    if (base === undefined) { base = 10; }
-
+export default function (value: number, place: number = 0, base: number = 10): number {
     var p = Math.pow(base, -place);
 
     return Math.floor(value * p) / p;

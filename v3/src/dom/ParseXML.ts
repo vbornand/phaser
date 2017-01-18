@@ -1,8 +1,8 @@
 declare var ActiveXObject;
 
-export default function (data)
+export default function (data: string): any
 {
-    var xml = null;
+    var xml: Document | any = null;
 
     try
     {

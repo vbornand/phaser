@@ -1,4 +1,3 @@
-export default function (min, max)
-{
+export default function (min: number, max: number): number {
     return Math.random() * (max - min + 1) + min;
 };

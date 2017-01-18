@@ -4,6 +4,8 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+import State from '../state/State';
+
 /**
 * The Color Component allows you to control the alpha, blend mode, tint and background color
 * of a Game Object.
@@ -13,21 +15,21 @@
 export default class Color {
 
     gameObject;
-    state;
-    private _dirty;
-    private _alpha;
-    private _worldAlpha;
-    private _blendMode;
-    private _tint;
-    private _glTint;
-    private _hasTint;
-    private _r;
-    private _g;
-    private _b;
-    private _a;
-    private _rgba;
-    private _glBg;
-    private _hasBackground: boolean;
+    state: State;
+    /*private*/ _dirty: boolean;
+    /*private*/ _alpha: number;
+    /*private*/ _worldAlpha: number;
+    /*private*/ _blendMode;
+    /*private*/ _tint: any;
+    /*private*/ _glTint: any;
+    /*private*/ _hasTint: boolean;
+    /*private*/ _r: number;
+    /*private*/ _g: number;
+    /*private*/ _b: number;
+    /*private*/ _a: number;
+    /*private*/ _rgba: string;
+    /*private*/ _glBg: number;
+    /*private*/ _hasBackground: boolean;
 
     constructor(gameObject) {
         this.gameObject = gameObject;
@@ -62,7 +64,7 @@ export default class Color {
         this._hasBackground = false;
     }
 
-    setBackground(red, green, blue, alpha) {
+    setBackground(red?: number, green?: number, blue?: number, alpha?: number) {
         if (red === undefined) {
             this._hasBackground = false;
             this._glBg = 0;

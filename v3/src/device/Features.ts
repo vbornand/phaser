@@ -179,11 +179,11 @@ function init ()
 
     Features.pointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
-    (<any>navigator).getUserMedia = (<any>navigator).getUserMedia || (<any>navigator).webkitGetUserMedia || (<any>navigator).mozGetUserMedia || (<any>navigator).msGetUserMedia || (<any>navigator).GetUserMedia;
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.GetUserMedia;
 
-    window.URL = window.URL || (<any>window).webkitURL || (<any>window).mozURL || (<any>window).msURL;
+    window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
 
-    Features.getUserMedia = Features.getUserMedia && !!(<any>navigator).getUserMedia && !!window.URL;
+    Features.getUserMedia = Features.getUserMedia && !!navigator.getUserMedia && !!window.URL;
 
     // Older versions of firefox (< 21) apparently claim support but user media does not actually work
     if (Browser.firefox && Browser.firefoxVersion < 21)
@@ -204,7 +204,7 @@ function init ()
         Features.canvasBitBltShift = false;
     }
 
-    navigator.vibrate = (<any>navigator).vibrate || (<any>navigator).webkitVibrate || (<any>navigator).mozVibrate || (<any>navigator).msVibrate;
+    navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
 
     if (navigator.vibrate)
     {

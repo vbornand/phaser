@@ -1,6 +1,3 @@
-export default function (a, b, epsilon)
-{
-    if (epsilon === undefined) { epsilon = 0.0001; }
-
+export default function (a: number, b: number, epsilon: number): boolean {
     return a < b + epsilon;
-};
+}

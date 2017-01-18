@@ -1,9 +1,7 @@
-export default function (element, parent, overflowHidden?)
+export default function (element: Node, parent?: string | Node, overflowHidden: boolean = true): Node
 {
-    if (overflowHidden === undefined) { overflowHidden = true; }
-
-    var target;
-
+    var target: HTMLElement;
+ 
     if (parent)
     {
         if (typeof parent === 'string')
@@ -14,7 +12,7 @@ export default function (element, parent, overflowHidden?)
         else if (typeof parent === 'object' && parent.nodeType === 1)
         {
             //  Quick test for a HTMLelement
-            target = parent;
+            target = parent as HTMLElement;
         }
     }
 

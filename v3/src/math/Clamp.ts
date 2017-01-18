@@ -7,18 +7,14 @@
 * @param {float} max - The maximum bounds.
 * @return {number} The clamped value.
 */
-export default function (v, min, max)
-{
-    if (v < min)
-    {
+export default function (v: number, min: number, max: number): number {
+    if (v < min) {
         return min;
     }
-    else if (max < v)
-    {
+    else if (max < v) {
         return max;
     }
-    else
-    {
+    else {
         return v;
     }
 };

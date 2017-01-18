@@ -1,4 +1,4 @@
-export default function (element)
+export default function (element: Node): void
 {
     if (element.parentNode)
     {

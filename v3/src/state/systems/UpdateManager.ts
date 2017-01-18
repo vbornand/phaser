@@ -4,6 +4,10 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
+import Transform from '../../components/Transform';
+import Game from '../../boot/Game';
+import State from '../../state/State';
+
 /**
 * Dirty! Manager
 *
@@ -11,11 +15,11 @@
 */
 export default class UpdateManager
 {
-    state;
-    game;
-    list;
-    running;
-    processed;
+    state: State;
+    game: Game;
+    list: any[];
+    running: boolean;
+    processed: number;
 
     constructor(state)
     {
@@ -70,7 +74,7 @@ export default class UpdateManager
         }
     }
 
-    add(transform)
+    add(transform: any)
     {
         this.list.push(transform);
     }

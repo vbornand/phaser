@@ -1,4 +1,4 @@
-export default function (point, x, y, angle, distance)
+export default function (point, x: number, y: number, angle: number, distance)
 {
     var t = angle + Math.atan2(point.y - y, point.x - x);
 

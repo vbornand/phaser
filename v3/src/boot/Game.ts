@@ -4,7 +4,7 @@
 * @license      {@link https://github.com/photonstorm/phaser/blob/master/license.txt|MIT License}
 */
 
-import Config from './Config';
+import { default as Config, GameConfig } from './Config';
 import DebugHeader from './DebugHeader';
 import * as Device from '../device';
 
@@ -16,12 +16,13 @@ import CreateRenderer from './CreateRenderer';
 import RandomDataGenerator from '../math/random-data-generator/RandomDataGenerator';
 import StateManager from '../state/StateManager';
 import TextureManager from '../textures/TextureManager';
+import Renderer from '../renderer/Renderer';
 
 export default class Game
 {
     public config: Config;
-    public renderer;
-    public canvas;
+    public renderer: Renderer;
+    public canvas: HTMLCanvasElement;
     public context;
     public isBooted: boolean;
     public isRunning: boolean;
@@ -32,7 +33,7 @@ export default class Game
     public device: typeof Device;
     public rnd : RandomDataGenerator;
 
-    constructor (config)
+    constructor(config: GameConfig)
     {
         this.config = new Config(config);
 
@@ -84,7 +85,7 @@ export default class Game
     public boot()
     {
         this.isBooted = true;
-
+        
         this.config.preBoot();
 
         //  Probably move within Math
@@ -105,7 +106,7 @@ export default class Game
         this.raf.start();
     }
 
-    public update(timestamp)
+    public update(timestamp: number)
     {
         this.state.step(timestamp);
     }

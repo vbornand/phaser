@@ -1,5 +1,4 @@
-export default function (point, angle)
-{
+export default function (point, angle: number) {
     var x = point.x;
     var y = point.y;
 

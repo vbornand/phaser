@@ -1,4 +1,3 @@
-export default function (a, b)
-{
+export default function (a: number, b: number): number {
     return Math.abs(a - b);
 };

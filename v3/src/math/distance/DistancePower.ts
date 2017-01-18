@@ -1,6 +1,3 @@
-export default function (x1, y1, x2, y2, pow)
-{
-    if (pow === undefined) { pow = 2; }
-
+export default function (x1: number, y1: number, x2: number, y2: number, pow: number = 2) {
     return Math.sqrt(Math.pow(x2 - x1, pow) + Math.pow(y2 - y1, pow));
 };

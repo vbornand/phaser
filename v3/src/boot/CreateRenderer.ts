@@ -8,8 +8,9 @@ import * as CONST from '../const';
 import CanvasPool from '../dom/CanvasPool';
 import Features from '../device/Features';
 import CanvasRenderer from '../renderer/canvas/CanvasRenderer';
-import WebGLRenderer from '../renderer/webgl/WebGLRenderer';
+import WebGLRenderer from '../renderer/webgl/renderers/ParticleRenderer';
 import Game from './Game';
+import Config from './Config';
 
 /**
 * Checks if the device is capable of using the requested renderer and sets it up or an alternative if not.
@@ -19,7 +20,7 @@ import Game from './Game';
 */
 export default function (game: Game)
 {
-    var config = game.config;
+    var config: Config = game.config;
 
     //  Game either requested Canvas,
     //  or requested AUTO or WEBGL but the browser doesn't support it, so fall back to Canvas
@@ -54,7 +55,7 @@ export default function (game: Game)
     //  Does the game config provide some canvas css styles to use?
     if (config.canvasStyle)
     {
-        game.canvas.style = config.canvasStyle;
+        (<any>game.canvas).style = config.canvasStyle;
     }
 
     //  Create the renderer
@@ -68,6 +69,6 @@ export default function (game: Game)
     {
         console.log('Creating Canvas Renderer');
         game.renderer = new CanvasRenderer(game);
-        game.context = game.renderer.context;
+        game.context = (<any>game.renderer).context;
     }
 };

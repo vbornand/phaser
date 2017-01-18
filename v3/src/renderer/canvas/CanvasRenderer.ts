@@ -1,28 +1,31 @@
 import DrawImage from './utils/DrawImage';
+import Renderer from '../Renderer';
+import Game from '../../boot/Game';
+import State from '../../state/State';
 
-export default class CanvasRenderer {
+export default class CanvasRenderer implements Renderer {
 
-    game;
-    clearBeforeRender;
-    transparent;
-    autoResize;
-    preserveDrawingBuffer;
-    width;
-    height;
-    resolution;
-    view;
-    context;
-    drawImage
-    roundPixels;
-    currentAlpha;
-    currentBlendMode;
-    currentScaleMode;
-    startTime;
-    endTime;
-    drawCount;
-    blendModes;
+    game: Game;
+    clearBeforeRender: boolean;
+    transparent: false;
+    autoResize: boolean;
+    preserveDrawingBuffer: boolean;
+    width: number;
+    height: number;
+    resolution: number;
+    view: HTMLCanvasElement;
+    context: CanvasRenderingContext2D;
+    drawImage: any;
+    roundPixels: boolean;
+    currentAlpha: number;
+    currentBlendMode: number;
+    currentScaleMode: number;
+    startTime: number;
+    endTime: number;
+    drawCount: number;
+    blendModes: string[];
 
-    constructor(game) {
+    constructor(game: Game) {
         /**
         * @property {Phaser.Game} game - A reference to the currently running Game.
         */
@@ -32,8 +35,9 @@ export default class CanvasRenderer {
         // this.type = CONST.CANVAS;
 
         //  Read all the following from game config
+        //TODO_VBO: UPDATE TO GET FROM GAME CONFIG
         this.clearBeforeRender = true;
-
+       
         this.transparent = false;
 
         this.autoResize = false;
@@ -61,9 +65,9 @@ export default class CanvasRenderer {
 
         this.drawImage = DrawImage;
 
-        var so = 'source-over'; 
+        var so: string = 'source-over';
 
-        this.blendModes = [so, 'lighter', so, so, so, so, so, so, so, so, so, so, so, so, so, so, so]; 
+        this.blendModes = [so, 'lighter', so, so, so, so, so, so, so, so, so, so, so, so, so, so, so];
 
         this.currentAlpha = 1;
         this.currentBlendMode = 0;
@@ -72,7 +76,7 @@ export default class CanvasRenderer {
         this.startTime = 0;
         this.endTime = 0;
         this.drawCount = 0;
-        
+
         // this.tintMethod = this.tintWithPerPixel;
 
         this.init();
@@ -80,7 +84,7 @@ export default class CanvasRenderer {
 
     init() {
         this.mapBlendModes();
-        
+
         this.resize(this.width, this.height);
     }
 
@@ -110,8 +114,8 @@ export default class CanvasRenderer {
         // this.blendModes[modes.LUMINOSITY] = 'luminosity';
     }
 
-    resize(width, height) {
-        var res = this.game.config.resolution;
+    resize(width: number, height: number) {
+        var res: number = this.game.config.resolution;
 
         this.width = width * res;
         this.height = height * res;
@@ -139,7 +143,7 @@ export default class CanvasRenderer {
      *   by the amount of time that will be simulated the next time update()
      *   runs. Useful for interpolating frames.
      */
-    render(state, interpolationPercentage) {
+    render(state: State, interpolationPercentage: number) {
         // console.log('%c render start ', 'color: #ffffff; background: #00ff00;');
 
         //  Add Pre-render hook
@@ -169,7 +173,7 @@ export default class CanvasRenderer {
         }
 
         this.drawCount = 0;
-        
+
         //  Could move to the State Systems or MainLoop
         this.game.state.renderChildren(this, state, interpolationPercentage);
 

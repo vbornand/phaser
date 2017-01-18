@@ -13,7 +13,7 @@
 * @param {number} angle2 - The second angle. In the range -180 to 180.
 * @return {number} The shortest angle, in degrees. If greater than zero it's a counter-clockwise rotation.
 */
-export default function (angle1, angle2)
+export default function (angle1: number, angle2: number): number
 {
     var difference = angle2 - angle1;
 

@@ -6,9 +6,9 @@
 
 import OS from '../device/OS';
 
-var isBooted = false;
+var isBooted: boolean = false;
 
-export default function (callback)
+export default function (callback: () => void)
 {
     if (isBooted)
     {

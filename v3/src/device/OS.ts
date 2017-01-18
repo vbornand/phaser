@@ -209,12 +209,12 @@ function init ()
     }
 
     //  WebApp mode in iOS
-    if ((<any>navigator).standalone)
+    if (navigator.standalone)
     {
         OS.webApp = true;
     }
 
-    if ((<any>window).cordova !== undefined)
+    if (window.cordova !== undefined)
     {
         OS.cordova = true;
     }
@@ -231,7 +231,7 @@ function init ()
         OS.electron = !!process.versions.electron;
     }
 
-    if ((<any>navigator).isCocoonJS)
+    if (navigator.isCocoonJS)
     {
         OS.cocoonJS = true;
 
@@ -245,7 +245,7 @@ function init ()
         }
     }
 
-    if ((<any>window).ejecta !== undefined)
+    if (window.ejecta !== undefined)
     {
         OS.ejecta = true;
     }

@@ -7,7 +7,7 @@ import XHRSettings from './XHRSettings';
 
 export default function (global, local)
 {
-    var output = (global === undefined) ? XHRSettings() : (<any>Object).assign(global);
+    var output = (global === undefined) ? XHRSettings() : Object.assign(global);
 
     if (local)
     {

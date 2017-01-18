@@ -6,7 +6,7 @@
 * @param {string} [value] - The touch action to set. Defaults to 'none'.
 * @return {HTMLCanvasElement} The source canvas.
 */
-export default function (canvas, value)
+export default function (canvas: HTMLCanvasElement, value: string): HTMLCanvasElement
 {
     if (value === undefined) { value = 'none'; }
 
@@ -15,5 +15,4 @@ export default function (canvas, value)
     canvas.style['touch-action'] = value;
 
     return canvas;
-
 }

@@ -1,4 +1,4 @@
-export default function (point, x, y, angle)
+export default function (point, x: number, y: number, angle: number)
 {
     var c = Math.cos(angle);
     var s = Math.sin(angle);

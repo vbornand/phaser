@@ -22,13 +22,13 @@ export default class Systems {
     add;
     make;
     input;
-    load;
+    load: Loader;
     tweens;
-    mainloop;
-    updates;
-    camera;
+    mainloop: MainLoop;
+    updates: UpdateManager;
+    camera: Camera;
     children;
-    color;
+    color: Component.Color;
     data;
     fbo;
     time;

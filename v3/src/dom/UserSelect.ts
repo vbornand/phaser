@@ -6,11 +6,9 @@
 * @param {string} [value] - The touch action to set. Defaults to 'none'.
 * @return {HTMLCanvasElement} The source canvas.
 */
-export default function (canvas, value)
+export default function (canvas: HTMLCanvasElement, value: string = 'none'): HTMLCanvasElement
 {
-    if (value === undefined) { value = 'none'; }
-
-    var vendors = [
+    var vendors: string[] = [
         '-webkit-',
         '-khtml-',
         '-moz-',

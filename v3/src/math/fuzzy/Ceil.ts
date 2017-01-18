@@ -1,6 +1,3 @@
-export default function (value, epsilon)
-{
-    if (epsilon === undefined) { epsilon = 0.0001; }
-
+export default function (value: number, epsilon: number = 0.0001): number {
     return Math.ceil(value - epsilon);
-};
+}

@@ -9,17 +9,17 @@ export default class CanvasInterpolation
     * @param {HTMLCanvasElement} canvas - The canvas to set image-rendering crisp on.
     * @return {HTMLCanvasElement} Returns the source canvas.
     */
-    public static setCrisp (canvas)
+    public static setCrisp(canvas: HTMLCanvasElement): HTMLCanvasElement
     {
-        var types = [ 'optimizeSpeed', 'crisp-edges', '-moz-crisp-edges', '-webkit-optimize-contrast', 'optimize-contrast', 'pixelated' ];
+        var types: string[] = [ 'optimizeSpeed', 'crisp-edges', '-moz-crisp-edges', '-webkit-optimize-contrast', 'optimize-contrast', 'pixelated' ];
 
         types.forEach(function(type)
         {
             canvas.style['image-rendering'] = type;
         });
-
+        
         canvas.style.msInterpolationMode = 'nearest-neighbor';
-
+        
         return canvas;
     }
 
@@ -31,11 +31,10 @@ export default class CanvasInterpolation
     * @param {HTMLCanvasElement} canvas The canvas to set image-rendering bicubic on.
     * @return {HTMLCanvasElement} Returns the source canvas.
     */
-    public static setBicubic (canvas)
+    public static setBicubic(canvas: HTMLCanvasElement): HTMLCanvasElement
     {
         canvas.style['image-rendering'] = 'auto';
         canvas.style.msInterpolationMode = 'bicubic';
-
         return canvas;
     }
 }

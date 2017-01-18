@@ -17,20 +17,20 @@ export default function (game: Game)
         return;
     }
 
-    var renderType = (config.renderType === CONST.CANVAS) ? 'Canvas' : 'WebGL';
+    var renderType: string = (config.renderType === CONST.CANVAS) ? 'Canvas' : 'WebGL';
 
-    var ie = false;
+    var ie: boolean = false;
 
     if (!ie)
     {
-        var c = '';
-        var args = [c];
+        var c: string = '';
+        var args: string[] = [c];
 
         if (Array.isArray(config.bannerBackgroundColor))
         {
-            var lastColor;
+            var lastColor: string;
 
-            config.bannerBackgroundColor.forEach(function(color) {
+            config.bannerBackgroundColor.forEach(function(color: string) {
 
                 c = c.concat('%c ');
 

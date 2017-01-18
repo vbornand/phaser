@@ -1,14 +1,14 @@
-export function In (v)
+export function In(v: number): number
 {
     return v * v * v;
 }
 
-export function Out (v)
+export function Out(v: number): number
 {
     return --v * v * v + 1;
 }
 
-export function InOut (v)
+export function InOut(v: number): number
 {
     if ((v *= 2) < 1)
     {

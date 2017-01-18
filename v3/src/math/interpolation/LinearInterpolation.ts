@@ -1,6 +1,6 @@
 import Linear from '../Linear';
 
-export default function (v, k)
+export default function (v: number[], k: number): number
 {
     var m = v.length - 1;
     var f = m * k;

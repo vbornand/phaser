@@ -7,20 +7,22 @@
 import * as Component from '../components';
 import * as MATH_CONST from '../math/const';
 import WrapAngle from '../math/angle/Wrap';
+import State from '../state/State';
+import Game from '../boot/Game';
+import Transform from '../components/Transform';
 
-export default class Camera
-{
+export default class Camera {
 
-    public state;
-    public game;
-    public viewportWidth;
-    public viewportHeight;
-    public transform;
-    public atLimit;
+    public state: State;
+    public game: Game;
+    public viewportWidth: number;
+    public viewportHeight: number;
+    public transform: Transform;
+    public atLimit: { x: boolean, y: boolean };
     public bounds;
-    public view;
-    public width;
-    public height;
+    public view: { x: number, y: number };
+    public width: number;
+    public height: number;
 
     private _shake;
 
@@ -38,8 +40,7 @@ export default class Camera
     * @param {number} width - The width of the view rectangle
     * @param {number} height - The height of the view rectangle
     */
-    constructor (state, x, y, viewportWidth, viewportHeight)
-    {
+    constructor(state: State, x: number, y: number, viewportWidth: number, viewportHeight: number) {
         /**
          * The State that this Camera belongs to. A Camera can only belong to one State, and a State only
          * has one Camera.
@@ -83,8 +84,7 @@ export default class Camera
     * @method Phaser.Camera#checkBounds
     * @protected
     */
-    protected checkBounds()
-    {
+    protected checkBounds() {
         this.atLimit.x = false;
         this.atLimit.y = false;
 
@@ -99,184 +99,153 @@ export default class Camera
         var vh = this.y + this.viewportHeight;
 
         //  Make sure we didn't go outside the cameras bounds
-        if (vx <= this.bounds.x * this.scale.x)
-        {
+        if (vx <= this.bounds.x * this.scaleX) {
             this.atLimit.x = true;
-            this.view.x = this.bounds.x * this.scale.x;
+            this.view.x = this.bounds.x * this.scaleX;
 
-            if (!this._shake.shakeBounds)
-            {
+            if (!this._shake.shakeBounds) {
                 //  The camera is up against the bounds, so reset the shake
                 this._shake.x = 0;
             }
         }
 
-        if (vw >= this.bounds.right * this.scale.x)
-        {
+        if (vw >= this.bounds.right * this.scaleX) {
             this.atLimit.x = true;
-            this.view.x = (this.bounds.right * this.scale.x) - this.width;
+            this.view.x = (this.bounds.right * this.scaleX) - this.width;
 
-            if (!this._shake.shakeBounds)
-            {
+            if (!this._shake.shakeBounds) {
                 //  The camera is up against the bounds, so reset the shake
                 this._shake.x = 0;
             }
         }
 
-        if (vy <= this.bounds.top * this.scale.y)
-        {
+        if (vy <= this.bounds.top * this.scaleY) {
             this.atLimit.y = true;
-            this.view.y = this.bounds.top * this.scale.y;
+            this.view.y = this.bounds.top * this.scaleY;
 
-            if (!this._shake.shakeBounds)
-            {
+            if (!this._shake.shakeBounds) {
                 //  The camera is up against the bounds, so reset the shake
                 this._shake.y = 0;
             }
         }
 
-        if (vh >= this.bounds.bottom * this.scale.y)
-        {
+        if (vh >= this.bounds.bottom * this.scaleY) {
             this.atLimit.y = true;
-            this.view.y = (this.bounds.bottom * this.scale.y) - this.height;
+            this.view.y = (this.bounds.bottom * this.scaleY) - this.height;
 
-            if (!this._shake.shakeBounds)
-            {
+            if (!this._shake.shakeBounds) {
                 //  The camera is up against the bounds, so reset the shake
                 this._shake.y = 0;
             }
         }
     }
 
-    get x(): any
-    {
+    get x(): number {
         return this.transform._posX;
     }
 
-    set x(value)
-    {
+    set x(value: number) {
         this.transform._posX = value;
         this.transform.dirty = true;
     }
 
-    get y(): any
-    {
+    get y(): number {
         return this.transform._posY;
     }
 
-    set y(value)
-    {
+    set y(value: number) {
         this.transform._posY = value;
         this.transform.dirty = true;
     }
 
-    get right(): any
-    {
+    get right(): number {
         return this.transform._posX + (this.viewportWidth * this.transform._scaleX);
     }
 
-    get bottom(): any
-    {
+    get bottom(): number {
         return this.transform._posY + (this.viewportHeight * this.transform._scaleY);
     }
 
-    get scale(): any
-    {
+    get scale(): number {
         return this.transform._scaleX;
     }
 
-    set scale(value)
-    {
+    set scale(value: number) {
         this.transform._scaleX = value;
-            this.transform._scaleY = value;
-            this.transform.dirty = true;
-            this.transform.updateCache();
-    }
-
-    get scaleX(): any
-    {
-        return this.transform._scaleX;
-    }
-
-    set scaleX(value)
-    {
-        this.transform._scaleX = value;
-            this.transform.dirty = true;
-            this.transform.updateCache();
-    }
-
-    get scaleY(): any
-    {
-        return this.transform._scaleY;
-    }
-
-    set scaleY(value)
-    {
         this.transform._scaleY = value;
         this.transform.dirty = true;
         this.transform.updateCache();
     }
 
-    get pivotX(): any
-    {
+    get scaleX(): number {
+        return this.transform._scaleX;
+    }
+
+    set scaleX(value: number) {
+        this.transform._scaleX = value;
+        this.transform.dirty = true;
+        this.transform.updateCache();
+    }
+
+    get scaleY(): number {
+        return this.transform._scaleY;
+    }
+
+    set scaleY(value: number) {
+        this.transform._scaleY = value;
+        this.transform.dirty = true;
+        this.transform.updateCache();
+    }
+
+    get pivotX(): number {
         return this.transform._pivotX;
     }
 
-    set pivotX(value)
-    {
+    set pivotX(value: number) {
         this.transform._pivotX = value;
         this.transform.dirty = true;
         this.transform.updateCache();
     }
 
-    get pivotY(): any
-    {
+    get pivotY(): number {
         return this.transform._pivotY;
     }
 
-    set pivotY(value)
-    {
+    set pivotY(value: number) {
         this.transform._pivotY = value;
         this.transform.dirty = true;
         this.transform.updateCache();
     }
 
-    get angle(): any
-    {
+    get angle(): number {
         return WrapAngle(this.rotation * MATH_CONST.RAD_TO_DEG);
     }
 
-    set angle(value)
-    {
+    set angle(value: number) {
         this.rotation = WrapAngle(value) * MATH_CONST.DEG_TO_RAD;
     }
 
-    get rotation(): any
-    {
+    get rotation(): number {
         return this.transform._rotation;
     }
 
-    set rotation(value)
-    {
-        if (this.transform._rotation === value)
-            {
-                return;
-            }
+    set rotation(value: number) {
+        if (this.transform._rotation === value) {
+            return;
+        }
 
-            this.transform._rotation = value;
-            this.transform.dirty = true;
+        this.transform._rotation = value;
+        this.transform.dirty = true;
 
-            if (this.transform._rotation % MATH_CONST.PI2)
-            {
-                this.transform.cache.sr = Math.sin(this.transform._rotation);
-                this.transform.cache.cr = Math.cos(this.transform._rotation);
-                this.transform.updateCache();
-                this.transform.hasLocalRotation = true;
-            }
-            else
-            {
-                this.transform.hasLocalRotation = false;
-            }
+        if (this.transform._rotation % MATH_CONST.PI2) {
+            this.transform.cache.sr = Math.sin(this.transform._rotation);
+            this.transform.cache.cr = Math.cos(this.transform._rotation);
+            this.transform.updateCache();
+            this.transform.hasLocalRotation = true;
+        }
+        else {
+            this.transform.hasLocalRotation = false;
+        }
     }
 
 }

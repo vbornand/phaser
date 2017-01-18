@@ -6,6 +6,10 @@
 
 import * as MATH_CONST from '../math/const';
 import WrapAngle from '../math/angle/Wrap';
+import Game from '../boot/Game';
+import State from '../state/State';
+import Renderer from '../renderer/Renderer';
+import GameObject from '../gameobjects/GameObject';
 
 /**
 * 2D Transformation Component.
@@ -14,40 +18,37 @@ import WrapAngle from '../math/angle/Wrap';
 */
 export default class Transform {
 
-    gameObject;
-    game;
-    state;
+    gameObject: any;
+    game: Game;
+    state: State;
     world;
     old;
     cache;
     glVertextData;
     canvasData;
-    immediate;
-    interpolate;
-    hasLocalRotation;
-    private _posX;
-    private _posY;
-    private _scaleX;
-    private _scaleY;
-    private _rotation;
-    private _pivotX;
-    private _pivotY;
-    private _anchorX;
-    private _anchorY;
-    private _worldRotation;
-    private _worldScaleX;
-    private _worldScaleY;
-    private _dirty;
-    private _dirtyVertex;
-    parent;
-    children;
+    immediate: boolean;
+    interpolate: boolean;
+    hasLocalRotation: boolean;
+    //Some are used directly from other classes
+    /*private*/ _posX: number;
+    /*private*/ _posY: number;
+    /*private*/ _scaleX: number;
+    /*private*/ _scaleY: number;
+    /*private*/ _rotation: number;
+    /*private*/ _pivotX: number;
+    /*private*/ _pivotY: number;
+    /*private*/ _anchorX: number;
+    /*private*/ _anchorY: number;
+    /*private*/ _worldRotation: number;
+    /*private*/ _worldScaleX: number;
+    /*private*/ _worldScaleY: number;
+    /*private*/ _dirty: boolean;
+    /*private*/ _dirtyVertex: boolean;
+    parent: Transform;
+    children: Transform[];
 
 
-    constructor(gameObject, x?, y?, scaleX?, scaleY?) {
-        if (x === undefined) { x = 0; }
-        if (y === undefined) { y = 0; }
-        if (scaleX === undefined) { scaleX = 1; }
-        if (scaleY === undefined) { scaleY = 1; }
+    constructor(gameObject: any, x: number = 0, y: number = 0, scaleX: number = 1, scaleY: number = 1) {
 
         this.gameObject = gameObject;
 
@@ -110,11 +111,11 @@ export default class Transform {
         this.children = [];
     }
 
-    add(child) {
+    add(child: Transform): Transform {
         return this.addAt(child, this.children.length);
     }
 
-    addAt(child, index) {
+    addAt(child: Transform, index: number): Transform {
         //  Invalid child?
         if (child === this || child.parent === this || index < 0 || index > this.children.length) {
             console.log('Invalid child');
@@ -137,7 +138,7 @@ export default class Transform {
         return child;
     }
 
-    remove(child) {
+    remove(child: Transform): Transform {
         //  Invalid child?
         if (child === this || child.parent !== this) {
             return child;
@@ -150,7 +151,7 @@ export default class Transform {
         }
     }
 
-    removeAt(index) {
+    removeAt(index: number): Transform {
         //  Valid index?
         if (index >= 0 && index < this.children.length) {
             var child = this.children.splice(index, 1);
@@ -189,17 +190,14 @@ export default class Transform {
         this.interpolate = false;
     }
 
-    setPosition(x, y) {
-        if (y === undefined) { y = x; }
-
+    setPosition(x: number, y: number = x) {
         this._posX = x;
         this._posY = y;
 
         return this.update();
     }
 
-    setScale(x, y) {
-        if (y === undefined) { y = x; }
+    setScale(x: number, y: number = x) {
 
         this._scaleX = x;
         this._scaleY = y;
@@ -208,8 +206,7 @@ export default class Transform {
         return this.update();
     }
 
-    setPivot(x, y) {
-        if (y === undefined) { y = x; }
+    setPivot(x: number, y: number = x) {
 
         this._pivotX = x;
         this._pivotY = y;
@@ -217,14 +214,14 @@ export default class Transform {
         return this.update();
     }
 
-    setAnchor(x, y = x) {
+    setAnchor(x: number, y: number = x) {
         this._anchorX = x;
         this._anchorY = y;
 
         this.dirty = true;
     }
 
-    setRotation(rotation) {
+    setRotation(rotation: number) {
         this.rotation = rotation;
 
         return this.update();
@@ -232,7 +229,7 @@ export default class Transform {
 
     //  Updates the Transform.world object, ready for rendering
     //  Assuming this Transform is a root node (i.e. no transform parent)
-    updateFromRoot() {
+    updateFromRoot(): Transform {
         var old = this.old;
         var world = this.world;
 
@@ -274,7 +271,7 @@ export default class Transform {
         return this;
     }
 
-    updateFromParent() {
+    updateFromParent(): Transform {
         var old = this.old;
         var world = this.world;
 
@@ -328,7 +325,7 @@ export default class Transform {
         return this;
     }
 
-    updateAncestors() {
+    updateAncestors(): Transform {
         // console.log(this.name, 'Transform.updateAncestors');
 
         //  No parent? Then just update the children and leave, our job is done
@@ -375,8 +372,9 @@ export default class Transform {
         //  By this point all of this Transforms ancestors have been
         //  updated, in the correct order, so we can now do this one
         //  and any of its children too
-
-        this.update();
+        
+        //TODO_VBO: Add the return
+        return this.update();
     }
 
     updateChildren() {
@@ -402,9 +400,10 @@ export default class Transform {
         this._dirtyVertex = true;
     }
 
-    update() {
+    update(): Transform {
         if (!this._dirty) {
-            return;
+            //TODO_VBO: Always return this
+            return this;
         }
 
         //  If we got this far then this Transform is dirty
@@ -428,6 +427,8 @@ export default class Transform {
 
         this._dirty = false;
         this._dirtyVertex = true;
+
+        return this;
     }
 
     updateCache() {
@@ -437,7 +438,7 @@ export default class Transform {
         this.cache.d = this.cache.cr * this._scaleY;
     }
 
-    updateVertexData(interpolationPercentage, renderer) {
+    updateVertexData(interpolationPercentage: number, renderer: Renderer) {
         if (!this.gameObject.frame || (!this._dirtyVertex && !this.interpolate)) {
             return;
         }
@@ -518,7 +519,7 @@ export default class Transform {
             h1 = _w1;
         }
 
-        if (frame.autoRound === 1 || (frame.autoRound === -1 && renderer.roundPixels)) {
+        if (frame.autoRound === 1 || (frame.autoRound === -1 && (<any>renderer).roundPixels)) {
             tx |= 0;
             ty |= 0;
         }
@@ -569,7 +570,7 @@ export default class Transform {
         };
     }
 
-    getCanvasTransformData(interpolationPercentage, renderer) {
+    getCanvasTransformData(interpolationPercentage: number, renderer: Renderer) {
         var frame = this.gameObject.frame;
         var world = this.world;
         var data = this.canvasData;
@@ -599,7 +600,7 @@ export default class Transform {
             data.dy = frame.y - (this.anchorY * frame.height);
         }
 
-        if (frame.autoRound === 1 || (frame.autoRound === -1 && renderer.roundPixels)) {
+        if (frame.autoRound === 1 || (frame.autoRound === -1 && (<any>renderer).roundPixels)) {
             data.tx |= 0;
             data.ty |= 0;
             data.dx |= 0;
@@ -611,31 +612,31 @@ export default class Transform {
 
     //  Transform getters / setters
 
-    get x() {
+    get x(): number {
         return this._posX;
     }
 
-    set x(value) {
+    set x(value: number) {
         this._posX = value;
         this.dirty = true;
     }
 
 
 
-    get y() {
+    get y(): number {
         return this._posY;
     }
 
-    set y(value) {
+    set y(value: number) {
         this._posY = value;
         this.dirty = true;
     }
 
-    get scale() {
+    get scale(): number {
         return this._scaleX;
     }
 
-    set scale(value) {
+    set scale(value: number) {
         this._scaleX = value;
         this._scaleY = value;
 
@@ -643,91 +644,87 @@ export default class Transform {
         this.updateCache();
     }
 
-    get scaleX() {
+    get scaleX(): number {
         return this._scaleX;
     }
 
-    set scaleX(value) {
+    set scaleX(value: number) {
         this._scaleX = value;
 
         this.dirty = true;
         this.updateCache();
     }
 
-    get scaleY() {
+    get scaleY(): number {
         return this._scaleY;
     }
 
-    set scaleY(value) {
+    set scaleY(value: number) {
         this._scaleY = value;
 
         this.dirty = true;
         this.updateCache();
     }
 
-    get anchor() {
+    get anchor(): number {
         return this._anchorX;
     }
 
-    set anchor(value) {
+    set anchor(value: number) {
         this.setAnchor(value);
     }
-
-
-    get anchorX() {
+    
+    get anchorX(): number {
         return this._anchorX;
     }
 
-    set anchorX(value) {
+    set anchorX(value: number) {
         this._anchorX = value;
         this.dirty = true;
     }
 
-
-    get anchorY() {
+    get anchorY(): number {
         return this._anchorY;
     }
 
-    set anchorY(value) {
+    set anchorY(value: number) {
         this._anchorY = value;
         this.dirty = true;
     }
 
-
-    get pivotX() {
+    get pivotX(): number {
         return this._pivotX;
     }
 
-    set pivotX(value) {
+    set pivotX(value: number) {
         this._pivotX = value;
         this.dirty = true;
         this.updateCache();
     }
 
-
-    get pivotY() {
+    get pivotY(): number {
         return this._pivotY;
     }
 
-    set pivotY(value) {
+    set pivotY(value: number) {
         this._pivotY = value;
         this.dirty = true;
         this.updateCache();
     }
 
-    get angle() {
+    get angle(): number {
         return WrapAngle(this.rotation * MATH_CONST.RAD_TO_DEG);
     }
 
-    set angle(value) {
+    set angle(value: number) {
         this.rotation = WrapAngle(value) * MATH_CONST.DEG_TO_RAD;
     }
 
-    get rotation() {
+    get rotation(): number {
         return this._rotation;
     }
 
-    set rotation(value) {
+    set rotation(value: number) {
         if (this._rotation === value) {
             return;
         }
@@ -747,11 +744,11 @@ export default class Transform {
     }
 
     //  Sets this *component* as being dirty
-    get dirty() {
+    get dirty(): boolean {
         return this._dirty;
     }
 
-    set dirty(value) {
+    set dirty(value: boolean) {
         if (value) {
             if (!this._dirty) {
                 this._dirty = true;
@@ -773,37 +770,37 @@ export default class Transform {
     //  GLOBAL read-only properties from here on
     //  Need *all* parents taken into account to get the correct values
 
-    get name() {
+    get name(): string {
         return (this.gameObject) ? this.gameObject.name : '';
     }
 
-    get worldRotation() {
+    get worldRotation(): number {
         this.updateAncestors();
 
         return this._worldRotation;
     }
 
-    get worldScaleX() {
+    get worldScaleX(): number {
         this.updateAncestors();
 
         return this._worldScaleX;
     }
 
 
-    get worldScaleY() {
+    get worldScaleY(): number {
         this.updateAncestors();
 
         return this._worldScaleY;
     }
 
 
-    get worldX() {
+    get worldX(): number {
         this.updateAncestors();
 
         return this.world.tx;
     }
 
-    get worldY() {
+    get worldY(): number {
         this.updateAncestors();
 
         return this.world.ty;

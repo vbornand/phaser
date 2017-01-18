@@ -37,9 +37,9 @@ var CanvasPool = function ()
     * @param {number} height - The height of the canvas element.
     * @return {HTMLCanvasElement} The canvas element.
     */
-    var create = function (parent, width = 1, height = 1, type = CONST.CANVAS)
+    var create = function (parent, width = 1, height = 1, type = CONST.CANVAS): HTMLCanvasElement
     {
-        var canvas;
+        var canvas: HTMLCanvasElement;
         var container = first(type);
 
         if (container === null)
@@ -64,13 +64,10 @@ var CanvasPool = function ()
 
             canvas = container.canvas;
         }
-
-        if (width !== undefined)
-        {
-            canvas.width = width;
-            canvas.height = height;
-        }
-
+        
+        canvas.width = width;
+        canvas.height = height;
+        
         return canvas;
     };
 
@@ -114,7 +111,7 @@ var CanvasPool = function ()
     * @method Phaser.CanvasPool.remove
     * @param {any|HTMLCanvasElement} parent - The parent of the canvas element.
     */
-    var remove = function (parent)
+    var remove = function (parent: HTMLCanvasElement)
     {
         //  Check to see if the parent is a canvas object
         var isCanvas = parent instanceof HTMLCanvasElement;

@@ -8,6 +8,8 @@ import * as CONST from '../const';
 import * as MATH_CONST from '../math/const';
 import * as Component from '../components';
 import WrapAngle from '../math/angle/Wrap';
+import Game from '../boot/Game';
+import State from '../state/State';
 
 /**
 * This is the base Game Object class that you can use when creating your own extended Game Objects.
@@ -20,24 +22,24 @@ import WrapAngle from '../math/angle/Wrap';
 //  Allows override from non-standard GO types
 export default class GameObject {
 
-    state;
-    game;
-    name;
-    type;
-    parent;
+    state: State;
+    game: Game;
+    name: string;
+    type: number;
+    parent: GameObject;
     texture;
     frame;
-    transform;
-    data;
-    color;
-    scaleMode;
-    skipRender;
-    visible;
+    transform: Component.Transform;
+    data: Component.Data;
+    color: Component.Color;
+    scaleMode: any;
+    skipRender: boolean;
+    visible: boolean;
     children;
     exists;
     render;
 
-    constructor(state, x, y, texture, frame, parent?) {
+    constructor(state: State, x: number, y: number, texture, frame, parent?: GameObject) {
         this.state = state;
 
         this.game = state.game;

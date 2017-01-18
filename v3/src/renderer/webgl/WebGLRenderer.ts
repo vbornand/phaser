@@ -7,8 +7,9 @@
 
 import * as CONST from '../../const';
 import CreateEmptyTexture from './utils/CreateEmptyTexture';
+import Renderer from '../Renderer';
 
-export default class WebGLRenderer {
+export default class WebGLRenderer implements Renderer {
 
     gl;
     view;

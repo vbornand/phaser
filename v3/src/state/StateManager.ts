@@ -11,28 +11,38 @@ import Settings from './Settings';
 import Systems from './Systems';
 import GetObjectValue from '../utils/GetObjectValue';
 import Game from '../boot/Game';
-// var LoaderEvent = require('../loader/events/');
+import Renderer from '../renderer/Renderer';
+import StateConfig from './StateConfig';
 
+interface PendingStateEntry {
+    index: number;
+    key: string;
+    state: StateConfig;
+    autoStart: boolean;
+}
+
+interface ActiveStateEntry {
+    index: number;
+    state: State;
+}
 
 export default class StateManager {
 
-    private _pending;
-    private _start;
-    public active;
-
-    public keys;
+    private _pending: PendingStateEntry[];
+    private _start: any[];
+    private active: ActiveStateEntry[];
+    public keys: any;
     public game: Game;
-    public states;
+    public states: State[];
 
-/**
-* The State Manager is responsible for loading, setting up and switching game states.
-*
-* @class Phaser.StateManager
-* @constructor
-* @param {Phaser.Game} game - A reference to the currently running game.
-*/
-    constructor (game: Game, stateConfig)
-    {
+    /**
+    * The State Manager is responsible for loading, setting up and switching game states.
+    *
+    * @class Phaser.StateManager
+    * @constructor
+    * @param {Phaser.Game} game - A reference to the currently running game.
+    */
+    constructor(game: Game, stateConfig: StateConfig | StateConfig[]) {
         this.game = game;
 
         //  Everything kept in here
@@ -44,12 +54,9 @@ export default class StateManager {
 
         this._pending = [];
 
-        if (stateConfig)
-        {
-            if (Array.isArray(stateConfig))
-            {
-                for (var i = 0; i < stateConfig.length; i++)
-                {
+        if (stateConfig) {
+            if (Array.isArray(stateConfig)) {
+                for (var i = 0; i < stateConfig.length; i++) {
                     //  The i === 0 part just starts the first State given
                     this._pending.push({
                         index: i,
@@ -59,8 +66,7 @@ export default class StateManager {
                     });
                 }
             }
-            else
-            {
+            else {
                 this._pending.push({
                     index: 0,
                     key: 'default',
@@ -70,7 +76,7 @@ export default class StateManager {
             }
         }
     }
-    
+
     /**
     * The Boot handler is called by Phaser.Game when it first starts up.
     * The renderer is available by now.
@@ -78,13 +84,11 @@ export default class StateManager {
     * @method Phaser.StateManager#boot
     * @private
     */
-    boot()
-    {
+    boot() {
         // this.game.onPause.add(this.pause, this);
         // this.game.onResume.add(this.resume, this);
 
-        for (var i = 0; i < this._pending.length; i++)
-        {
+        for (var i = 0; i < this._pending.length; i++) {
             var entry = this._pending[i];
 
             this.add(entry.key, entry.state, entry.autoStart);
@@ -94,27 +98,22 @@ export default class StateManager {
         this._pending = [];
     }
 
-    getKey(key, stateConfig)
-    {
+    getKey(key, stateConfig) {
         if (!key) { key = 'default'; }
 
-        if (stateConfig instanceof State)
-        {
+        if (stateConfig instanceof State) {
             key = stateConfig.settings.key;
         }
-        else if (typeof stateConfig === 'object' && stateConfig.hasOwnProperty('key'))
-        {
+        else if (typeof stateConfig === 'object' && stateConfig.hasOwnProperty('key')) {
             key = stateConfig.key;
         }
 
         //  By this point it's either 'default' or extracted from the State
 
-        if (this.keys.hasOwnProperty(key))
-        {
+        if (this.keys.hasOwnProperty(key)) {
             throw new Error('Cannot add a State with duplicate key: ' + key);
         }
-        else
-        {
+        else {
             return key;
         }
     }
@@ -129,13 +128,9 @@ export default class StateManager {
     * @param {Phaser.State|object|function} state  - The state you want to switch to.
     * @param {boolean} [autoStart=false]  - If true the State will be started immediately after adding it.
     */
-    add(key, stateConfig, autoStart)
-    {
-        if (autoStart === undefined) { autoStart = false; }
-
+    add(key: string, stateConfig: State | StateConfig | (() => any), autoStart: boolean = false) {
         //  if not booted, then put state into a holding pattern
-        if (!this.game.isBooted)
-        {
+        if (!this.game.isBooted) {
             this._pending.push({
                 index: this._pending.length,
                 key: key,
@@ -152,21 +147,18 @@ export default class StateManager {
 
         var newState;
 
-        if (stateConfig instanceof State)
-        {
+        if (stateConfig instanceof State) {
             // console.log('StateManager.add from instance', key);
             newState = this.createStateFromInstance(key, stateConfig);
         }
-        else if (typeof stateConfig === 'object')
-        {
+        else if (typeof stateConfig === 'object') {
             // console.log('StateManager.add from object', key);
 
             stateConfig.key = key;
 
             newState = this.createStateFromObject(key, stateConfig);
         }
-        else if (typeof stateConfig === 'function')
-        {
+        else if (typeof stateConfig === 'function') {
             // console.log('StateManager.add from function', key);
 
             newState = this.createStateFromFunction(key, stateConfig);
@@ -176,14 +168,11 @@ export default class StateManager {
 
         this.states.push(newState);
 
-        if (autoStart || newState.settings.active)
-        {
-            if (this.game.isBooted)
-            {
+        if (autoStart || newState.settings.active) {
+            if (this.game.isBooted) {
                 this.start(key);
             }
-            else
-            {
+            else {
                 this._start.push(key);
             }
         }
@@ -191,48 +180,41 @@ export default class StateManager {
         return newState;
     }
 
-    createStateFromInstance(key, newState)
-    {
+    createStateFromInstance(key, newState) {
         newState.game = this.game;
 
         newState.settings.key = key;
 
         newState.sys.init();
 
-        if (this.game.config.renderType === CONST.WEBGL)
-        {
+        if (this.game.config.renderType === CONST.WEBGL) {
             this.createStateFrameBuffer(newState);
         }
 
         return newState;
     }
 
-    createStateFromObject(key, stateConfig)
-    {
+    createStateFromObject(key, stateConfig) {
         var newState = new State(stateConfig);
 
         newState.game = this.game;
 
         newState.sys.init();
 
-        if (this.game.config.renderType === CONST.WEBGL)
-        {
+        if (this.game.config.renderType === CONST.WEBGL) {
             this.createStateFrameBuffer(newState);
         }
 
         return this.setupCallbacks(newState, stateConfig);
     }
 
-    createStateFromFunction(key, state)
-    {
+    createStateFromFunction(key, state) {
         var newState = new state();
 
-        if (newState instanceof State)
-        {
+        if (newState instanceof State) {
             return this.createStateFromInstance(key, newState);
         }
-        else
-        {
+        else {
             newState.game = this.game;
 
             newState.settings = new Settings(newState, key);
@@ -240,8 +222,7 @@ export default class StateManager {
 
             newState.sys.init();
 
-            if (this.game.config.renderType === CONST.WEBGL)
-            {
+            if (this.game.config.renderType === CONST.WEBGL) {
                 this.createStateFrameBuffer(newState);
             }
 
@@ -250,8 +231,7 @@ export default class StateManager {
         }
     }
 
-    setupCallbacks(newState, stateConfig = newState)
-    {
+    setupCallbacks(newState, stateConfig = newState) {
         //  Extract callbacks or set NOOP
 
         newState.init = GetObjectValue(stateConfig, 'init', NOOP);
@@ -267,43 +247,35 @@ export default class StateManager {
         return newState;
     }
 
-    createStateFrameBuffer(newState)
-    {
+    createStateFrameBuffer(newState) {
         var x = newState.settings.x;
         var y = newState.settings.y;
 
-        if (newState.settings.width === -1)
-        {
+        if (newState.settings.width === -1) {
             newState.settings.width = this.game.config.width;
         }
 
-        if (newState.settings.height === -1)
-        {
+        if (newState.settings.height === -1) {
             newState.settings.height = this.game.config.height;
         }
 
         var width = newState.settings.width;
         var height = newState.settings.height;
 
-        newState.sys.fbo = this.game.renderer.createFBO(newState, x, y, width, height);
+        newState.sys.fbo = (<any>this.game.renderer).createFBO(newState, x, y, width, height);
     }
 
-    getState(key)
-    {
+    getState(key) {
         return this.keys[key];
     }
 
-    getStateIndex(state)
-    {
+    getStateIndex(state) {
         return this.states.indexOf(state);
     }
 
-    getActiveStateIndex(state)
-    {
-        for (var i = 0; i < this.active.length; i++)
-        {
-            if (this.active[i].state === state)
-            {
+    getActiveStateIndex(state) {
+        for (var i = 0; i < this.active.length; i++) {
+            if (this.active[i].state === state) {
                 return this.active[i].index;
             }
         }
@@ -311,26 +283,21 @@ export default class StateManager {
         return -1;
     }
 
-    isActive(key)
-    {
+    isActive(key) {
         var state = this.getState(key);
 
         return (state && state.settings.active && this.active.indexOf(state) !== -1);
     }
 
-    start(key)
-    {
+    start(key) {
         //  if not booted, then put state into a holding pattern
-        if (!this.game.isBooted)
-        {
+        if (!this.game.isBooted) {
             // console.log('StateManager not yet booted, setting autoStart on pending list');
 
-            for (var i = 0; i < this._pending.length; i++)
-            {
+            for (var i = 0; i < this._pending.length; i++) {
                 var entry = this._pending[i];
 
-                if (entry.key === key)
-                {
+                if (entry.key === key) {
                     entry.autoStart = true;
                 }
             }
@@ -340,35 +307,29 @@ export default class StateManager {
 
         var state = this.getState(key);
 
-        if (state)
-        {
+        if (state) {
             //  Already started? Nothing more to do here ...
-            if (this.isActive(key))
-            {
+            if (this.isActive(key)) {
                 return;
             }
 
             state.settings.active = true;
 
             //  + arguments
-            if (state.init)
-            {
+            if (state.init) {
                 state.init.call(state);
             }
 
-            if (state.preload && state.sys.load)
-            {
+            if (state.preload && state.sys.load) {
                 state.sys.load.reset();
 
                 state.preload.call(state, this.game);
 
                 //  Is the loader empty?
-                if (state.sys.load.list.size === 0)
-                {
+                if (state.sys.load.list.size === 0) {
                     this.startCreate(state);
                 }
-                else
-                {
+                else {
                     //  Start the loader going as we have something in the queue
 
                     state.sys.load.events.once('LOADER_COMPLETE_EVENT', this.loadComplete.bind(this));
@@ -376,8 +337,7 @@ export default class StateManager {
                     state.sys.load.start();
                 }
             }
-            else
-            {
+            else {
                 //  No preload? Then there was nothing to load either
                 this.startCreate(state);
             }
@@ -385,25 +345,21 @@ export default class StateManager {
         }
     }
 
-    loadComplete(event)
-    {
+    loadComplete(event) {
         var state = event.loader.state;
 
         //  Make sure to do load-update one last time before state is set to _created
 
         //  Stop doing this ...
-        if (state.hasOwnProperty('loadUpdate'))
-        {
+        if (state.hasOwnProperty('loadUpdate')) {
             state.loadUpdate.call(state);
         }
 
         this.startCreate(state);
     }
 
-    startCreate(state)
-    {
-        if (state.create)
-        {
+    startCreate(state) {
+        if (state.create) {
             state.create.call(state);
         }
 
@@ -421,12 +377,10 @@ export default class StateManager {
         state.sys.mainloop.start();
     }
 
-    pause(key)
-    {
+    pause(key) {
         var index = this.getActiveStateIndex(key);
 
-        if (index > -1)
-        {
+        if (index > -1) {
             var state = this.getState(key);
 
             state.settings.active = false;
@@ -437,33 +391,26 @@ export default class StateManager {
         }
     }
 
-    sortStates(stateA, stateB)
-    {
+    sortStates(stateA, stateB) {
         //  Sort descending
-        if (stateA.index < stateB.index)
-        {
+        if (stateA.index < stateB.index) {
             return -1;
         }
-        else if (stateA.index > stateB.index)
-        {
+        else if (stateA.index > stateB.index) {
             return 1;
         }
-        else
-        {
+        else {
             return 0;
         }
     }
 
     //  See if we can reduce this down to just update and render
 
-    step(timestamp)
-    {
-        for (var i = 0; i < this.active.length; i++)
-        {
+    step(timestamp: number) {
+        for (var i = 0; i < this.active.length; i++) {
             var state = this.active[i].state;
 
-            if (state.sys.mainloop.running)
-            {
+            if (state.sys.mainloop.running) {
                 state.sys.mainloop.step(timestamp);
             }
         }
@@ -542,11 +489,9 @@ export default class StateManager {
     }
     */
 
-    renderChildren(renderer, state, interpolationPercentage)
-    {
+    renderChildren(renderer: Renderer, state: State, interpolationPercentage: number) {
         //  Populates the display list
-        for (var c = 0; c < state.sys.children.list.length; c++)
-        {
+        for (var c = 0; c < state.sys.children.list.length; c++) {
             var child = state.sys.children.list[c];
 
             child.render(renderer, child, interpolationPercentage);

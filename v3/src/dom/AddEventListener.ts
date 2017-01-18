@@ -1,6 +1,4 @@
-export default function (target, event, listener, useCapture)
+export default function (target: EventTarget, event: string, listener?: EventListenerOrEventListenerObject, useCapture: boolean = false): void
 {
-    if (useCapture === undefined) { useCapture = false; }
-
     target.addEventListener(event, listener, useCapture);
 };

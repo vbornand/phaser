@@ -1,4 +1,6 @@
-export default function (frame, blendMode, transform, alpha, tint, bg)
+import CanvasRenderer from '../CanvasRenderer';
+
+export default function (this: CanvasRenderer, frame, blendMode, transform, alpha, tint, bg)
 {
     var ctx = this.context;
     var cd = frame.canvasData;

@@ -1,17 +1,11 @@
-export default function (a, b, base)
-{
-    if (base === undefined) { base = 0; }
-
-    if (a > b || base > b)
-    {
+export default function (a: number, b: number, base: number = 0): number {
+    if (a > b || base > b) {
         return 1;
     }
-    else if (a < base || base > a)
-    {
+    else if (a < base || base > a) {
         return 0;
     }
-    else
-    {
+    else {
         return (a - base) / b;
     }
 };

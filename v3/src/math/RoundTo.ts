@@ -1,8 +1,5 @@
-export default function (value, place, base)
+export default function (value: number, place: number = 0, base: number = 10): number
 {
-    if (place === undefined) { place = 0; }
-    if (base === undefined) { base = 10; }
-
     var p = Math.pow(base, -place);
 
     return Math.round(value * p) / p;

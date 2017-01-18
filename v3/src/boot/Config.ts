@@ -7,10 +7,43 @@
 import * as CONST from '../const';
 import NOOP from '../utils/NOOP';
 import GetObjectValue from '../utils/GetObjectValue';
+import Game from './Game';
+import StateConfig from '../state/StateConfig';
 
-export default class Config
+export interface BannerConfig {
+    hidePhaser?: boolean;
+    text?: string;
+    background?: string[];
+}
+
+export interface GameCallbacksConfig {
+    preBoot?: (this: Game) => void;
+    postBoot?: (this: Game) => void;
+}
+
+export interface GameConfig {
+    width?: number;
+    height?: number;
+    resolution?: number;
+    type?: number;
+    parent?: string | Node;
+    canvas?: HTMLCanvasElement;
+    canvasStyle?: CSSStyleDeclaration;
+    state?: StateConfig;
+    seed?: string[];
+    title?: string;
+    url?: string;
+    version?: string;
+    banner?: BannerConfig;
+    forceSetTimeOut?: boolean;
+    transparent?: boolean;
+    pixelArt?: boolean;
+    callbacks?: GameCallbacksConfig;
+}
+
+export default class Config 
 {
-    private static defaultBannerColor = [
+    private static defaultBannerColor: string[] = [
         '#ff0000',
         '#ffff00',
         '#00ff00',
@@ -18,34 +51,31 @@ export default class Config
         '#000000'
     ];
 
-    private static defaultBannerTextColor = '#ffffff';
+    private static defaultBannerTextColor: string = '#ffffff';
 
-    public width;
-    public height;
-    public resolution;
-    public renderType;
-    public parent;
-    public canvas;
-    public canvasStyle;
-    public stateConfig;
-    public seed;
-    public gameTitle;
-    public gameURL;
-    public gameVersion;
-    public hideBanner;
-    public hidePhaser;
-    public bannerTextColor;
-    public bannerBackgroundColor;
-    public forceSetTimeOut;
-    public transparent;
-    public pixelArt;
-    public preBoot;
-    public postBoot;
+    public width: number;
+    public height: number;
+    public resolution: number;
+    public renderType: number; //TODO_VBO: Use enum WEBBL/CANVAS/AUTO
+    public parent: string | Node;
+    public canvas: HTMLCanvasElement;
+    public canvasStyle: CSSStyleDeclaration;
+    public stateConfig :StateConfig;
+    public seed: string[];
+    public gameTitle: string;
+    public gameURL: string;
+    public gameVersion: string;
+    public hideBanner: boolean;
+    public hidePhaser: boolean;
+    public bannerTextColor: string;
+    public bannerBackgroundColor: string[];
+    public forceSetTimeOut: boolean;
+    public transparent: boolean;
+    public pixelArt: boolean;
+    public preBoot: (this: Config) => void;
+    public postBoot: (this: Config) => void;
 
-    constructor (config)
-    {
-        if (config === undefined) { config = {}; }
-
+    constructor(config: GameConfig = {}) {
         this.width = GetObjectValue(config, 'width', 1024);
         this.height = GetObjectValue(config, 'height', 768);
 
@@ -58,8 +88,8 @@ export default class Config
         this.canvasStyle = GetObjectValue(config, 'canvasStyle', null);
 
         this.stateConfig = GetObjectValue(config, 'state', null);
-
-        this.seed = GetObjectValue(config, 'seed', [ (Date.now() * Math.random()).toString() ]);
+        
+        this.seed = GetObjectValue(config, 'seed', [(Date.now() * Math.random()).toString()]);
 
         this.gameTitle = GetObjectValue(config, 'title', '');
         this.gameURL = GetObjectValue(config, 'url', 'http://phaser.io');
@@ -79,6 +109,5 @@ export default class Config
         //  Callbacks
         this.preBoot = GetObjectValue(config, 'callbacks.preBoot', NOOP);
         this.postBoot = GetObjectValue(config, 'callbacks.postBoot', NOOP);
-
     }
 }

@@ -1,4 +1,4 @@
-export function In (v)
+export function In(v: number): number
 {
     v = 1 - v;
 
@@ -20,7 +20,7 @@ export function In (v)
     }
 }
 
-export function Out (v)
+export function Out(v: number): number
 {
     if (v < 1 / 2.75)
     {
@@ -40,7 +40,7 @@ export function Out (v)
     }
 }
 
-export function InOut (v)
+export function InOut(v: number): number
 {
     var reverse = false;
 

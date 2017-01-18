@@ -1,9 +1,7 @@
-export default function (values: number[]): number
-{
-    var sum : number = 0;
+export default function (values: number[]): number {
+    var sum: number = 0;
 
-    for (var i : number = 0; i < values.length; i++)
-    {
+    for (var i: number = 0; i < values.length; i++) {
         sum += (+values[i]);
     }
 

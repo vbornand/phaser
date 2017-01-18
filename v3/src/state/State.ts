@@ -14,46 +14,40 @@ import Loader from './systems/Loader';
 * @class Phaser.State
 * @constructor
 */
-export default class State
-{
+export default class State {
 
-  public game;
-  public settings;
-  public sys;
-  public children;
+    public game;
+    public settings;
+    public sys: Systems;
+    public children;
 
-  public load: Loader;
+    public load: Loader;
 
 
-  constructor(config)
-  {
-    this.game = null;
+    constructor(config) {
+        this.game = null;
 
-    //  Maybe just an object? Doesn't have to instantiate I don't think ...
-    this.settings = new Settings(this, config);
+        //  Maybe just an object? Doesn't have to instantiate I don't think ...
+        this.settings = new Settings(this, config);
 
-    this.sys = new Systems(this, config);
+        this.sys = new Systems(this, config);
 
-    //  Reference to sys.children, set during sys.init only
-    this.children;
-  }
+        //  Reference to sys.children, set during sys.init only
+        this.children;
+    }
 
-   preUpdate()
-    {
+    public preUpdate() {
     }
 
     //  Can be overridden by your own States
-    update()
-    {
+    public update() {
     }
 
     //  Can be overridden by your own States
-    postUpdate()
-    {
+    public postUpdate() {
     }
 
     //  Can be overridden by your own States
-    render()
-    {
+    public render() {
     }
 }

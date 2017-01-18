@@ -1,7 +1,6 @@
 import CanvasPool from './CanvasPool';
 
-export class Smoothing
-{
+export class Smoothing {
 
     /**
     * Gets the Smoothing Enabled vendor prefix being used on the given context, or null if not set.
@@ -11,19 +10,16 @@ export class Smoothing
     * @param {CanvasRenderingContext2D} context - The context to enable or disable the image smoothing on.
     * @return {string|null} Returns the smoothingEnabled vendor prefix, or null if not set on the context.
     */
-    static prefix = (function ()
-    {
-        var canvas = CanvasPool.create(this, 1, 1);
-        var ctx = canvas.getContext('2d');
+    static prefix = (function () {
+        var canvas: HTMLCanvasElement = CanvasPool.create(this, 1, 1);
+        var ctx: CanvasRenderingContext2D = canvas.getContext('2d');
 
-        var vendors = [ 'i', 'webkitI', 'msI', 'mozI', 'oI' ];
+        var vendors = ['i', 'webkitI', 'msI', 'mozI', 'oI'];
 
-        vendors.forEach(function (vendor)
-        {
+        vendors.forEach(function (vendor) {
             var s = vendor + 'mageSmoothingEnabled';
 
-            if (s in ctx)
-            {
+            if (s in ctx) {
                 CanvasPool.remove(canvas);
                 return s;
             }
@@ -47,10 +43,8 @@ export class Smoothing
     * @param {boolean} value - If set to true it will enable image smoothing, false will disable it.
     * @return {CanvasRenderingContext2D} Returns the source context.
     */
-    enable (context, value)
-    {
-        if (Smoothing.prefix)
-        {
+    enable(context: CanvasRenderingContext2D, value: boolean): CanvasRenderingContext2D {
+        if (Smoothing.prefix) {
             context[Smoothing.prefix] = value;
         }
 
@@ -65,8 +59,7 @@ export class Smoothing
      * @param {CanvasRenderingContext2D} context - The context to check for smoothing on.
      * @return {boolean} True if the given context has image smoothing enabled, otherwise false.
      */
-    isEnabled (context)
-    {
+    isEnabled(context: CanvasRenderingContext2D): boolean {
         return (Smoothing.prefix !== null) ? context[Smoothing.prefix] : null;
     }
 }

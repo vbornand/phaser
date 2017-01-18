@@ -1,29 +1,23 @@
 import CatmullRom from '../CatmullRom';
 
-export default function (v, k)
-{
+export default function (v: number[], k: number): number {
     var m = v.length - 1;
     var f = m * k;
     var i = Math.floor(f);
 
-    if (v[0] === v[m])
-    {
-        if (k < 0)
-        {
+    if (v[0] === v[m]) {
+        if (k < 0) {
             i = Math.floor(f = m * (1 + k));
         }
 
         return CatmullRom(v[(i - 1 + m) % m], v[i], v[(i + 1) % m], v[(i + 2) % m], f - i);
     }
-    else
-    {
-        if (k < 0)
-        {
+    else {
+        if (k < 0) {
             return v[0] - (CatmullRom(v[0], v[0], v[1], v[1], -f) - v[0]);
         }
 
-        if (k > 1)
-        {
+        if (k > 1) {
             return v[m] - (CatmullRom(v[m], v[m], v[m - 1], v[m - 1], f - m) - v[m]);
         }
 

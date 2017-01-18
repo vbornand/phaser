@@ -10,10 +10,8 @@ import * as MATH_CONST from '../const';
 * @param {number} [lerp=0.05] - The lerp value to add to the current angle.
 * @return {number} The adjusted angle.
 */
-export default function (currentAngle, targetAngle, lerp)
+export default function (currentAngle: number, targetAngle: number, lerp: number = 0.05): number
 {
-    if (lerp === undefined) { lerp = 0.05; }
-
     if (currentAngle === targetAngle)
     {
         return currentAngle;
